@@ -1,0 +1,26 @@
+<Application x:Class="DWMStudio.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:DWMStudio.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark"
+                                             PrimaryColor="BlueGrey"
+                                             SecondaryColor="Cyan" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="Resources/DwmTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <BooleanToVisibilityConverter   x:Key="BooleanToVisibilityConverter" />
+            <conv:BoolToOpacityConverter    x:Key="BoolToOpacityConverter" />
+            <conv:StringToBoolConverter     x:Key="StringToBoolConverter" />
+            <conv:IntToVisibilityConverter  x:Key="IntToVisibilityConverter" />
+            <conv:StepVisibilityConverter   x:Key="StepVisibilityConverter" />
+            <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
