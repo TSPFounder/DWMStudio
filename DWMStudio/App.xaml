@@ -9,18 +9,16 @@
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Dark"
                                              PrimaryColor="BlueGrey"
-                                             SecondaryColor="Cyan" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                                             SecondaryColor="Cyan" />                
                 <ResourceDictionary Source="Resources/DwmTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Converters -->
-            <BooleanToVisibilityConverter   x:Key="BooleanToVisibilityConverter" />
-            <conv:BoolToOpacityConverter    x:Key="BoolToOpacityConverter" />
-            <conv:StringToBoolConverter     x:Key="StringToBoolConverter" />
-            <conv:IntToVisibilityConverter  x:Key="IntToVisibilityConverter" />
-            <conv:StepVisibilityConverter   x:Key="StepVisibilityConverter" />
-            <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <BooleanToVisibilityConverter            x:Key="BooleanToVisibilityConverter" />
+            <conv:BoolToOpacityConverter             x:Key="BoolToOpacityConverter" />
+            <conv:StringToBoolConverter              x:Key="StringToBoolConverter" />
+            <conv:IntToVisibilityConverter           x:Key="IntToVisibilityConverter" />
+            <conv:StepVisibilityConverter            x:Key="StepVisibilityConverter" />
+            <conv:InverseBoolToVisibilityConverter   x:Key="InverseBoolToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

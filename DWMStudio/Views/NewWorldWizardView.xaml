@@ -17,7 +17,7 @@
                 <Run Text="Step " />
                 <Run Text="{Binding CurrentStep}" />
                 <Run Text=" of " />
-                <Run Text="{Binding TotalSteps}" />
+              <Run Text="{Binding TotalSteps, Mode=OneWay}" />
             </TextBlock>
         </StackPanel>
 

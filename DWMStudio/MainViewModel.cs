@@ -20,13 +20,13 @@ namespace DWMStudio.ViewModels
         // Child view models
         // ------------------------------------------------------------------
 
-        public DashboardViewModel   Dashboard   { get; } = new();
-        public NewWorldWizardViewModel Wizard   { get; } = new();
-        public LibraryViewModel     Library     { get; } = new();
+        public DashboardViewModel Dashboard { get; } = new();
+        public NewWorldWizardViewModel Wizard { get; } = new();
+        public LibraryViewModel Library { get; } = new();
 
         [ObservableProperty] private ObservableObject? _currentView;
-        [ObservableProperty] private bool              _isWizardOpen;
-        [ObservableProperty] private string            _activeNavItem = "Dashboard";
+        [ObservableProperty] private bool _isWizardOpen;
+        [ObservableProperty] private string _activeNavItem = "Dashboard";
 
         // ------------------------------------------------------------------
         // Tool status (bound to status bar)
@@ -40,8 +40,8 @@ namespace DWMStudio.ViewModels
 
         public MainViewModel()
         {
-            _toolStatus  = new ToolStatusService();
-            CurrentView  = Dashboard;
+            _toolStatus = new ToolStatusService();
+            CurrentView = Dashboard;
 
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
@@ -53,17 +53,17 @@ namespace DWMStudio.ViewModels
         [RelayCommand]
         private void NavigateDashboard()
         {
-            CurrentView   = Dashboard;
+            CurrentView = Dashboard;
             ActiveNavItem = "Dashboard";
-            IsWizardOpen  = false;
+            IsWizardOpen = false;
         }
 
         [RelayCommand]
         private void NavigateLibrary()
         {
-            CurrentView   = Library;
+            CurrentView = Library;
             ActiveNavItem = "Library";
-            IsWizardOpen  = false;
+            IsWizardOpen = false;
         }
 
         [RelayCommand]
@@ -85,9 +85,9 @@ namespace DWMStudio.ViewModels
 
         public void Receive(OpenWorldMessage message)
         {
-            CurrentView   = new WorldDetailViewModel(message.World);
+            CurrentView = new WorldDetailViewModel(message.World);
             ActiveNavItem = "World";
-            IsWizardOpen  = false;
+            IsWizardOpen = false;
         }
     }
 }

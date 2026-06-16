@@ -15,7 +15,7 @@ namespace DWMStudio.ViewModels
         public WorldProject World { get; }
 
         [ObservableProperty] private string _statusMessage = string.Empty;
-        [ObservableProperty] private bool   _isBusy;
+        [ObservableProperty] private bool _isBusy;
 
         public WorldDetailViewModel(WorldProject world)
         {
@@ -26,10 +26,10 @@ namespace DWMStudio.ViewModels
         // Stage accessors for binding
         // ------------------------------------------------------------------
 
-        public PipelineStageStatus SysmlStage   => World.GetStage(PipelineStage.SysML);
-        public PipelineStageStatus CadStage     => World.GetStage(PipelineStage.Cad);
-        public PipelineStageStatus MatlabStage  => World.GetStage(PipelineStage.Matlab);
-        public PipelineStageStatus CoSimStage   => World.GetStage(PipelineStage.CoSim);
+        public PipelineStageStatus SysmlStage => World.GetStage(PipelineStage.SysML);
+        public PipelineStageStatus CadStage => World.GetStage(PipelineStage.Cad);
+        public PipelineStageStatus MatlabStage => World.GetStage(PipelineStage.Matlab);
+        public PipelineStageStatus CoSimStage => World.GetStage(PipelineStage.CoSim);
         public PipelineStageStatus RuntimeStage => World.GetStage(PipelineStage.Runtime);
 
         // ------------------------------------------------------------------

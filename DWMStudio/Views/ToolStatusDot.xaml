@@ -1,0 +1,24 @@
+<UserControl x:Class="DWMStudio.Views.ToolStatusDot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <Ellipse Width="7" Height="7" VerticalAlignment="Center">
+            <Ellipse.Style>
+                <Style TargetType="Ellipse">
+                    <Setter Property="Fill" Value="{StaticResource DwmMutedBrush}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsConnected, ElementName=Root}" Value="True">
+                            <Setter Property="Fill" Value="{StaticResource DwmSuccessBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Ellipse.Style>
+        </Ellipse>
+        <TextBlock Text="{Binding Label, ElementName=Root}"
+                   Style="{StaticResource MutedLabelStyle}"
+                   Margin="5 0 0 0"
+                   VerticalAlignment="Center" />
+    </StackPanel>
+</UserControl>
