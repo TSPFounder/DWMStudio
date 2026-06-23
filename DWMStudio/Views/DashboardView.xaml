@@ -15,6 +15,13 @@
             </StackPanel>
         </Border>
 
+      <Border DockPanel.Dock="Top" Padding="32 0 32 12">
+        <Button Content="Export Test Package"
+                Command="{Binding ExportTestPackageCommand}"
+                Style="{StaticResource GhostButtonStyle}"
+                HorizontalAlignment="Left" />
+      </Border>
+
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32 16 32 32">
             <ItemsControl ItemsSource="{Binding Worlds}">
                 <ItemsControl.ItemsPanel>
