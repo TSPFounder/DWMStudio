@@ -82,3 +82,5 @@ Heavy assets that cannot all be loaded at once on UE 5.3 across five zones. One 
 | Date | Change | What was cut to make room | Rationale |
 | --- | --- | --- | --- |
 | 2026-06-30 | Initial scope frozen | — | Baseline established from MVP Delivery Plan |
+
+| 2026-06-30 | Confirmed DWM_Dev sandbox is UE 5.3 (correct for MATLAB R2025b co-sim). The 5.7 "drift" was an obsolete separate repo (UE_Library5_7), now archived. | — | Verification spike found the 5.7 repo; DWM_Dev was already correct. SQLite spike ran in the obsolete repo — re-verify binding behavior against USQLite when building the real reader. |
