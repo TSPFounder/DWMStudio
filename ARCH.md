@@ -65,3 +65,43 @@ Not a journal mode — **process discipline**, already written down:
 - [ ] Confirm no other reader/writer (e.g. a future dashboard, a second tool) will ever hold
       the file open concurrently with DWMStudio during MVP.
 - [ ] X's second-opinion review (Day 4 task) — flag this recommendation for that review.
+
+---
+
+### X — Second-opinion review (Day 4 task, done same-day)
+
+**Verdict: confirms the recommendation.** Steelmanning the case FOR WAL first, then why it
+still loses here.
+
+**The strongest case for WAL anyway:** it's the standard, oft-repeated advice ("just enable
+WAL, it's free") and future-proofs against concurrency you might add later without realizing
+you needed to revisit this decision. That's a real argument — but "enable it just in case"
+is exactly the kind of speculative complexity the MVP's frozen-scope discipline exists to
+resist elsewhere, and it should be resisted here too: WAL's costs (companion files, the
+copy/recreate footgun) are paid immediately; its benefit is paid only if concurrency is ever
+actually needed, which today it isn't.
+
+**A supporting argument the original analysis under-weighted:** DELETE-mode's single-file
+simplicity has a concrete DWM-specific payoff beyond the exporter. The MVP plan's playbooks
+(Appendix B) rely on **"golden .db" fixtures** — a known-good database state used to reset
+the demo and to seed tests. A single self-contained `.db` file is trivially copyable,
+attachable to a bug report, or committed as a test fixture. A WAL-mode database is NOT safely
+copyable by grabbing just the `.db` — you'd have to remember the `-wal`/`-shm` companions or
+force a checkpoint first, every time. That's an easy step to forget under deadline pressure,
+and forgetting it produces a subtly-stale fixture rather than a loud error — a bad failure
+mode to introduce right before the Week-9 demo-recording rehearsals depend on a golden reset.
+This alone would tip the decision even without the concurrency argument.
+
+**One thing worth naming as a residual risk, not a reason to reverse the decision:** the
+scenario where this DOES matter is a hypothetical intermediate step — if, before the
+post-MVP hosted backend lands, some interim tool ever needs live concurrent access to this
+same local file (e.g., a debug dashboard tailing the ledger while DWMStudio stays open). No
+such tool is planned. If one is ever proposed, that's the trigger to revisit this file,
+not a reason to preemptively add WAL's complexity now.
+
+**Also worth noting:** this decision requires zero implementation work — DELETE/rollback
+journal is SQLite's default; "the decision" is documenting why we're deliberately NOT
+changing it, not writing new code. Good result for a Day-3 task competing for time against
+the economy schema and the tracer re-proof.
+
+**Recommendation: keep the draft decision as written. Check all three boxes above.**
