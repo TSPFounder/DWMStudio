@@ -16,6 +16,7 @@ Outcome key: ✅ used as-is · 🔧 used after edits · 🔁 sent back / redone 
 | Date | Agent | Task | Outcome | Reviewed? | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 2026-06-30 | Cw | Review SCOPE.md for hidden in/out dependencies | ⏳ | — | Day 1 task |
+| 2026-07-02 | C | Add caller for WorldPackageExporter.WritePendulum (no caller existed anywhere in the solution) | ✅ | Reviewed | Output: pendulum.db at DWM_Dev\Content\Databases\pendulum.db. Data source: **[CONFIRM: Simscape CSV / analytic fallback]**. Tracer confirmed working in PIE — pendulum moves (had to reposition actor to ~1160,340,200 to see it; cosmetic, not a pipeline issue). |
 | 2026-06-30 | — | (template row — copy this) | | | |
 
 ---

@@ -82,5 +82,4 @@ Heavy assets that cannot all be loaded at once on UE 5.3 across five zones. One 
 | Date | Change | What was cut to make room | Rationale |
 | --- | --- | --- | --- |
 | 2026-06-30 | Initial scope frozen | — | Baseline established from MVP Delivery Plan |
-
-| 2026-06-30 | Confirmed DWM_Dev sandbox is UE 5.3 (correct for MATLAB R2025b co-sim). The 5.7 "drift" was an obsolete separate repo (UE_Library5_7), now archived. | — | Verification spike found the 5.7 repo; DWM_Dev was already correct. SQLite spike ran in the obsolete repo — re-verify binding behavior against USQLite when building the real reader. |
+| 2026-07-02 | Tracer bullet fully proven: DWMStudio → SQLite → UE round-trip confirmed in PIE, pendulum actor driven by exported data (data source: **[CONFIRM: Simscape CSV / analytic fallback]**). Root causes of the two-day build blocker, now fixed: (1) SQLiteCore/SQLiteSupport plugin not enabled in .uproject despite being declared in Build.cs — module built but wouldn't load; (2) Windows Smart App Control blocking UBT-compiled DLLs (0x800711C7) — disabled (one-way, requires Windows reinstall to re-enable); (3) WorldPackageExporter.cs existed but had no caller — nothing had ever produced a .db. Fixed via Claude Code; pendulum.db now at DWM_Dev\Content\Databases\. | — | Week 1 Friday-gate criterion (tracer round-trips) met early. |
