@@ -16,10 +16,17 @@
         </Border>
 
       <Border DockPanel.Dock="Top" Padding="32 0 32 12">
-        <Button Content="Export Test Package"
-                Command="{Binding ExportTestPackageCommand}"
-                Style="{StaticResource GhostButtonStyle}"
-                HorizontalAlignment="Left" />
+        <StackPanel Orientation="Horizontal">
+          <Button Content="Export Test Package"
+                  Command="{Binding ExportTestPackageCommand}"
+                  Style="{StaticResource GhostButtonStyle}"
+                  HorizontalAlignment="Left" />
+          <Button Content="Export Economy Package"
+                  Command="{Binding ExportEconomyPackageCommand}"
+                  Style="{StaticResource GhostButtonStyle}"
+                  HorizontalAlignment="Left"
+                  Margin="12 0 0 0" />
+        </StackPanel>
       </Border>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32 16 32 32">

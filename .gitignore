@@ -3,4 +3,4 @@
 .vs/
 *.user
 *.suo
-packages/
+packages/Dotnet8/

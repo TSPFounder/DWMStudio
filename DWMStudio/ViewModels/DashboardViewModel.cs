@@ -2,11 +2,13 @@
 // Backs the Dashboard view — world cards and the New World command.
 
 using System.Collections.ObjectModel;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DWMStudio.Models;
 using DWM.Shared;
+using DWM.Shared.Economy;
 
 namespace DWMStudio.ViewModels
 {
@@ -40,10 +42,25 @@ namespace DWMStudio.ViewModels
         [RelayCommand]
         private void ExportTestPackage()
         {
+            const string outputPath = @"C:\DreamWorldMaker\Repos\DWM_Dev\Content\Databases\pendulum.db";
+            const string simResultsCsv = @"C:\DWM\out\pendulum_results.csv";
+
             var exporter = new DWM.Shared.WorldPackageExporter();
-            exporter.WriteHardcodedPendulum(
-                @"C:\DreamWorldMaker\Packages\DWM_WorldPackage_pendulum.db");
-            StatusMessage = "Package written to C:\\DreamWorldMaker\\Packages\\";
+            exporter.WritePendulum(outputPath, "pendulum", simResultsCsv);
+
+            var source = File.Exists(simResultsCsv) ? "Simscape CSV" : "analytic small-angle fallback";
+            StatusMessage = $"Package written to {outputPath} ({source}).";
+        }
+
+        [RelayCommand]
+        private void ExportEconomyPackage()
+        {
+            const string outputPath = @"C:\DreamWorldMaker\Repos\DWM_Dev\Content\Databases\economy.db";
+
+            var seeder = new EconomySeeder();
+            seeder.WriteEconomy(outputPath);
+
+            StatusMessage = $"Economy package written to {outputPath}.";
         }
 
         [RelayCommand]
