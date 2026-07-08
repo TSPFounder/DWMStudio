@@ -5,6 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- Default "dotnet test" excludes [Trait("Category", "Slow")] tests (currently just the
+         100k-trade scale test, roughly 8 to 9 minutes). Run them deliberately with the
+         "Category=Slow" filter (see RandomizedTradeSettlementAtScaleTests.cs). -->
+    <VSTestTestCaseFilter>Category!=Slow</VSTestTestCaseFilter>
   </PropertyGroup>
 
   <ItemGroup>

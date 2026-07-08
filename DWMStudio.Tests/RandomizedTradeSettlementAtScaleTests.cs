@@ -47,7 +47,11 @@ namespace DWMStudio.Tests
             "water", "skilled_labor", "textiles", "manufactured_tools", "software_services"
         };
 
+        // ~8-9 minutes by itself — excluded from the default `dotnet test` run via
+        // DWMStudio.Tests.csproj's VSTestTestCaseFilter (Category!=Slow). Run it
+        // deliberately with: dotnet test --filter "Category=Slow"
         [Fact]
+        [Trait("Category", "Slow")]
         public void Invariant_HoldsAcross100000TradesThroughSettlementService()
         {
             using var db = new EconomyTestDatabase();
