@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="../DWM.Shared/DWM.Shared.csproj" />
   <Project Path="DWMStudio/DWMStudio.csproj" />
+  <Project Path="DWMStudio.EconomyCli/DWMStudio.EconomyCli.csproj" />
   <Project Path="DWMStudio.Tests/DWMStudio.Tests.csproj" />
 </Solution>
