@@ -37,19 +37,32 @@ return command switch
 
 static int Export(string[] a)
 {
+    // --economy-db is now OPTIONAL (Day 13): if omitted, exports the canonical golden demo
+    // scenario (GoldenEconomyScenario) instead of requiring an existing hand-prepared .db,
+    // same "default when nothing else is given" shape as WritePendulum's CSV fallback.
     var economyDb = GetOption(a, "--economy-db");
     var outPath = GetOption(a, "--out");
     var worldId = GetOption(a, "--world-id") ?? "economy";
 
-    if (economyDb is null || outPath is null)
+    if (outPath is null)
     {
-        Console.Error.WriteLine("Usage: export --economy-db <path> --out <path> [--world-id <id>]");
+        Console.Error.WriteLine("Usage: export [--economy-db <path>] --out <path> [--world-id <id>]");
+        Console.Error.WriteLine("  (omit --economy-db to export the canonical golden demo scenario)");
         return 1;
     }
 
     var exporter = new WorldPackageExporter();
-    exporter.WriteEconomySnapshot(outPath, economyDb, worldId);
-    // WriteEconomySnapshot has already disposed its write connection by the time it returns.
+    if (economyDb is null)
+    {
+        Console.WriteLine("[export] No --economy-db given; exporting the canonical golden demo scenario.");
+        exporter.WriteGoldenEconomySnapshot(outPath, worldId);
+    }
+    else
+    {
+        exporter.WriteEconomySnapshot(outPath, economyDb, worldId);
+    }
+    // WriteEconomySnapshot/WriteGoldenEconomySnapshot have already disposed their write
+    // connection by the time they return.
 
     Console.WriteLine($"[verify] Re-opening '{outPath}' fresh (ReadOnly) immediately after export...");
     DumpDatabase(outPath);

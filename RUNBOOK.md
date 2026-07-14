@@ -102,7 +102,29 @@ once it builds).
   MathWorks **Startup program** application must precede campaign use of MATLAB-derived
   content (see business plan §4.4).
 
-## 7. Housekeeping
+## 7. Golden Demo Scenario & Demo Reset (Day 13)
+
+- **Fixture:** `DWMStudio.Tests/Fixtures/golden_world_economy.db` — a committed, already-
+  exported world package. Starting state: 5 communities/10 resources/24 CommunityResources
+  (Day 5 seed, unmodified), StoneLedger **empty** (the demo's live trade is meant to visibly
+  be the first), and calibrated per-community Dollar Vault balances (Mountain 4200, Hillside
+  4400, Valley 4600, Suburb 4000, City 5000 — all against the shared $500 threshold). All 5
+  communities read `Healthy` at this starting point.
+- **Demo arc:** City's descent into `CascadingFailure` is a LIVE, in-take action, not baked
+  into the fixture — run `CityCascadingFailureScenario` (DWM.Shared/Economy) against a working
+  copy of the golden .db's source economy.db to drive City from $5000 to $400 (below the $500
+  threshold) via 3 scripted debits. That's 3 demo actions to visibly flip City's failure state
+  — reused as-is from Day 11, not recalibrated.
+- **Reset before each take:** copy the golden `.db` back over the working world package file
+  UE reads (`Databases\...`) to restore the exact starting state, then re-run the live demo
+  trade/failure sequence fresh.
+- **Regenerate the fixture** (only when the scenario changes ON PURPOSE):
+  `dotnet run --project DWMStudio.WorldPackageCli -- export --out DWMStudio.Tests/Fixtures/golden_world_economy.db --world-id dwm_golden_demo`
+  (omit `--economy-db` to use the canonical `GoldenEconomyScenario` default). Update
+  `GoldenWorldPackageTests.cs`'s assertions in the same change — they'll fail otherwise, which
+  is the point: that test exists to catch an accidental drift in the starting scenario.
+
+## 8. Housekeeping
 
 - Log build-system incidents in AGENT_LOG.md; scope-affecting decisions in SCOPE.md's log.
 - `UE_Library5_7` was an obsolete repo (deleted). If any tool "finds" a 5.7 project, it is
