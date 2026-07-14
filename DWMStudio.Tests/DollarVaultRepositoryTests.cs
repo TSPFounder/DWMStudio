@@ -129,5 +129,19 @@ namespace DWMStudio.Tests
             // Neither rejected call should have touched the balance.
             Assert.Equal(5000.0, vault.GetVaultBalance("mountain"), precision: 9);
         }
+
+        [Fact]
+        public void GetVaultThreshold_ForUnknownCommunity_ThrowsInvalidOperationException()
+        {
+            // Day 15 gap: GetVaultThreshold's doc comment asserts this throws rather than
+            // silently defaulting -- was never actually tested until now.
+            using var db = new EconomyTestDatabase();
+            var vault = new DollarVaultRepository(db.DbPath);
+
+            var ex = Assert.Throws<System.InvalidOperationException>(
+                () => vault.GetVaultThreshold("not-a-real-community"));
+
+            Assert.Contains("not-a-real-community", ex.Message);
+        }
     }
 }
