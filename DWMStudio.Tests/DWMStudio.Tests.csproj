@@ -27,4 +27,10 @@
     <ProjectReference Include="..\..\DWM.Shared\DWM.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Day 13 golden-scenario regression fixture, copied to the test output dir so
+         GoldenWorldPackageTests.cs can open it by relative path. -->
+    <None Include="Fixtures\golden_world_economy.db" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
