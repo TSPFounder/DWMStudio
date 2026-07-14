@@ -145,6 +145,94 @@ namespace DWMStudio.Tests
         }
 
         // ------------------------------------------------------------------
+        // Day 15 gap: ProposeTrade re-implements the same six structural validations
+        // TradeSettlementService.SettleTrade already has coverage for (TradeSettlementServiceTests.cs),
+        // but ProposeTrade itself was never tested against those cases directly -- the tests
+        // above all start from an already-successful ProposeTrade call. Each of these asserts
+        // both the rejection reason AND that no TradeRequests row was written at all.
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-5)]
+        public void ProposeTrade_WithNonPositiveAmount_IsRejected_NoRowWritten(double badAmount)
+        {
+            using var db = new EconomyTestDatabase();
+            var tradeRequests = new TradeRequestRepository(db.DbPath);
+
+            var result = tradeRequests.ProposeTrade("mountain", "valley", badAmount, null, null, null);
+
+            Assert.False(result.Success);
+            Assert.Equal(TradeRequestFailureReason.NonPositiveAmount, result.FailureReason);
+            Assert.NotNull(result.Message);
+            Assert.Empty(tradeRequests.GetTradeRequests());
+        }
+
+        [Fact]
+        public void ProposeTrade_SelfTrade_IsRejected_NoRowWritten()
+        {
+            using var db = new EconomyTestDatabase();
+            var tradeRequests = new TradeRequestRepository(db.DbPath);
+
+            var result = tradeRequests.ProposeTrade("mountain", "mountain", 10, null, null, null);
+
+            Assert.False(result.Success);
+            Assert.Equal(TradeRequestFailureReason.SelfTrade, result.FailureReason);
+            Assert.Empty(tradeRequests.GetTradeRequests());
+        }
+
+        [Fact]
+        public void ProposeTrade_UnknownFromCommunity_IsRejected_NoRowWritten()
+        {
+            using var db = new EconomyTestDatabase();
+            var tradeRequests = new TradeRequestRepository(db.DbPath);
+
+            var result = tradeRequests.ProposeTrade("atlantis", "valley", 10, null, null, null);
+
+            Assert.False(result.Success);
+            Assert.Equal(TradeRequestFailureReason.UnknownFromCommunity, result.FailureReason);
+            Assert.Empty(tradeRequests.GetTradeRequests());
+        }
+
+        [Fact]
+        public void ProposeTrade_UnknownToCommunity_IsRejected_NoRowWritten()
+        {
+            using var db = new EconomyTestDatabase();
+            var tradeRequests = new TradeRequestRepository(db.DbPath);
+
+            var result = tradeRequests.ProposeTrade("mountain", "atlantis", 10, null, null, null);
+
+            Assert.False(result.Success);
+            Assert.Equal(TradeRequestFailureReason.UnknownToCommunity, result.FailureReason);
+            Assert.Empty(tradeRequests.GetTradeRequests());
+        }
+
+        [Fact]
+        public void ProposeTrade_UnknownResource_IsRejected_NoRowWritten()
+        {
+            using var db = new EconomyTestDatabase();
+            var tradeRequests = new TradeRequestRepository(db.DbPath);
+
+            var result = tradeRequests.ProposeTrade("mountain", "valley", 10, "unobtainium", 5, null);
+
+            Assert.False(result.Success);
+            Assert.Equal(TradeRequestFailureReason.UnknownResource, result.FailureReason);
+            Assert.Empty(tradeRequests.GetTradeRequests());
+        }
+
+        [Fact]
+        public void ProposeTrade_NonPositiveQuantityWithResource_IsRejected_NoRowWritten()
+        {
+            using var db = new EconomyTestDatabase();
+            var tradeRequests = new TradeRequestRepository(db.DbPath);
+
+            var result = tradeRequests.ProposeTrade("mountain", "valley", 10, "grain", 0, null);
+
+            Assert.False(result.Success);
+            Assert.Equal(TradeRequestFailureReason.NonPositiveQuantity, result.FailureReason);
+            Assert.Empty(tradeRequests.GetTradeRequests());
+        }
+
+        // ------------------------------------------------------------------
         private static void DeleteCommunityBypassingForeignKeys(string dbPath, string communityId)
         {
             using var conn = new SqliteConnection($"Data Source={dbPath}");
