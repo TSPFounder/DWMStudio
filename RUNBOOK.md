@@ -124,7 +124,46 @@ once it builds).
   `GoldenWorldPackageTests.cs`'s assertions in the same change — they'll fail otherwise, which
   is the point: that test exists to catch an accidental drift in the starting scenario.
 
-## 8. Housekeeping
+## 8. Economy Export Procedure & the Phase 1 Gate (Day 14)
+
+**What it produces:** a world-package `.db` (separate file from `pendulum.db` — see §7)
+containing `WorldInfo`, `Communities`, `Resources`, `CommunityResources`, `StoneLedger` (full
+trade history), `CommunityDollarVault` (current per-community balance/threshold), and
+`CommunityFailureStatus` (current Healthy/CascadingFailure per community). Written by
+`WorldPackageExporter.WriteEconomySnapshot` (Day 12); `WriteEconomySnapshot` READS an existing
+economy.db and exports its current state, it does not create or seed one.
+
+**Two ways to produce it:**
+- `dotnet run --project DWMStudio.WorldPackageCli -- export --economy-db <path-to-economy.db> --out <path> [--world-id <id>]`
+  — exports whatever state that specific economy.db is currently in (live/authored data).
+- `dotnet run --project DWMStudio.WorldPackageCli -- export --out <path>` (no `--economy-db`)
+  — exports the canonical golden demo scenario instead (§7), generated fresh from code.
+
+**The Phase 1 gate** (`DWMStudio.Tests/Phase1GateTests.cs`) is the automated proof that the
+whole economy stack (Days 5-13) works as one continuous flow, not just as isolated unit tests.
+Run it on its own with:
+```
+dotnet test --project DWMStudio.Tests --filter "FullyQualifiedName~Phase1GateTests"
+```
+In one headless run it: seeds the golden scenario → settles one trade via
+`TradeSettlementService` (the direct path) AND one via `TradeRequestRepository`'s
+Propose/Settle lifecycle (both paths that exist, not just one) → runs
+`CityCascadingFailureScenario` and confirms City actually reaches `CascadingFailure` in this
+run → confirms the network-sum-zero invariant over the resulting ledger → exports the result
+→ opens the exported `.db` with a brand-new read-only connection (simulating what UE's
+`FSQLiteDatabase` will eventually do) and confirms City's failure state and both settled
+trades are present and correct in the export, not just that the file opens. Ran clean on first
+write and repeatedly on rerun — no bugs or workarounds were needed to make it pass.
+
+**Gotcha worth flagging (a documentation trap, not a bug):** the network-sum-zero invariant is
+easy to check WRONG by summing `StoneLedger.Amount` directly — that column is always positive
+(`Amount > 0` is a schema `CHECK`), so a naive `SUM(Amount)` is never zero and proves nothing.
+The correct check is each community's **net** (sum of `Amount` where it's `ToCommunityId`,
+minus sum where it's `FromCommunityId`), summed across all communities — see
+`EconomyLedgerInvariantTests.cs`'s `NetworkSum` query or `Phase1GateTests.cs`'s
+`perCommunityNet` for the two ways this project already computes it correctly.
+
+## 9. Housekeeping
 
 - Log build-system incidents in AGENT_LOG.md; scope-affecting decisions in SCOPE.md's log.
 - `UE_Library5_7` was an obsolete repo (deleted). If any tool "finds" a 5.7 project, it is
