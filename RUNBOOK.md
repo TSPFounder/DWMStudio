@@ -163,6 +163,13 @@ minus sum where it's `FromCommunityId`), summed across all communities — see
 `EconomyLedgerInvariantTests.cs`'s `NetworkSum` query or `Phase1GateTests.cs`'s
 `perCommunityNet` for the two ways this project already computes it correctly.
 
+**Scope note (Day 15):** the Phase 1 gate above DOES export a non-empty StoneLedger, but
+neither of its two trades uses a null `ResourceId` — so the null-vs-populated
+`ResourceId`/`Quantity` round-trip through the export loop was still untested until
+`WorldPackageExporterEconomyTests.cs` (Day 15) added a dedicated test with a Stone-only trade
+alongside two resource-attached ones. The gate proves the INTEGRATED FLOW works; it isn't a
+substitute for exporter-specific edge-case coverage.
+
 ## 9. Housekeeping
 
 - Log build-system incidents in AGENT_LOG.md; scope-affecting decisions in SCOPE.md's log.
