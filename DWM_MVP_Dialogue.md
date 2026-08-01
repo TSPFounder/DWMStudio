@@ -36,20 +36,20 @@ Kai — and then stop. It is now a CLOSED LOOP: Sophia credits Suburb scrap,
 Mike credits both Suburb feedstock and Owen's drawings, DeShawn credits
 City castings and Valley grain, Maria credits Hillside/City/Suburb for
 one small control box, and Hank credits Sophia and Mike for the verdict.
+Every community now appears in another community's mouth, so the theme —
+the communities are strongest united — is carried structurally rather than
+announced. See the Theme section of DWM_MVP_Storyline.md. **None of these
+lines say "we are stronger together," and none of them should.**
 
 **Recycling beats (added 2026-08-01).** Recycling is a UNIVERSAL capability,
-not one community's specialisation -- sustainment is the point. Suburb is the
+not one community's specialisation — sustainment is the point. Suburb is the
 major recycler (already established), City is the other major node (scrap
 feedstock for the foundry, plus electronics recovery in Kai's block), and
 every community has at least a small method: Mountain keeps a scrap bin,
 Valley composts and runs a digester. Valley's line also resolves the
 storyline's open question about Valley's role in the manufacturing arc.
-NARRATIVE ONLY for the MVP -- no schema change. A tradeable scrap resource
+NARRATIVE ONLY for the MVP — no schema change. A tradeable scrap resource
 is post-MVP; see SCOPE.md 2026-08-01.
-Every community now appears in another community's mouth, so the theme —
-the communities are strongest united — is carried structurally rather than
-announced. See the Theme section of DWM_MVP_Storyline.md. **None of these
-lines say "we are stronger together," and none of them should.**
 
 ---
 
@@ -439,9 +439,9 @@ he also cannot conclude alone. The two halves meet at Hank.]**
    **RENAMED 2026-08-01:** Reya Sandoval → **Sophia** Sandoval; Lena Ferris
    → **Nathan** Ferris, who is now a man (his lines are all first person, so
    no third-person pronouns needed changing); Marisol Vega → **Maria** Vega.
-   SURNAMES WERE ASSUMED TO CARRY OVER — only the given names were
-   specified. If Sandoval/Ferris are
-   also changing, that is a one-line fix here and in the storyline doc.
+   SURNAMES CONFIRMED UNCHANGED (2026-08-01): Sandoval, Ferris and Vega all
+   stay as they were — only the given names changed. Settled, not an open
+   question.
 2. **The Valley farewell line** implies an existing relationship between
    Hank and Valley ("he still owes us from last winter") — a small piece
    of worldbuilding not established anywhere else. Fine to keep as a light
