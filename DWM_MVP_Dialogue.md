@@ -51,6 +51,37 @@ storyline's open question about Valley's role in the manufacturing arc.
 NARRATIVE ONLY for the MVP — no schema change. A tradeable scrap resource
 is post-MVP; see SCOPE.md 2026-08-01.
 
+**Navigation hand-offs (added 2026-08-01).** Each stop now ends by telling
+the player where to physically go next, in-character, so the demo route is
+walkable without a quest marker or minimap:
+
+| From | Direction given | To |
+| --- | --- | --- |
+| Hank (Mountain) | Out through the gate, follow the track down | Sophia, room above the Hillside realty office |
+| Sophia (Hillside) | Right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
+| Maria (Valley) | Left out of the house, down the dirt road | *(destination not yet named — see below)* |
+
+**TWO CONSEQUENCES, both worth knowing before these lines are treated as
+final:**
+
+1. **The dialogue is now coupled to level geometry.** It was previously
+   level-agnostic. These lines name a gate, a realty office, a market
+   street, a porch and a dirt road — if a level is rearranged, the dialogue
+   becomes wrong, and wrong directions are worse than none. Any level edit
+   to Mountain, Hillside or Valley now needs a check against this table.
+2. **They imply an ORDER: Mountain → Hillside → Valley → onward.** The rest
+   of the design is deliberately order-agnostic (SCOPE.md 2026-08-01 notes
+   every Act 2 purchase stays justified in any visit order, and the
+   return-visit states handle partial progress). Directions do not BREAK
+   that — they are a character's suggestion, not a gate — but a player who
+   wanders off-route will be holding stale instructions. Acceptable for a
+   guided demo; worth knowing it is a deliberate trade.
+
+**INCOMPLETE:** the chain stops at Maria. Two hand-offs are still needed to
+close the route — Valley → Suburb (where the dirt road actually leads, and
+DeShawn should be named the way Sophia and Maria are), and Suburb → City.
+Until those exist the player is unguided from the Valley onward.
+
 ---
 
 ## Mountain — Hank "Murph" Murphy
@@ -74,6 +105,14 @@ storyline doc for his movement loop.)*
 > mount. Hands that know rigging, because none of us have hung something
 > this heavy before. And tools from the city — precision work no one up
 > here can forge."
+
+**[Directions — hand-off to Hillside. See the navigation note in the format
+section: these lines describe REAL level geometry and break if the level
+changes.]**
+
+> "Out through the gate and follow the track down to Hillside. Ask for
+> Sophia Sandoval — she's got the room above the realty office. She'll be
+> expecting you."
 
 **[Return visit, before all trades complete — shown each time player
 returns to Mountain mid-quest:]**
@@ -173,9 +212,13 @@ not be able to conclude alone.]**
 > give you. Ask Mike in the City. Put his figure next to mine before you
 > decide anything."
 
-**Farewell:**
+**Farewell — includes the hand-off to Valley:**
 > "Good luck up there. Come back through when it's spinning — I'd like to
 > see it."
+
+> "Right as you come out of the office, then straight on down the market
+> street — don't turn off it. Road climbs out the far end and drops you
+> into the Valley. Maria Vega'll be on her porch. She generally is."
 
 **Sophia — Ambient (optional, triggered on repeat visits):**
 
@@ -248,9 +291,12 @@ will need a matching pass, same as Sophia's did for engineering_services.)*
 > "Here — grain'll keep your crew fed a good while on its own. Ledger
 > says it's fair, and I trust the ledger."
 
-**Farewell:**
+**Farewell — includes the hand-off out of Valley:**
 > "Tell Hank the Valley says good luck. And tell him he still owes us from
 > last winter."
+
+> "Left out of the house and follow the dirt road down. Only road it could
+> be — you'll know you're on it."
 
 *(That last line is a small worldbuilding hook — implies an existing
 relationship/history between communities beyond this one quest. Cut if you
