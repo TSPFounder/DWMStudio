@@ -36,6 +36,16 @@ Kai — and then stop. It is now a CLOSED LOOP: Sophia credits Suburb scrap,
 Mike credits both Suburb feedstock and Owen's drawings, DeShawn credits
 City castings and Valley grain, Maria credits Hillside/City/Suburb for
 one small control box, and Hank credits Sophia and Mike for the verdict.
+
+**Recycling beats (added 2026-08-01).** Recycling is a UNIVERSAL capability,
+not one community's specialisation -- sustainment is the point. Suburb is the
+major recycler (already established), City is the other major node (scrap
+feedstock for the foundry, plus electronics recovery in Kai's block), and
+every community has at least a small method: Mountain keeps a scrap bin,
+Valley composts and runs a digester. Valley's line also resolves the
+storyline's open question about Valley's role in the manufacturing arc.
+NARRATIVE ONLY for the MVP -- no schema change. A tradeable scrap resource
+is post-MVP; see SCOPE.md 2026-08-01.
 Every community now appears in another community's mouth, so the theme —
 the communities are strongest united — is carried structurally rather than
 announced. See the Theme section of DWM_MVP_Storyline.md. **None of these
@@ -113,6 +123,11 @@ quest flow; references the newly-added Mountain assets):**
 
 > "Fish trap's been good to us this season — one less thing to worry
 > about while everyone's hands are full with the turbine. Small mercy."
+
+> "We keep a scrap bin by the workshop — bolts, offcuts, anything with
+> metal left in it. Not much on its own. But it goes down to the Suburb
+> with the empty carts, and something useful comes back up. Everybody
+> keeps a bin now."
 
 ---
 
@@ -263,6 +278,11 @@ added Valley assets):**
 > DeShawn's people put it in. Three towns for one little grey box. Nobody
 > thought that was strange, which is the part I like."
 
+> "Nothing organic leaves this valley. Stalks, husks, what the animals
+> make — it all goes back on the fields or into the digester. Everybody's
+> got their own way of not wasting things. Ours just smells worse than
+> most."
+
 ---
 
 ## Suburb — DeShawn Okafor (labor hall foreman)
@@ -398,6 +418,11 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 > "Enclosure's nothing fancy — just needed to keep the electronics dry
 > and let heat out without letting weather in. Modeled it in Fusion in an
 > afternoon. The code took a lot longer than the box did."
+
+> "Half the boards in that station were pulled out of dead equipment and
+> re-flowed. We strip more electronics here than anyone — the Suburb sends
+> us the carcasses, we take the parts nobody else can reuse. Cheaper than
+> new, and there isn't a 'new' to buy most weeks anyway."
 
 ---
 
