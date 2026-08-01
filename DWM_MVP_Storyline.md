@@ -31,6 +31,40 @@ dialogue as final.
 
 ---
 
+## Theme (added 2026-08-01)
+
+**The communities are strongest united — and the story should DEMONSTRATE
+that, never announce it.**
+
+The theme is already load-bearing in three places that exist independently
+of any dialogue, and the writing should lean on those rather than adding
+lines that state the moral:
+
+1. **The ledger is the moral, expressed as arithmetic.** In mutual credit,
+   Mountain can only go negative because others go positive; the network
+   always sums to zero. "No one is self-sufficient, and that is the point"
+   is already on screen as a number the HUD displays and the tests verify.
+2. **The Act 3 verdict requires two communities.** Hillside prices the
+   design, City prices the manufacturing, and neither conclusion means
+   anything alone. Interdependence as a gate, not a speech.
+3. **The NPC reference chain.** Mike works from Owen's drawings; Kai works
+   from Nathan's model. As of this revision that chain is CLOSED INTO A
+   LOOP — every community now appears in another community's dialogue, so
+   the interdependence is structural rather than asserted.
+
+**The one failure mode to avoid:** a character saying "we are stronger
+together." The existing dialogue is already good at not doing this —
+Marisol's "tell him he still owes us from last winter" implies an entire
+history of mutual obligation without ever using the word. Keep that
+register.
+
+**The concrete expression of "common designs":** a shared standard means
+parts interchange. The dramatic version is not a speech about
+standardisation; it is someone casually pulling a spare from another
+community's stock and it simply fitting.
+
+---
+
 ## Characters
 
 **Player character** — an apprentice/resident of the Mountain community.
@@ -143,8 +177,8 @@ Stone move on both sides' balances.
 **Setting:** Hillside's TownShops dressing (PropHaus, replacing the earlier
 shared-Snowy-Peaks-base plan — see SCOPE.md 2026-07-17/18 entries).
 
-**NPCs: Reya Sandoval** (engineering firm lead), **Owen Marsh** (CAD
-designer), and **Lena Ferris** (Simulink modeler) — full approach/trade/
+**NPCs: Sophia Sandoval** (engineering firm lead), **Owen Marsh** (CAD
+designer), and **Nathan Ferris** (Simulink modeler) — full approach/trade/
 farewell dialogue for all three in `DWM_MVP_Dialogue.md`, which also flags
 the open question of whether they share one marker or are spread across
 Hillside as separate points of interest.
@@ -207,7 +241,12 @@ economy handling more than a single line-item trade.
 
 ---
 
-## Act 3 — The Build (Return to Mountain)
+## Act 3 — The Build, and the Verdict (Return to Mountain)
+
+*(Revised 2026-08-01. The turbine still runs — the Week 7 gate payoff is
+unchanged — but the repair is now explicitly a STOPGAP, and the real
+outcome is the decision about what comes next. See SCOPE.md for the
+decision entry and what it supersedes.)*
 
 **Setting:** Mountain, turbine site, Hank's marker again.
 
@@ -217,16 +256,51 @@ economy handling more than a single line-item trade.
 > and tools to finish it right. That's everything. Let's bring this old
 > thing back to life."
 
-**Gameplay beat — the payoff:** this is where the demo transitions from
-"economy simulation" to "the DWM_Dev → verification gate → DWM promotion"
-beat, without the player needing to understand any of the engineering
-underneath it. In-world, this reads as simple as: the turbine, driven by
-the real Simscape-derived rotor motion already promoted through the gate
-(per Week 7), begins to turn.
+**Gameplay beat — the payoff:** unchanged. This is where the demo
+transitions from "economy simulation" to "the DWM_Dev → verification gate →
+DWM promotion" beat, without the player needing to understand any of the
+engineering underneath it. In-world, this reads as simple as: the turbine,
+driven by the real Simscape-derived rotor motion already promoted through
+the gate (per Week 7), begins to turn.
+
+**The verdict — and why it takes two communities:**
+
+The cost conclusion is NOT Hank's own, and not any single community's. It
+requires two independent inputs that exist only because the player bought
+them:
+
+- **Hillside** priced the engineering — what a permanent repair would take
+  to design properly rather than patch.
+- **City** priced the manufacturing — Mike already works his estimate off
+  Owen's CAD drawings in his existing dialogue, so this is an edit to a
+  beat that already exists, not a new one.
+
+Hank does the arithmetic. Neither Sophia nor Mike can reach the conclusion
+alone; the network produces the answer. That is the theme expressed as a
+gate rather than as a speech.
+
+> "Sophia priced the engineering. Mike priced the parts. Put those two
+> together and this old machine costs more to keep alive than it gives
+> back — not this winter, but soon enough. What we bought ourselves is
+> time, and a straight answer."
+
+**The turn — what the communities do about it:**
+
+Rather than pour Stone into an asset that will keep demanding it, the
+communities build their own smaller turbines and, critically, the **tooling
+to make them**: common designs, common tooling, parts that interchange
+between communities. See "Post-MVP: the manufacturing arc" below.
 
 **Hank, final line:**
 > "There it goes. Every community up on that ledger had a hand in this —
-> yours included."
+> yours included. And now we've all got the same drawings. Next one, we
+> build ourselves."
+
+*(The closing beat lands on shared capability, not on the repair and not on
+a countdown to the old turbine failing. The turbine turning is evidence
+that the communities can act together; the shared drawings are what they
+actually earned. Tone note: an ending that emphasises "this is temporary"
+deflates — the win is the capability.)*
 
 ---
 
@@ -246,6 +320,47 @@ the real Simscape-derived rotor motion already promoted through the gate
   useful if you want the Week-9 demo narration to reference the exact same
   trade the written spec already uses, for consistency across every piece
   of DWM's documentation.
+
+## Post-MVP: the manufacturing arc (added 2026-08-01)
+
+**NOT MVP SCOPE.** In the MVP these machines are static set-dressing at
+most, per SCOPE.md's existing "static set-dressing only" and "frameworks
+are scope risk, not free wins" rules. This section exists so the Act 3 turn
+has somewhere to point, not to add Week 8 work.
+
+The communities acquire a **common set of designs and tooling**:
+
+| Capability | Notes |
+| --- | --- |
+| CNC router | Blade molds. Mold cavities are 3-axis work; a plug would want 4-axis |
+| Gingery machine tools | Charcoal foundry → lathe → shaper → drill press → dividing head → mill → sheet metal brake. Each tool helps build the next, cast largely from scrap aluminium |
+| 3D printers | Jigs, fixtures, and **casting patterns** — the modern replacement for Gingery's carved wood patterns |
+| CNC laser cutter | Flat work, templates, gaskets. NOTE: a CO2 laser cuts wood/acrylic, NOT metal. If metal cutting is wanted in-story that is a fiber laser or plasma — pick deliberately, it bounds what the tool can plausibly make |
+| CNC lathe | **A modification of the Gingery lathe design** — the machine the communities cast by hand becomes the machine that makes precision parts. A tool that upgrades itself is a stronger beat than a purchased CNC lathe |
+
+**The dependency chain is the quest structure:**
+
+> 3D printer → prints the pattern
+> → foundry casts it in scrap aluminium
+> → lathe/mill machines it to size
+
+This gives the printers a reason to exist *first* in the chain rather than
+being generic tech dressing, and no single community can hold the whole
+chain — which is the theme again, in the mechanics.
+
+**Community allocation (proposed, not yet decided):**
+
+- **Hillside** — design, 3D printers, laser cutter (they are already the
+  CAD and simulation shop)
+- **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
+  own narration already has City "selling tools/tech")
+- **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
+  line already establishes this: *"half that control station's housing used
+  to be something else entirely. We don't waste much out here."* No retrofit
+  needed
+- **Mountain** — assembly and the turbine site
+- **Valley** — UNDECIDED. Currently only a food supplier in this arc; worth
+  giving them a role rather than leaving them out of the manufacturing story
 
 ## Open decisions for you
 

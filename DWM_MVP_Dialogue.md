@@ -30,6 +30,17 @@ These are flavor-only and don't gate anything — cut freely if a community
 stop runs long, or keep all of them for a richer world if the player
 lingers.
 
+**Cross-community references (added 2026-08-01).** The NPC reference chain
+used to run one way — Owen's drawings reach Mike, Nathan's model reaches
+Kai — and then stop. It is now a CLOSED LOOP: Sophia credits Suburb scrap,
+Mike credits both Suburb feedstock and Owen's drawings, DeShawn credits
+City castings and Valley grain, Marisol credits Hillside/City/Suburb for
+one small control box, and Hank credits Sophia and Mike for the verdict.
+Every community now appears in another community's mouth, so the theme —
+the communities are strongest united — is carried structurally rather than
+announced. See the Theme section of DWM_MVP_Storyline.md. **None of these
+lines say "we are stronger together," and none of them should.**
+
 ---
 
 ## Mountain — Hank "Murph" Murphy
@@ -65,9 +76,28 @@ returns to Mountain mid-quest:]**
 > and tools to finish it right. That's everything. Let's bring this old
 > thing back to life."
 
+**[The verdict — Hank synthesises Hillside's and City's numbers. Revised
+2026-08-01. Neither community can reach this conclusion alone, which is the
+point; see the Theme section of DWM_MVP_Storyline.md. Maps to the
+ReturnAllTradesComplete dialogue state, which already gates on trades with
+every required community.]**
+
+> "Something you should hear before you get comfortable. Sophia priced the
+> engineering. Mike priced the parts. Put those two together and this old
+> machine costs more to keep alive than it gives back — not this winter,
+> but soon enough."
+
+**[Player prompt: "So the repair was a waste?"]**
+
+> "Opposite. It buys us the winter, and it bought us a straight answer,
+> which we didn't have before. Nobody up here could have worked that out
+> alone — took their drawings and their shop floor both. What we do with it
+> is build our own, smaller, and build the tools to make them."
+
 **Farewell (after the turbine spins):**
 > "There it goes. Every community up on that ledger had a hand in this —
-> yours included."
+> yours included. And now we've all got the same drawings. Next one, we
+> build ourselves."
 
 **Ambient (optional — triggered on repeat visits, not part of the core
 quest flow; references the newly-added Mountain assets):**
@@ -86,8 +116,8 @@ quest flow; references the newly-added Mountain assets):**
 
 ---
 
-## Hillside — Reya Sandoval (engineering firm lead), Owen Marsh (CAD
-designer), and Lena Ferris (Simulink modeler) — TownShops
+## Hillside — Sophia Sandoval (engineering firm lead), Owen Marsh (CAD
+designer), and Nathan Ferris (Simulink modeler) — TownShops
 
 *(New NPCs — no asset assignments made yet; use neutral character meshes
 from PropHaus TownShops, or Suburb Neighborhood pack if more specific
@@ -96,13 +126,13 @@ are wanted the way Hank got one.)*
 
 *(Updated 2026-07-18: Hillside's trade changed from Timber to
 `engineering_services` — see SCOPE.md and DWM_EngineeringServices_Task.md.
-Reya is reframed from "sawmill foreman" to leading the small engineering
+Sophia is reframed from "sawmill foreman" to leading the small engineering
 outfit that produced the CAD drawings and Simulink model for the old
 turbine. Timber/the sawmill are NOT gone from the world — deferred to
-post-MVP — so Reya's location can still visually be the sawmill/workshop
+post-MVP — so Sophia's location can still visually be the sawmill/workshop
 building even though her trade and dialogue no longer center on lumber.)*
 
-**Reya Sandoval — Approach:**
+**Sophia Sandoval — Approach:**
 > "So that's the turbine that came with your land. Ambitious purchase —
 > nobody's touched that thing in years. Good news is, my two here already
 > worked up what you need to bring it back."
@@ -111,18 +141,28 @@ building even though her trade and dialogue no longer center on lumber.)*
 
 > "Full CAD drawings of the mount and rotor assembly, plus a Simulink
 > model of how it should actually behave once it's running. Owen did the
-> drawings, Lena built the model. Between the two, whoever's doing the
+> drawings, Nathan built the model. Between the two, whoever's doing the
 > repair up there won't be guessing."
 
 **[Trade panel opens — Engineering Services for Stone:]**
 > "Here's everything — drawings and model both. Take care of it; that's
 > real engineering hours in your hands, not just a sketch on a napkin."
 
+**[The design-cost half of the Act 3 verdict. Added 2026-08-01. Sophia
+delivers HALF the answer and says so — City holds the other half. She must
+not be able to conclude alone.]**
+
+> "One more thing, and you won't like it. Doing this properly — not
+> patching it, properly — the design hours alone are steep. Whether that's
+> worth paying depends on what the parts cost, and that's not my number to
+> give you. Ask Mike in the City. Put his figure next to mine before you
+> decide anything."
+
 **Farewell:**
 > "Good luck up there. Come back through when it's spinning — I'd like to
 > see it."
 
-**Reya — Ambient (optional, triggered on repeat visits):**
+**Sophia — Ambient (optional, triggered on repeat visits):**
 
 > "Old sawmill building still stands out back — not running these days,
 > but I like the space. Good light for drafting."
@@ -130,6 +170,9 @@ building even though her trade and dialogue no longer center on lumber.)*
 > "Got solar on the roof now, battery bank right beside it. Doesn't run
 > much, but it keeps the lights on through a cloudy week while these two
 > are hunched over a screen."
+
+> "Half the fittings on that bank came up from the Suburb — somebody else's
+> junk, cleaned up and re-cut. Saves me drawing parts that already exist."
 
 ---
 
@@ -151,7 +194,7 @@ building even though her trade and dialogue no longer center on lumber.)*
 
 ---
 
-### Lena Ferris — Simulink Modeler
+### Nathan Ferris — Simulink Modeler
 
 **Approach:**
 > "Owen's drawings tell you what the turbine looks like. My model tells
@@ -178,7 +221,7 @@ than just grain — vegetables, meat, honey, and non-orchard fruits
 Orchard Fruit resource, so the two don't overlap). This is FLAVOR ONLY for
 now — the actual trade stays Grain-for-Stone, no schema change. A real
 resource change is planned for later; when that happens, this dialogue
-will need a matching pass, same as Reya's did for engineering_services.)*
+will need a matching pass, same as Sophia's did for engineering_services.)*
 
 **Approach:**
 > "Feeding a work crew on a mountain, in the cold, for however long it
@@ -215,6 +258,10 @@ added Valley assets):**
 > catch in the long days, spend it down when the sun's not cooperating.
 > Same idea as the grain, really. Save when you can, draw when you need
 > to."
+
+> "That control box on the silo — Hillside drew it, City built it, and
+> DeShawn's people put it in. Three towns for one little grey box. Nobody
+> thought that was strange, which is the part I like."
 
 ---
 
@@ -259,6 +306,13 @@ added Suburb assets):**
 > housing used to be something else entirely. We don't waste much out
 > here. Can't afford to."
 
+> "Anything we strip that's worth melting goes up to Mike in the City —
+> comes back as castings we couldn't make ourselves. Fair trade. Neither
+> of us has the whole shop, but between us it's most of one."
+
+> "Crews eat Valley grain on every job over a week. Marisol won't let me
+> send anybody up a mountain on what the canteen calls food."
+
 ---
 
 ## City — Mike Dayton (factory foreman, Manufactured Tools) and Kai
@@ -283,6 +337,23 @@ stops.)*
 > "This'll hold. Good steel, machined straight off Owen's drawings — not
 > the kind of thing that fails halfway up a mountain."
 
+**[The manufacturing-cost half of the Act 3 verdict. Added 2026-08-01. Mike
+gives the OTHER half — he can price parts but not judge the engineering, so
+he also cannot conclude alone. The two halves meet at Hank.]**
+
+> "Now — what you're paying me for is this batch. If you're asking what it
+> costs to keep that machine running for good, every part on Owen's
+> drawings has to be made one at a time, by us, forever. I can put a number
+> on that. You won't enjoy it, and it's only half the picture — Sophia's
+> got the design side. Take both to Hank."
+
+**[The interchangeable-part beat. Concrete expression of "common designs"
+— no speech about standardisation, just a part fitting.]**
+
+> "Here — that bearing's off our own shelf, not made for your mount.
+> Same drawing though, so it'll drop straight in. That's the part that
+> ought to interest you more than the invoice."
+
 **Farewell:**
 > "Bring it back down if it ever needs work again. We don't forget good
 > customers."
@@ -297,10 +368,13 @@ stops.)*
 > our estimating headaches come from guessing at parts nobody's measured
 > properly."
 
+> "Feedstock's mostly Suburb scrap these days. DeShawn's crews strip it,
+> we melt it. Cheaper than buying billet and it keeps two towns working."
+
 ### Kai Sutherland — Software Services
 
 **Approach:**
-> "Took Lena's Simulink model and turned it into real controller code —
+> "Took Nathan's Simulink model and turned it into real controller code —
 > C, running on the hardware, not just a diagram anymore. And since it
 > needed a home, I laid out the controller enclosure myself in Fusion.
 > Wind speed, load, the whole picture — that's on us. Software's not
@@ -330,13 +404,18 @@ stops.)*
 ## Open items for you
 
 1. **Named NPCs for Hillside, Valley, Suburb, and City are new
-   inventions** (Reya Sandoval, Owen Marsh, Lena Ferris, Marisol Vega,
+   inventions** (Sophia Sandoval, Owen Marsh, Nathan Ferris, Marisol Vega,
    DeShawn Okafor, Mike Dayton, Kai Sutherland) — none of these have an
    asset assignment yet, unlike Hank's confirmed Yarrawah "Murph" Murphy
    character. Worth deciding whether each gets a similarly specific named
    character asset, or stays as a generic/unnamed mesh pulled from
    whichever community pack is already in use there (TownShops, Suburb
    Neighborhood, etc.).
+   **RENAMED 2026-08-01:** Reya Sandoval → **Sophia** Sandoval; Lena Ferris
+   → **Nathan** Ferris, who is now a man (his lines are all first person, so
+   no third-person pronouns needed changing). SURNAMES WERE ASSUMED TO
+   CARRY OVER — only the given names were specified. If Sandoval/Ferris are
+   also changing, that is a one-line fix here and in the storyline doc.
 2. **The Valley farewell line** implies an existing relationship between
    Hank and Valley ("he still owes us from last winter") — a small piece
    of worldbuilding not established anywhere else. Fine to keep as a light
@@ -349,20 +428,20 @@ stops.)*
 4. **The Suburb Dollar Vault beat is still marked optional**, same as it
    was in the storyline doc — this dialogue includes it, but cut both the
    flagged lines above if you've decided against including it.
-5. **Hillside now has THREE NPCs at one stop** (Reya, Owen, Lena) — same
+5. **Hillside now has THREE NPCs at one stop** (Sophia, Owen, Nathan) — same
    one-marker-vs-multiple-marker question as City above applies here too;
    worth deciding whether all three appear together at a single Hillside
    marker (matches the "one trade, one stop" pattern elsewhere since it's
    still a single `engineering_services` trade) or are spread across the
    Hillside level as separate points of interest to walk between.
-6. **Reya's old sawmill-line assumption is now removed** — since her
+6. **Sophia's old sawmill-line assumption is now removed** — since her
    dialogue no longer centers on lumber, the earlier open item about
    confirming QuadArt Survivor Base's sawmill mesh naming is no longer
    tied to her dialogue specifically. That mesh-naming question still
    matters for the timber trade's eventual post-MVP return, just not for
    this MVP dialogue pass.
 7. **Mike and Kai's dialogue now references a connected digital-thread
-   chain** (Owen's CAD → Mike's manufacturing estimate; Lena's Simulink
+   chain** (Owen's CAD → Mike's manufacturing estimate; Nathan's Simulink
    model → Kai's generated C controller code → Kai's Fusion 360 enclosure
    design) — added 2026-07-18. Currently DIALOGUE-ONLY: nothing new is
    actually being built or modeled for the MVP itself. If you want a real
