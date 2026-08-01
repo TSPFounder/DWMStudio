@@ -34,7 +34,7 @@ lingers.
 used to run one way — Owen's drawings reach Mike, Nathan's model reaches
 Kai — and then stop. It is now a CLOSED LOOP: Sophia credits Suburb scrap,
 Mike credits both Suburb feedstock and Owen's drawings, DeShawn credits
-City castings and Valley grain, Marisol credits Hillside/City/Suburb for
+City castings and Valley grain, Maria credits Hillside/City/Suburb for
 one small control box, and Hank credits Sophia and Mike for the verdict.
 Every community now appears in another community's mouth, so the theme —
 the communities are strongest united — is carried structurally rather than
@@ -212,7 +212,7 @@ not be able to conclude alone.]**
 
 ---
 
-## Valley — Marisol Vega (co-op lead)
+## Valley — Maria Vega (co-op lead)
 
 *(New NPC — no asset assignment made yet, same flag as Hillside above.
 Updated 2026-07-18: dialogue broadened to reflect Valley producing more
@@ -310,7 +310,7 @@ added Suburb assets):**
 > comes back as castings we couldn't make ourselves. Fair trade. Neither
 > of us has the whole shop, but between us it's most of one."
 
-> "Crews eat Valley grain on every job over a week. Marisol won't let me
+> "Crews eat Valley grain on every job over a week. Maria won't let me
 > send anybody up a mountain on what the canteen calls food."
 
 ---
@@ -404,7 +404,7 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 ## Open items for you
 
 1. **Named NPCs for Hillside, Valley, Suburb, and City are new
-   inventions** (Sophia Sandoval, Owen Marsh, Nathan Ferris, Marisol Vega,
+   inventions** (Sophia Sandoval, Owen Marsh, Nathan Ferris, Maria Vega,
    DeShawn Okafor, Mike Dayton, Kai Sutherland) — none of these have an
    asset assignment yet, unlike Hank's confirmed Yarrawah "Murph" Murphy
    character. Worth deciding whether each gets a similarly specific named
@@ -413,8 +413,9 @@ he also cannot conclude alone. The two halves meet at Hank.]**
    Neighborhood, etc.).
    **RENAMED 2026-08-01:** Reya Sandoval → **Sophia** Sandoval; Lena Ferris
    → **Nathan** Ferris, who is now a man (his lines are all first person, so
-   no third-person pronouns needed changing). SURNAMES WERE ASSUMED TO
-   CARRY OVER — only the given names were specified. If Sandoval/Ferris are
+   no third-person pronouns needed changing); Marisol Vega → **Maria** Vega.
+   SURNAMES WERE ASSUMED TO CARRY OVER — only the given names were
+   specified. If Sandoval/Ferris are
    also changing, that is a one-line fix here and in the storyline doc.
 2. **The Valley farewell line** implies an existing relationship between
    Hank and Valley ("he still owes us from last winter") — a small piece
@@ -450,7 +451,7 @@ he also cannot conclude alone. The two halves meet at Hank.]**
    post-MVP task, not automatically implied by this dialogue update —
    confirm if you want that added to Todoist the way the sawmill idea was.
 8. **Valley's food variety (vegetables, meat, honey, non-orchard fruits)
-   is FLAVOR-ONLY as of 2026-07-18** — Marisol's dialogue now mentions
+   is FLAVOR-ONLY as of 2026-07-18** — Maria's dialogue now mentions
    these, but the actual trade stays Grain-for-Stone; no schema change.
    Confirmed the future fruit resource will be specifically NON-orchard
    fruit (berries, melons, etc.) to avoid overlapping with Hillside's

@@ -54,7 +54,7 @@ lines that state the moral:
 
 **The one failure mode to avoid:** a character saying "we are stronger
 together." The existing dialogue is already good at not doing this —
-Marisol's "tell him he still owes us from last winter" implies an entire
+Maria's "tell him he still owes us from last winter" implies an entire
 history of mutual obligation without ever using the word. Keep that
 register.
 
@@ -192,7 +192,7 @@ just deferred to post-MVP.
 
 **Setting:** Valley's farmland/grain-silo dressing (Day 23).
 
-**NPC: Marisol Vega**, Valley co-op lead (title updated 2026-07-18 — her
+**NPC: Maria Vega**, Valley co-op lead (title updated 2026-07-18 — her
 dialogue now reflects Valley growing more than grain, though the trade
 itself stays Grain-only for now) — full approach/trade/farewell dialogue in
 `DWM_MVP_Dialogue.md` (includes an optional small worldbuilding hint at

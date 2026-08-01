@@ -80,7 +80,7 @@ version, no exceptions to the cutoff.
 - The multi-NPC dialogue+terminal co-location problem (Task 5 in the NPC
   dialogue doc) — flagged as future work once Track A Task 2 proves the
   pattern on Hank.
-- Character assets for the other six NPCs (Sophia, Owen, Nathan, Marisol,
+- Character assets for the other six NPCs (Sophia, Owen, Nathan, Maria,
   DeShawn, Mike, Kai) — still unassigned, not blocking any current task
   but will eventually need deciding.
 - The fuller Hank scripted movement loop (turbine-check-and-back +
