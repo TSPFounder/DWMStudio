@@ -59,7 +59,10 @@ walkable without a quest marker or minimap:
 | --- | --- | --- |
 | Hank (Mountain) | Out through the gate, follow the track down | Sophia, room above the Hillside realty office |
 | Sophia (Hillside) | Right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
-| Maria (Valley) | Left out of the house, down the dirt road | *(destination not yet named — see below)* |
+| Maria (Valley) | Left out of the house, down the dirt road | DeShawn, the realty office in the Suburb |
+| DeShawn (Suburb) | **NOT YET DEFINED** | ? |
+| Mike / Kai (City) | **NOT YET DEFINED** | ? |
+| Return to Mountain | **NOT YET DEFINED** | Hank, for Act 3 |
 
 **TWO CONSEQUENCES, both worth knowing before these lines are treated as
 final:**
@@ -77,10 +80,30 @@ final:**
    wanders off-route will be holding stale instructions. Acceptable for a
    guided demo; worth knowing it is a deliberate trade.
 
-**INCOMPLETE:** the chain stops at Maria. Two hand-offs are still needed to
-close the route — Valley → Suburb (where the dirt road actually leads, and
-DeShawn should be named the way Sophia and Maria are), and Suburb → City.
-Until those exist the player is unguided from the Valley onward.
+**INCOMPLETE — three links still undefined (as of 2026-08-01):**
+
+1. **Where the player goes in the Suburb after DeShawn.** Undecided.
+2. **How they reach Mike and Kai in the City.** Undecided. Note this
+   interacts with the open one-marker-vs-two-marker question for City — if
+   Mike and Kai sit at separate markers, DeShawn's hand-off has to name
+   which one the player reaches first, and that NPC then hands off to the
+   other.
+3. **How they get back to Mountain for Act 3.** Undecided, and the largest
+   of the three: it is a route across the whole map rather than one turn.
+   This likely resolves through the level-transition system rather than
+   through walking directions — Codex's Track B task 1 is the Mountain ↔
+   Hillside transition, so the mechanism may already exist by the time this
+   is written.
+
+Until these exist the player is unguided from the Suburb onward.
+
+**⚠ NAMING COLLISION — worth resolving before playtest.** There is now a
+"realty office" in BOTH Hillside (Sophia, in the room above it) and the
+Suburb (DeShawn, inside it). If those levels share a building asset, the two
+will also look identical. A player who gets turned around has no way to tell
+which one they are standing in, and the directions become actively
+misleading. Fix by distinguishing them in the dialogue (a sign, a colour, a
+detail on the building) or by giving one of them a different name.
 
 ---
 
@@ -295,8 +318,9 @@ will need a matching pass, same as Sophia's did for engineering_services.)*
 > "Tell Hank the Valley says good luck. And tell him he still owes us from
 > last winter."
 
-> "Left out of the house and follow the dirt road down. Only road it could
-> be — you'll know you're on it."
+> "Left out of the house and follow the dirt road down — it runs all the
+> way into the Suburb. Ask for DeShawn Okafor; he works out of the realty
+> office there. Walk straight in, he won't stand on ceremony."
 
 *(That last line is a small worldbuilding hook — implies an existing
 relationship/history between communities beyond this one quest. Cut if you
