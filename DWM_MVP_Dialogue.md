@@ -361,9 +361,33 @@ every required community.]**
 **Ambient (optional — triggered on repeat visits, not part of the core
 quest flow; references the newly-added Mountain assets):**
 
-> "Freshcan crew finished the new houses last week — good timing, since
-> the storm put three families out of their own. Village's a little more
-> crowded now, but nobody's sleeping in a barn."
+> "Labour hall crew came up from the Suburb and finished the new houses
+> last week — DeShawn's people, Hillside's lumber. Realty office had three
+> families and nowhere to put them. Village's a little more crowded now,
+> but nobody's sleeping in a barn."
+
+**RENAMED 2026-08-02 — "Freshcan crew" was a VENDOR NAME that leaked into
+spoken dialogue.** Freshcan is the developer of the Village Houses
+Environment pack used for Mountain's settlement (SCOPE.md 2026-07-14); it
+belongs in asset notes and must never appear in a character's mouth. A
+sweep of every spoken line found no other leaks. `Simulink` appears twice
+and is DELIBERATE — Hillside sells a Simulink model as
+`engineering_services` and Nathan is the modeller, so it is diegetic.
+
+Rather than invent a replacement company, the crew is now the SUBURB'S
+LABOUR HALL — which already exists, is already DeShawn's, and already
+produces `skilled_labor`. That turns a bug into a small gain: the line now
+names three communities and shows the HOUSING SUPPLY CHAIN from the
+receiving end (Suburb labour, Hillside lumber, Mountain houses), adding
+Hank to the cross-community reference chain this document tracks.
+
+**"The storm" was also removed, and that is a SEPARATE fix worth knowing
+about.** The premise was reframed on 2026-07-18 from storm damage to an
+old, never-run turbine, but this line still referenced *"the storm"* with a
+definite article — a specific known event that no longer exists anywhere in
+the story. The realty office having three families and nowhere to put them
+does the same narrative job (it explains why houses were built) using an
+institution that IS in the story. Revert if a storm is wanted back.
 
 > "Solar panels are holding the mountain over while the turbine's down.
 > Control station keeps it steady, and the bank stores what we don't use
@@ -484,8 +508,8 @@ of. None of the three works inside one community alone, which is the theme
 carried structurally rather than said.
 
 **The world already shows this, which is why it needs no setup.** Hank's
-existing Mountain ambient line has new houses going up right now — *"Freshcan
-crew finished the new houses last week... nobody's sleeping in a barn"* —
+existing Mountain ambient line has new houses going up right now — *"Labour
+hall crew came up from the Suburb... DeShawn's people, Hillside's lumber"* —
 and "new housing" is already in the placed-props list at the top of this
 document. Those houses are made of something. Naming Hillside's mill as the
 source explains set dressing the player can already see, in the same way the
