@@ -87,12 +87,12 @@ isn't a retargeting concern — he only needs idle/talk animation at one
 fixed location, not locomotion compatibility with the player's Character
 Customizer rig.
 
-**Movement (decided 2026-07-14):** a light scripted loop plus a small
+**Movement (decided 2026-07-14):** a light scripted movement loop plus a small
 wander radius, not fully static and not autonomous AI — stays within
 SCOPE.md's "static or simply-animated dressing" allowance, well short of
 the "Autonomous NPC trade AI" line that's explicitly out of scope.
 
-- **Core loop:** Hank periodically walks a few steps toward the turbine,
+- **Core movement loop:** Hank periodically walks a few steps toward the turbine,
   pauses, glances up at it (ties directly into the "waiting for it to work
   again" framing from Act 1), then walks back to his marker position. Two
   hardcoded points, no pathfinding complexity — a Blueprint Timeline or a
@@ -231,7 +231,7 @@ fee paid in Dollar Vault funds (an "outside resource," per §4.4 — not
 Stone-tradeable), giving a natural, low-stakes moment to show the Dollar
 Vault actually depleting on screen without needing to push any community
 into full Cascading Failure. This is optional polish, not required for the
-core loop — cut if time is short.
+core interaction cycle — cut if time is short.
 
 ### Stop 4 — City (Manufactured Tools + Software Services)
 
@@ -386,7 +386,19 @@ chain — which is the theme again, in the mechanics.
 **Community allocation (proposed, not yet decided):**
 
 - **Hillside** — design, 3D printers, laser cutter (they are already the
-  CAD and simulation shop)
+  CAD and simulation shop), **plus the mill and composite lumber**
+  (clarified 2026-08-02). Hillside RUNS its sawmill — what is deferred to
+  post-MVP is the timber *trade*, not the building or the work — and the
+  mill also presses structural beam and flat board from recycled wood:
+  Suburb salvage plus Mountain offcuts. This is the wood mirror of the
+  metal loop the dialogue already establishes (Suburb strips → City melts →
+  castings return), and the industry term for the product is *engineered
+  wood*, so the community selling engineering services making engineered
+  lumber needs no line to explain it. **The payoff is the blade molds:**
+  they are MDF, which is a wood composite board, currently bought with
+  dollars — pressing it here turns the arc's first physical dependency into
+  a Stone trade. Adhesive stays the one import they cannot make, which is
+  where Valley's bio-adhesive potential comes in
 - **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
@@ -417,7 +429,7 @@ chain — which is the theme again, in the mechanics.
    small wander radius, detailed above.
 2. **Dollar Vault beat placement** — included as optional at the Suburb
    stop above; could just as easily be its own dedicated moment, or cut
-   from the MVP demo loop entirely and left as a separate HUD-only beat
+   from the MVP demo run entirely and left as a separate HUD-only beat
    (per the existing plan, showing vault depletion doesn't strictly need
    to be wrapped in narrative).
 3. **Length/pacing** — this is written as a full walkthrough; if the
