@@ -445,6 +445,16 @@ chain — which is the theme again, in the mechanics.
   number. A blue door means somebody spent from the vault, and blue is
   precisely what they cannot make. (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
+- **Shared, not one community's** (added 2026-08-02): **the WATER TOWERS
+  and LIME KILNS** behind thatch fire protection. Torching — lime mortar on
+  the underside of the thatch — uses the SAME lime as the limewash and the
+  white pigment, so one kiln serves fire safety, paint and mortar. The
+  towers are gravity-fed and need no pump or power, at roughly 10 m of head
+  per bar, so Mountain gets its pressure from terrain while the Valley needs
+  a real ten-metre structure — a landmark that is plainly nobody's private
+  property, and the fourth shared institution after the bus loop, the realty
+  company and the mill. Built the usual way: City casts, Suburb raises,
+  Hillside frames
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
   line already establishes this: *"half that control station's housing used
   to be something else entirely. We don't waste much out here."* No retrofit

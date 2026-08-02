@@ -717,6 +717,75 @@ where labour is the tradeable thing: Valley grows it, the Suburb's
 was banned in cities after 1666. For a village a mile from the nearest road
 with no fire service, that is a live tension.
 
+**THATCH FIRE PROTECTION — decided 2026-08-02: LIME TORCHING plus a
+GRAVITY-FED WATER TOWER.** Both were chosen over a pumped roof-deluge
+system, and there is one principle underneath both that is worth stating
+before either:
+
+> **EVERY FIRE MEASURE FOR THATCH FIGHTS THE THING THAT MAKES THATCH LAST.**
+> Thatch survives because it SHEDS water and dries between rains — that is
+> the whole mechanism, and it is why hosing a burning thatch roof barely
+> works (crews strip it with eaves knives instead). Fire protection wants
+> water and mass; longevity wants dryness. Neither measure below escapes
+> that, and neither should be written as if it does.
+
+**LIME TORCHING** — lime mortar applied to the UNDERSIDE of the thatch,
+between the rafters. Traditional, genuinely historical, and it addresses the
+ignition path that actually dominates: fire reaching the thatch from the
+building below, rather than sparks landing on top. It also stiffens the
+roof and cuts draughts.
+
+*It fits these communities almost too neatly:* it is the SAME LIME as the
+limewash and the white pigment, off the SAME KILN. One kiln serves fire
+protection, paint and mortar — shared infrastructure that pays three ways.
+
+*Honest caveat, and it is the principle above in miniature:* torching adds
+weight, and done badly it holds damp against the thatch and shortens its
+life. Modern conservators are divided on it for exactly that reason.
+
+**THE WATER TOWER — gravity-fed, no pump, no power.** A header tank sited
+above the rooflines gives pressure that cannot fail when the electricity
+does, which matters for a place with intermittent power and no fire service.
+
+*The design constraint is specific and checkable:* **roughly 10 m of head
+per bar of pressure**, so a tank must stand about ten metres above the roofs
+it serves. On Mountain the terrain gives that for free. In the Valley it
+means an actual TOWER — a real structure, ten-plus metres tall, and a
+distinctive silhouette.
+
+*That visibility is a feature.* A water tower is a landmark, it is plainly
+nobody's private property, and it is the fourth shared institution after the
+bus loop, the realty company and the mill — this one for safety and water
+rather than transport, housing or materials.
+
+*It also gives `water` a presence it has never had.* The Valley PRODUCES
+`water` in the seed data and no character has ever mentioned it — the same
+gap the flock closed for `wool`. The tower is what makes that resource
+visible, and fire is only one of its uses.
+
+*Two practical points not to skip:* a header tank in a cold climate can
+FREEZE, which is a real failure mode for a fire system, so it wants burying,
+insulating, keeping in circulation, or a drain-down design. And building it
+splits the usual way — City casts the tank and fittings, the Suburb's labour
+hall raises it, Hillside frames.
+
+**RECOMMENDED THIRD LEG, not yet chosen: A CHIMNEY STANDARD.** Most thatch
+fires trace to chimneys, so a build rule — height above the ridge (UK
+guidance is around 1.8 m for thatch), lined and insulated — is the single
+highest-value measure of the three and costs nothing but discipline. Flagged
+rather than assumed, since only torching and the tower were decided.
+
+**WHY THIS IS GOOD FOR THE STORY.** Thatch is the cheapest roof they can
+make and the one demanding the most COLLECTIVE DISCIPLINE: a chimney rule
+everybody follows, a tower nobody owns alone, spacing that constrains where
+you build. You cannot have the free roof without the shared rule — the unity
+theme with an actual penalty for getting it wrong, unlike the bus schedule.
+
+*And the tension to KEEP rather than solve:* wetting rots thatch, so the
+tower's system cannot be tested often — which means nobody knows for certain
+it works until the night it is needed. That is uncomfortable rather than
+solvable, and it should stay that way.
+
 **WOOD-FIBRE SHEATHING as the building wrap — the one that costs least.**
 Real product line (Gutex, Steico, Pavatex): wood-fibre panels, often
 wax-impregnated, vapour-open, used as external sheathing and weather
@@ -1091,6 +1160,21 @@ added Valley assets):**
 **[Sheep and the golden hoof — added 2026-08-02. The Valley WANTS the
 flock; it is not doing Hillside a favour. See the sheep note under
 Hillside.]**
+
+**[The water tower — added 2026-08-02. Gives the Valley's seeded `water`
+resource a voice for the first time, and carries the fire tension. See
+the thatch fire-protection note under Hillside.]**
+
+> "Tower's the tallest thing we've built and it holds nothing but
+> water. Sits high enough to push a line up onto a roof without a pump
+> — no motor to seize, nothing to switch on. Just weight and gravity,
+> which is the only thing round here that never stopped working."
+
+> "We don't run it often, mind. Wet thatch rots, and a roof we soak
+> for practice is a roof we're replacing early. So we keep it full,
+> keep it from freezing, and we don't truly know it works."
+
+> "Which is a thing I try not to dwell on of an evening."
 
 > "Hillside's sheep come down to us after harvest. Eat the stubble off,
 > and we fold them on the fields at night — that's the whole point of it.
