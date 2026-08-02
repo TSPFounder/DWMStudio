@@ -62,7 +62,7 @@ walkable without a quest marker or minimap:
 | Maria (Valley) | Left out of the house, down the dirt road | DeShawn, the realty office in the Suburb |
 | DeShawn (Suburb) | Out to the stop on the corner, take the bus loop | Mike, on the City machine-shop floor |
 | Mike (City) | Upstairs, same building | Kai, in the office above the shop floor |
-| Kai (City) | Bus loop back round; it stops at the foot of the mountain road, walk the last stretch up | Hank, for Act 3 |
+| Kai (City) | Bus loop back round to Mountain | Hank, for Act 3 |
 
 **TWO CONSEQUENCES, both worth knowing before these lines are treated as
 final:**
@@ -88,8 +88,8 @@ than one:
    bus loop.
 2. **Reaching Mike and Kai** — the bus loop runs to City; the player
    arrives at the City stop and walks to the machine shop.
-3. **Back to Mountain for Act 3** — the bus loop again, as far as the foot of
-   the mountain road, then on foot up the last stretch.
+3. **Back to Mountain for Act 3** — the bus loop again, landing at
+   Mountain's existing return spawn point.
 
 **This also settles the one-marker-vs-two question for City.** Mike is on
 the shop floor, Kai is in the office above it — two markers, one building,
@@ -99,18 +99,46 @@ directions at all, so the second marker costs nothing in navigation
 complexity. The parenthetical under the City heading records this as
 resolved.
 
-**Implementation note — use a TRIGGER VOLUME for the bus loop, not the E
-key.** `Interact()` already has a three-case ordering (open dialogue → trade
-terminal → NPC) that is deliberately fragile and has been verified against
-regression. Adding the bus as a fourth case means touching that function
-again. An overlap trigger is a completely separate code path and cannot
-regress it. Place the volume at the bus door or on the pavement at the stop
-so that walking past does nothing and boarding is deliberate.
+**TRANSITION RULE (decided 2026-08-02) — ALL transitions are transition
+volumes. Every one of them, walked or ridden, without exception.** The
+player crosses a volume and arrives at the destination level's spawn point.
+There is one mechanism in the game for changing communities and this is it.
 
-The bus loop is a SKIN on the existing level-transition system, not a second
-system: Codex's Track B task 1 is the Mountain ↔ Hillside transition, and
-once that exists, walking and riding are the same mechanism wearing
-different fiction — a trigger on a track, a trigger on a kerb.
+What differs between links is only what the volume is SITTING ON and what
+the fiction says is happening:
+
+| Link | Volume placed | Reads as |
+| --- | --- | --- |
+| Mountain → Hillside | on the track past the gate | walking down |
+| Hillside → Valley | where the market street road climbs out | walking on |
+| Valley → Suburb | on the dirt road out of the Valley | walking down |
+| Suburb → City | at the Suburb bus stop | boarding the loop |
+| City → Mountain | at the City bus stop | boarding the loop |
+
+Three things follow, and they are the reason this rule is worth stating
+rather than leaving as an implementation detail:
+
+1. **NOT the E key.** `Interact()` already has a three-case ordering (open
+   dialogue → trade terminal → NPC) that is deliberately fragile and has
+   been verified against regression. Adding transitions as a fourth case
+   means touching that function again. An overlap volume is a completely
+   separate code path and cannot regress it. This is the single most
+   important consequence of the rule.
+2. **One thing to build, one thing to debug.** Walking and riding are the
+   same Blueprint with a different placement and a different destination.
+   The bus loop is a SKIN on the transition system, not a second system —
+   Codex's Track B task 1 is the Mountain ↔ Hillside transition, so the
+   mechanism the whole game needs is already the one being built.
+3. **Placement is the whole design.** Since every volume behaves
+   identically, the only thing that makes a link read as a walk rather than
+   a ride is WHERE the volume sits and what is standing next to it. Put a
+   walking volume somewhere with no road and the player will not understand
+   what happened to them.
+
+**Place volumes so that crossing is deliberate.** On a road, set it far
+enough along that a player idling near the edge of the level does not
+trip it. At a bus stop, put it at the door or on the pavement immediately
+beside the bus, not spanning the street — walking past should do nothing.
 
 **The realty offices are deliberate, not a collision (recorded 2026-08-02).**
 An earlier draft of this section flagged the "realty office" appearing in
@@ -173,6 +201,15 @@ Design rules, so this stays MVP-sized:
   Valley → Suburb stay on foot. The bus loop covers only Suburb → City and
   City → Mountain. If every leg is a bus ride the level design stops paying
   off.
+
+  This is a distinction in FICTION AND LEVEL LAYOUT ONLY — the mechanism is
+  identical either way. See the transition rule below.
+- **The bus goes all the way to Mountain (corrected 2026-08-02).** Boarding
+  in the City lands the player at Mountain's existing return spawn point.
+  There is no walk up from a stop at the bottom of the hill; an earlier
+  draft had one and it is withdrawn — see the note under Act 3 in the
+  storyline doc for what was removed and why nothing load-bearing went with
+  it.
 - **The bus stops at the FOOT of the mountain road.** It cannot make the
   climb, so the last stretch into Mountain is walked. This mirrors the walk
   that opens the game, gives Act 3 a real arrival, and hands the plot its
@@ -728,14 +765,14 @@ this needs no map directions:]**
 **Farewell:**
 > "Good luck up there. I'll be watching the feed once it's live."
 
-**[Navigation hand-off — added 2026-08-02. Closes the route and sets up the
-walk into Act 3. The bus stopping short of the summit is deliberate: see the
-format note above for why it earns its keep twice over.]**
+**[Navigation hand-off — added 2026-08-02, revised same day. Closes the
+route into Act 3. An earlier version had the bus stop short of the summit
+and the player walk up; that is withdrawn — the loop runs all the way to
+Mountain.]**
 
-> "Loop runs back round the way you came — it'll take you as far as the
-> foot of the mountain road, and that's as far as it goes. Grade beats it
-> every time. You'll walk the last stretch, same as everything else that
-> ends up on that mountain. Hank'll be waiting."
+> "Loop runs back round the way you came — stays on it all the way up to
+> Mountain. Get on, and the next thing you'll be looking at is that
+> turbine. Hank'll be waiting."
 
 **Ambient (optional — triggered on repeat visits):**
 

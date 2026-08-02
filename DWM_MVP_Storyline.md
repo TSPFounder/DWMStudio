@@ -181,8 +181,12 @@ foot is deliberate, since if every leg were a ride the level design would
 stop paying off. `DWM_MVP_Dialogue.md` carries the full navigation table,
 the in-character hand-offs, and the fleet's design rules.
 
-The bus stops at the FOOT of the mountain road and cannot make the climb,
-which matters to Act 3 — see there.
+**All five links are TRANSITION VOLUMES** (decided 2026-08-02). Walked or
+ridden, the mechanism is identical: the player crosses a volume and arrives
+at the destination level's spawn point. The walk/ride distinction is
+fiction and level layout — where the volume sits and what is standing next
+to it — not two different systems. The dialogue doc carries the placement
+table and the reasons the rule is worth stating.
 
 ### Stop 1 — Hillside (Engineering Services)
 
@@ -266,23 +270,27 @@ decision entry and what it supersedes.)*
 
 **Setting:** Mountain, turbine site, Hank's marker again.
 
-**Getting there — the walk up (added 2026-08-02).** The bus loop carries the
-player back as far as the FOOT of the mountain road and no further; the
-grade beats it. The last stretch into Mountain is walked, and that is doing
-three jobs at once rather than being a traversal inconvenience:
+**Getting there (added 2026-08-02, revised same day).** The player boards
+the bus loop in the City and arrives at **Mountain's existing return spawn
+point.** That is the whole traversal — one transition volume, no walk up
+from a stop at the bottom of the hill.
 
-1. **It mirrors the walk that opened the game.** Act 1 sends the player out
-   through the gate and down the track. Ending on the same climb in reverse
-   gives Act 3 an actual arrival instead of a fade-in.
-2. **It hands the plot its logistics argument for free.** If a bus cannot
-   get up there, neither can freight. That is a concrete, visible part of
-   why repairing the large turbine costs what it does — the player has just
-   physically experienced the reason, rather than being told it in a
-   dialogue box during the verdict.
-3. **It buys a beat of quiet before the payoff.** The climb is the only
-   stretch of the demo with no marker, no trade and no NPC, which makes it
-   the natural place for the player to arrive at the turbine rather than
-   simply appear beside it.
+*An earlier draft of this section had the bus stop at the foot of the
+mountain road and the player climb the last stretch on foot, and argued
+that the climb did three jobs. That is WITHDRAWN. It is recorded here only
+because one of those three jobs deserves a straight answer rather than
+being quietly dropped:*
+
+*The claim was that a grade steep enough to beat a bus also beats freight,
+so the climb would let the player physically experience part of why
+repairing the large turbine costs what it does. That reasoning is gone with
+the walk — and it turns out nothing load-bearing went with it, because* **Act
+3's verdict never rested on it.** *The cost argument is carried where it
+always was: Hillside prices the design, City prices the manufacturing, and
+neither number means anything alone. That is interdependence used as a gate,
+which is stronger than a traversal beat, and it is untouched. The walk was a
+nice-to-have that would have reinforced an argument already standing on its
+own.*
 
 **Hank (interaction-panel text):**
 
