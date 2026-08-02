@@ -433,7 +433,17 @@ chain — which is the theme again, in the mechanics.
   the bought hardener longest. That is a real constraint rather than the
   lucky break an earlier draft called it, and it is better for the story:
   they can make everything except the part that holds the roof up
-- **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
+- **City** — heavy machines and the CNC lathe, **plus PIGMENT** (added
+  2026-08-02): mill scale and rust off the furnace floor, ground and roasted
+  to yellow, orange, red and purple-brown by kiln temperature, with lampblack
+  from the same charcoal. That supplies the whole community palette, which is
+  warm earths, black, white and the greys between — no blues and no vivid
+  greens, because the nontoxic ones do not exist and the vivid historical
+  ones were copper and arsenic. **ANY OTHER COLOUR IS BOUGHT FROM OUTSIDE
+  VENDORS FOR DOLLARS, not Stone** — which makes paint the ONE economic
+  decision in this project visible from the street rather than in a HUD
+  number. A blue door means somebody spent from the vault, and blue is
+  precisely what they cannot make. (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
   line already establishes this: *"half that control station's housing used

@@ -750,6 +750,88 @@ City's foundry win instead**: reclaimed plastic pipe from the Suburb, cast
 fittings from Mike. **A world where bio solves everything is less believable
 than one where it solves most things and metal covers the rest.**
 
+**PAINT AND THE PALETTE — decided 2026-08-02. The colours they can MAKE are
+earths, black and white. Any other colour is available FROM OUTSIDE VENDORS
+at a DOLLAR cost.** This is the most useful decision in this whole thread,
+because it is the only one that puts the economy on screen.
+
+**WHAT THEY CAN MAKE.** Exterior paint needs MINERAL pigment — plant and
+insect colours are dyes, and sunlight destroys them in a season, so they are
+fine on cloth indoors and useless on a wall. That single fact sets the whole
+palette. The iron-oxide family does most of the work, and the range comes
+from KILN TEMPERATURE rather than from different materials, which the City's
+foundry can already deliver:
+
+| Fired to | Colour | Pigment |
+| --- | --- | --- |
+| unroasted | yellow | yellow ochre (goethite) |
+| gentle | orange | burnt sienna |
+| hotter | red | red ochre / hematite — Falu red |
+| hotter still | purple-brown | violet iron oxide |
+
+Plus **black** from lampblack or charcoal, free from the same foundry, and
+about as lightfast as pigment gets; **white** from burnt limestone, where
+lime is a BINDER as well as a colour (limewash is breathable and mildly
+antifungal, being strongly alkaline); and every grey, cream, buff and stone
+colour between them by mixing. Binders: linseed oil once flax is in, lime,
+**casein from the flock's milk**, the Falu rye-flour emulsion for rough sawn
+timber, and **tallow** from the same flock for water resistance.
+
+**WHERE IT STOPS, and this should STAY stopped.** BLUE is genuinely out of
+reach — natural mineral blues are azurite (copper, scarce, not really
+nontoxic), lapis (precious) or vivianite (rare); woad and indigo are dyes
+and will not last outdoors. Vivid GREEN and PURPLE are worse: the historical
+versions were verdigris, Scheele's green and Paris green, which is to say
+copper and arsenic — the pigments that actually killed people. Nontoxic
+greens stop at pale green earth or dull olives mixed from ochre and black.
+None of this is invented scarcity: blue was expensive everywhere for
+centuries, which is exactly why it got reserved for things that mattered.
+
+**THE MECHANIC — ANY COLOUR, FROM OUTSIDE, FOR DOLLARS.** Vendors beyond the
+five communities will sell any colour wanted. It is **not** a Stone trade,
+because nobody inside the network made it: it is a **DOLLAR** cost out of
+the community's vault, the same finite pool the Suburb's permits come from.
+
+Three things follow, and the first is why this is worth doing at all:
+
+1. **IT MAKES THE LEDGER VISIBLE FROM THE STREET.** Every other economic
+   decision in this project lives in a HUD number or a document. This one
+   is a wall. A row of ochre and red with one blue door says *somebody spent
+   dollars*, and the player reads it without a line of dialogue, a tooltip
+   or a tutorial. **Blue especially**, since it is precisely the colour they
+   cannot make — the hardest colour to produce locally is the clearest
+   possible marker that money left the system.
+2. **NO SCHEMA CHANGE IS NEEDED, now or later.**
+   `CommunityDollarVaultLedger` already carries `CommunityId`, a signed
+   `DeltaAmount` and a free-text `Reason`. A paint purchase is one row in a
+   table that already exists and is already tested. If this is ever made
+   mechanical rather than narrative, the ledger is waiting for it.
+3. **It is a WANT, not a NEED — which is the contrast worth having.** The
+   Suburb's Dollar Vault beat is permits and insurance: unavoidable. Paint
+   is optional. Both drain the same finite pool, and having one of each
+   makes the point better than two necessities would.
+
+**TONE — DO NOT MAKE BOUGHT COLOUR A VILLAIN.** The standing rule against
+characters saying "we are stronger together" applies here too: no lectures
+about consumption. A child's room, somebody's front door, a sign that needed
+to be seen. People want things and that is human. The line to aim for is
+neutral, or wistful at most — the community can SEE what was spent, and that
+is enough without anybody moralising about it.
+
+*One wrinkle worth keeping straight:* bright colour on SALVAGED material is
+not a purchase. A reclaimed plank with old paint on it came out of the
+Suburb's yard, not out of the vault. Old bright colour reads as
+before-times; NEW bright colour reads as dollars.
+
+**⚠ IMPLICATION TO HANDLE CAREFULLY: this makes the OUTSIDE concrete.** Up
+to now the Dollar Vault has implied an outside economy without ever showing
+one. "Outside vendors" gives it people who sell things. **Keep them
+offstage and unnamed** — no vendor characters, no named towns, no map beyond
+the five communities. A concrete outside invites questions the MVP cannot
+answer and does not need to.
+
+---
+
 **FLAX — ADDED POST-MVP, decided 2026-08-02.** It was previously ruled out
 as "needs something they do not have". It is now in, and it turns out to be
 the best-connected crop available to them — linoleum is the least of it.
@@ -1183,6 +1265,22 @@ this needs no map directions:]**
 
 > "Feedstock's mostly Suburb scrap these days. DeShawn's crews strip it,
 > we melt it. Cheaper than buying billet and it keeps two towns working."
+
+**[Pigment and bought colour — added 2026-08-02. Waste stream to input
+again, plus the dollar mechanic. The last line is the one that matters and
+it must stay NON-JUDGMENTAL: see the paint note under Hillside.]**
+
+> "Scale off the furnace floor, rust off anything not worth saving — grind
+> it fine enough and there's your red. Roast it hotter and it goes purple.
+> Half the paint in five towns started as something we swept up."
+
+> "Anything that isn't a red or an ochre or a black came from outside, and
+> it came out of somebody's vault. That's not me telling anyone not to."
+
+> "You can just see it from the road, is all. Blue especially. There's no
+> making blue — not here, not from anything we've got. So when you see a
+> blue door you know exactly what it cost, and near enough what it meant to
+> somebody."
 
 ### Kai Sutherland — Software Services
 
