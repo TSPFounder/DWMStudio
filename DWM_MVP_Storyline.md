@@ -25,9 +25,10 @@ document: `DWM_MVP_Dialogue.md`** (drafted 2026-07-14). It contains the
 actual approach/trade/farewell lines for all five stops, including four
 newly-named NPCs for Hillside, Valley, Suburb, and City. That document has
 its own open items (NPC asset assignments, whether to keep a small Valley/
-Hank backstory hint, City's one-marker-vs-two-marker structure, and the
-Suburb Dollar Vault beat) — resolve those there before treating the
-dialogue as final.
+Hank backstory hint, and the Suburb Dollar Vault beat) — resolve those
+there before treating the dialogue as final. The marker-structure questions
+for **both** City and Hillside were resolved 2026-08-02 and are no longer
+open.
 
 ---
 
@@ -87,12 +88,12 @@ isn't a retargeting concern — he only needs idle/talk animation at one
 fixed location, not locomotion compatibility with the player's Character
 Customizer rig.
 
-**Movement (decided 2026-07-14):** a light scripted loop plus a small
+**Movement (decided 2026-07-14):** a light scripted movement loop plus a small
 wander radius, not fully static and not autonomous AI — stays within
 SCOPE.md's "static or simply-animated dressing" allowance, well short of
 the "Autonomous NPC trade AI" line that's explicitly out of scope.
 
-- **Core loop:** Hank periodically walks a few steps toward the turbine,
+- **Core movement loop:** Hank periodically walks a few steps toward the turbine,
   pauses, glances up at it (ties directly into the "waiting for it to work
   again" framing from Act 1), then walks back to his marker position. Two
   hardcoded points, no pathfinding complexity — a Blueprint Timeline or a
@@ -168,9 +169,25 @@ checks back in with Hank partway through Act 2.)*
 
 ## Act 2 — The Search (Hillside → Valley → Suburb → City)
 
-Each stop is a full loop of the MVP's core interaction: walk to the
+Each stop is a full cycle of the MVP's core interaction: reach the
 community's economy marker, read its flavor text, initiate a trade, watch
 Stone move on both sides' balances.
+
+**How the player travels (added 2026-08-02).** Not every leg is walked. The
+first three are — Mountain → Hillside → Valley → Suburb — and the last two
+are ridden on the **bus loop**, the small fleet of school buses the five
+communities jointly run. Suburb → City and City → Mountain are the long
+legs, and they are the only ones the bus covers; keeping the short links on
+foot is deliberate, since if every leg were a ride the level design would
+stop paying off. `DWM_MVP_Dialogue.md` carries the full navigation table,
+the in-character hand-offs, and the fleet's design rules.
+
+**All five links are TRANSITION VOLUMES** (decided 2026-08-02). Walked or
+ridden, the mechanism is identical: the player crosses a volume and arrives
+at the destination level's spawn point. The walk/ride distinction is
+fiction and level layout — where the volume sits and what is standing next
+to it — not two different systems. The dialogue doc carries the placement
+table and the reasons the rule is worth stating.
 
 ### Stop 1 — Hillside (Engineering Services)
 
@@ -179,9 +196,15 @@ shared-Snowy-Peaks-base plan — see SCOPE.md 2026-07-17/18 entries).
 
 **NPCs: Sophia Sandoval** (engineering firm lead), **Owen Marsh** (CAD
 designer), and **Nathan Ferris** (Simulink modeler) — full approach/trade/
-farewell dialogue for all three in `DWM_MVP_Dialogue.md`, which also flags
-the open question of whether they share one marker or are spread across
-Hillside as separate points of interest.
+farewell dialogue for all three in `DWM_MVP_Dialogue.md`.
+
+**Placement RESOLVED 2026-08-02:** all three are in the SECOND-FLOOR ROOM
+ABOVE THE REALTY OFFICE, and nowhere else in Hillside. Only Sophia opens a
+trade panel — Hillside has one trade, unlike City's two — so Owen and
+Nathan are optional conversations that explain what went into her package
+and can be cut without touching the trade. Space the three markers within
+the room so their interaction radii do not overlap. Sophia's hand-off to
+the Valley now starts with the stairs, since she is a floor up.
 
 **Trade:** Mountain pays Stone for **Engineering Services** — real CAD
 drawings and a Simulink model of the turbine's expected behavior. This
@@ -219,7 +242,7 @@ fee paid in Dollar Vault funds (an "outside resource," per §4.4 — not
 Stone-tradeable), giving a natural, low-stakes moment to show the Dollar
 Vault actually depleting on screen without needing to push any community
 into full Cascading Failure. This is optional polish, not required for the
-core loop — cut if time is short.
+core interaction cycle — cut if time is short.
 
 ### Stop 4 — City (Manufactured Tools + Software Services)
 
@@ -228,9 +251,13 @@ crane backdrop.
 
 **NPCs: Mike Dayton** (factory foreman, Manufactured Tools) **and Kai
 Sutherland** (systems engineer, Software Services) — full approach/trade/
-farewell dialogue for both in `DWM_MVP_Dialogue.md`, which also flags the
-open question of whether they share one marker or sit at two separate
-ones.
+farewell dialogue for both in `DWM_MVP_Dialogue.md`.
+
+**Marker layout RESOLVED 2026-08-02:** two markers, one building. Mike is on
+the machine-shop floor and Kai is in the office above it, so City keeps the
+one-trade-per-approach pattern every other community uses while the hand-off
+between them stays "upstairs at the back" — no map directions needed. The
+player arrives from the Suburb on the bus loop and reaches Mike first.
 
 **Trade:** Mountain buys **Manufactured Tools** *and* **Software Services**
 from City — this is the demo's second cross-community trade, and
@@ -249,6 +276,28 @@ outcome is the decision about what comes next. See SCOPE.md for the
 decision entry and what it supersedes.)*
 
 **Setting:** Mountain, turbine site, Hank's marker again.
+
+**Getting there (added 2026-08-02, revised same day).** The player boards
+the bus loop in the City and arrives at **Mountain's existing return spawn
+point.** That is the whole traversal — one transition volume, no walk up
+from a stop at the bottom of the hill.
+
+*An earlier draft of this section had the bus stop at the foot of the
+mountain road and the player climb the last stretch on foot, and argued
+that the climb did three jobs. That is WITHDRAWN. It is recorded here only
+because one of those three jobs deserves a straight answer rather than
+being quietly dropped:*
+
+*The claim was that a grade steep enough to beat a bus also beats freight,
+so the climb would let the player physically experience part of why
+repairing the large turbine costs what it does. That reasoning is gone with
+the walk — and it turns out nothing load-bearing went with it, because* **Act
+3's verdict never rested on it.** *The cost argument is carried where it
+always was: Hillside prices the design, City prices the manufacturing, and
+neither number means anything alone. That is interdependence used as a gate,
+which is stronger than a traversal beat, and it is untouched. The walk was a
+nice-to-have that would have reinforced an argument already standing on its
+own.*
 
 **Hank (interaction-panel text):**
 
@@ -310,8 +359,9 @@ deflates — the win is the capability.)*
   set-dressing referenced already exists in the Week 5–6 schedule.
 - **No new systems required.** Dialogue is static interaction-panel text —
   same pattern as the existing economy markers, not a new dialogue engine.
-- **Covers every required MVP "done" criterion in one continuous loop:**
-  walk through all five communities, see balances on screen, execute
+- **Covers every required MVP "done" criterion in one continuous run:**
+  travel through all five communities — walking the short links, riding the
+  bus loop for the two long ones — see balances on screen, execute
   cross-community trades (three of them, escalating in complexity),
   optionally demonstrate Dollar Vault depletion, and finish on the promoted
   engineered mechanism actually running.
@@ -351,7 +401,19 @@ chain — which is the theme again, in the mechanics.
 **Community allocation (proposed, not yet decided):**
 
 - **Hillside** — design, 3D printers, laser cutter (they are already the
-  CAD and simulation shop)
+  CAD and simulation shop), **plus the mill and composite lumber**
+  (clarified 2026-08-02). Hillside RUNS its sawmill — what is deferred to
+  post-MVP is the timber *trade*, not the building or the work — and the
+  mill also presses structural beam and flat board from recycled wood:
+  Suburb salvage plus Mountain offcuts. This is the wood mirror of the
+  metal loop the dialogue already establishes (Suburb strips → City melts →
+  castings return), and the industry term for the product is *engineered
+  wood*, so the community selling engineering services making engineered
+  lumber needs no line to explain it. **The payoff is the blade molds:**
+  they are MDF, which is a wood composite board, currently bought with
+  dollars — pressing it here turns the arc's first physical dependency into
+  a Stone trade. Adhesive stays the one import they cannot make, which is
+  where Valley's bio-adhesive potential comes in
 - **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
@@ -359,8 +421,17 @@ chain — which is the theme again, in the mechanics.
   to be something else entirely. We don't waste much out here."* No retrofit
   needed
 - **Mountain** — assembly and the turbine site
-- **Valley** — UNDECIDED. Currently only a food supplier in this arc; worth
-  giving them a role rather than leaving them out of the manufacturing story
+- **Valley** — **RESOLVED 2026-08-02: grown feedstock.** No longer only a
+  food supplier here. The bus fleet's biofuel conversion runs on what the
+  Valley grows and presses — Maria's existing digester ambient line is the
+  hook, and her new one makes the point explicitly: it is *"the first thing
+  anybody's asked us for that we'd be growing instead of just handing
+  over."* That is a genuine manufacturing-arc role rather than a courtesy
+  one, because it is an input nobody else in the network can produce.
+  It extends naturally if wanted: bio-based adhesives (soy, starch and
+  lignin routes are all real) come off the same fields, which matters if
+  the composite-lumber idea is taken up, since resin is otherwise the one
+  input that has to be bought with dollars.
 
 ## Open decisions for you
 
@@ -373,7 +444,7 @@ chain — which is the theme again, in the mechanics.
    small wander radius, detailed above.
 2. **Dollar Vault beat placement** — included as optional at the Suburb
    stop above; could just as easily be its own dedicated moment, or cut
-   from the MVP demo loop entirely and left as a separate HUD-only beat
+   from the MVP demo run entirely and left as a separate HUD-only beat
    (per the existing plan, showing vault depletion doesn't strictly need
    to be wrapped in narrative).
 3. **Length/pacing** — this is written as a full walkthrough; if the

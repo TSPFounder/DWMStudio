@@ -58,8 +58,11 @@ walkable without a quest marker or minimap:
 | From | Direction given | To |
 | --- | --- | --- |
 | Hank (Mountain) | Out through the gate, follow the track down | Sophia, room above the Hillside realty office |
-| Sophia (Hillside) | Right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
-| Maria (Valley) | Left out of the house, down the dirt road | *(destination not yet named — see below)* |
+| Sophia (Hillside) | Down the stairs, right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
+| Maria (Valley) | Left out of the house, down the dirt road | DeShawn, the realty office in the Suburb |
+| DeShawn (Suburb) | Out to the stop on the corner, take the bus loop | Mike, on the City machine-shop floor |
+| Mike (City) | Upstairs, same building | Kai, in the office above the shop floor |
+| Kai (City) | Bus loop back round to Mountain | Hank, for Act 3 |
 
 **TWO CONSEQUENCES, both worth knowing before these lines are treated as
 final:**
@@ -77,10 +80,191 @@ final:**
    wanders off-route will be holding stale instructions. Acceptable for a
    guided demo; worth knowing it is a deliberate trade.
 
-**INCOMPLETE:** the chain stops at Maria. Two hand-offs are still needed to
-close the route — Valley → Suburb (where the dirt road actually leads, and
-DeShawn should be named the way Sophia and Maria are), and Suburb → City.
-Until those exist the player is unguided from the Valley onward.
+**COMPLETE as of 2026-08-02.** The three links that were open on 2026-08-01
+are all closed, and the shared bus fleet (see below) closed all three rather
+than one:
+
+1. **Suburb after DeShawn** — he sends the player to the stop and onto the
+   bus loop.
+2. **Reaching Mike and Kai** — the bus loop runs to City; the player
+   arrives at the City stop and walks to the machine shop.
+3. **Back to Mountain for Act 3** — the bus loop again, landing at
+   Mountain's existing return spawn point.
+
+**This also settles the one-marker-vs-two question for City.** Mike is on
+the shop floor, Kai is in the office above it — two markers, one building,
+matching every other community's one-trade-per-approach pattern. The
+hand-off between them is "upstairs, same building," which needs no map
+directions at all, so the second marker costs nothing in navigation
+complexity. The parenthetical under the City heading records this as
+resolved.
+
+**TRANSITION RULE (decided 2026-08-02) — ALL transitions are transition
+volumes. Every one of them, walked or ridden, without exception.** The
+player crosses a volume and arrives at the destination level's spawn point.
+There is one mechanism in the game for changing communities and this is it.
+
+What differs between links is only what the volume is SITTING ON and what
+the fiction says is happening:
+
+| Link | Volume placed | Reads as |
+| --- | --- | --- |
+| Mountain → Hillside | on the track past the gate | walking down |
+| Hillside → Valley | where the market street road climbs out | walking on |
+| Valley → Suburb | on the dirt road out of the Valley | walking down |
+| Suburb → City | at the Suburb bus stop | boarding the loop |
+| City → Mountain | at the City bus stop | boarding the loop |
+
+Three things follow, and they are the reason this rule is worth stating
+rather than leaving as an implementation detail:
+
+1. **NOT the E key.** `Interact()` already has a three-case ordering (open
+   dialogue → trade terminal → NPC) that is deliberately fragile and has
+   been verified against regression. Adding transitions as a fourth case
+   means touching that function again. An overlap volume is a completely
+   separate code path and cannot regress it. This is the single most
+   important consequence of the rule.
+2. **One thing to build, one thing to debug.** Walking and riding are the
+   same Blueprint with a different placement and a different destination.
+   The bus loop is a SKIN on the transition system, not a second system —
+   Codex's Track B task 1 is the Mountain ↔ Hillside transition, so the
+   mechanism the whole game needs is already the one being built.
+3. **Placement is the whole design.** Since every volume behaves
+   identically, the only thing that makes a link read as a walk rather than
+   a ride is WHERE the volume sits and what is standing next to it. Put a
+   walking volume somewhere with no road and the player will not understand
+   what happened to them.
+
+**Place volumes so that crossing is deliberate.** On a road, set it far
+enough along that a player idling near the edge of the level does not
+trip it. At a bus stop, put it at the door or on the pavement immediately
+beside the bus, not spanning the street — walking past should do nothing.
+
+**The realty offices are deliberate, not a collision (recorded 2026-08-02).**
+An earlier draft of this section flagged the "realty office" appearing in
+both Hillside and the Suburb as a naming hazard. That was wrong, and the
+correction matters enough to write down so nobody "fixes" it later.
+
+The realty company is ESTABLISHED SHARED INFRASTRUCTURE — a cross-community
+organisation that places community members in housing and runs its offices
+as community support sites. The offices are separate places in separate
+buildings; they already carry the SAME SIGN out front in the current UE
+levels. So the repetition is a system the player learns, not an ambiguity
+they trip over: "go to the realty office" parses in any community, exactly
+like "go to the bus stop." Keep the shared sign and keep the buildings
+distinct — that combination is what makes it read as one institution with
+five branches rather than five coincidences.
+
+Two things follow from this:
+
+1. **It carries the theme without a speech.** A realty company that
+   ALLOCATES housing rather than sells it puts a familiar name on a changed
+   function. The player arrives with assumptions about what happens inside a
+   realty office and learns the economy by having them corrected — which is
+   worth more than any line of dialogue explaining mutual credit.
+2. **It is the same pattern as the shared bus fleet** (below): two
+   cross-community institutions, both concerned with moving people between
+   communities, and neither one workable by a single community alone. The
+   fleet is therefore the SECOND instance of a pattern the player has
+   already met, not a cold introduction of the unity theme.
+
+Sophia and DeShawn both stay where they are. A support office is exactly
+where a stranger would be sent, so both placements are already right. The
+only outstanding nicety is that neither location currently shows what its
+person TRADES: a drafting table with drawings pinned up in Sophia's room
+reads "engineer" instantly, and DeShawn's office looking out onto the
+sorting yard reads "recycler." Props, not relocations.
+
+**The shared bus fleet (added 2026-08-02).** The five communities jointly
+run a small fleet of school buses between them — the service is called
+**"the loop,"** which is literally true: Mountain → Hillside → Valley →
+Suburb → City → Mountain. Characters saying "catch the loop" teaches the
+shape of the map for free.
+
+**NAMING CONVENTION (2026-08-02), because these documents were already using
+"loop" for three other things** — the core interaction cycle, Hank's
+two-point movement loop, and the closed cross-community reference loop.
+In PROSE, the service is always **"the bus loop."** In SPOKEN LINES,
+characters say **"the loop"** and always will: in-world there is nothing
+else it could mean, and "catch the bus loop" is not how anyone talks. So
+the in-world name never changed — only the way the docs refer to it, which
+is a reading convenience for whoever picks these up next, not a design
+decision.
+
+Design rules, so this stays MVP-sized:
+
+- **One bus parked at every community, always.** This is the whole reason a
+  fleet beats a single bus: a player who reaches a stop and finds it empty
+  would need a timetable to explain itself. A fleet never has that problem,
+  and never needs a schedule.
+- **Walk the short links, ride the long ones.** Mountain → Hillside →
+  Valley → Suburb stay on foot. The bus loop covers only Suburb → City and
+  City → Mountain. If every leg is a bus ride the level design stops paying
+  off.
+
+  This is a distinction in FICTION AND LEVEL LAYOUT ONLY — the mechanism is
+  identical either way. See the transition rule below.
+- **The bus goes all the way to Mountain (corrected 2026-08-02).** Boarding
+  in the City lands the player at Mountain's existing return spawn point.
+  There is no walk up from a stop at the bottom of the hill; an earlier
+  draft had one and it is withdrawn — see the note under Act 3 in the
+  storyline doc for what was removed and why nothing load-bearing went with
+  it.
+- **The bus stops at the FOOT of the mountain road.** It cannot make the
+  climb, so the last stretch into Mountain is walked. This mirrors the walk
+  that opens the game, gives Act 3 a real arrival, and hands the plot its
+  logistics argument for free: if a bus cannot get up there, neither can
+  freight, which is part of why repairing the large turbine costs what it
+  costs.
+- **Co-locate stop, support office and trade terminal.** Same three things
+  in the same relationship in every community. This is the strongest form of
+  "repetition teaches a rule," and it gives the Suburb and City trade
+  terminals a natural home instead of an arbitrary placement.
+
+**ASSET ASSIGNED (2026-08-02): HQ Retro School Bus by NotLonely**, already
+owned. This is a rare case of an asset choice that improves the fiction
+rather than merely satisfying it — a RETRO bus reads as a vehicle kept
+running long past the era that built it, which is what a salvage-and-repair
+economy would actually be riding. Nobody has to say that; the mesh says it.
+
+The fleet is intentionally UNIFORM — same bus at every stop, no per-community
+paint. Fleet numbers on the side are the right way to tell them apart if you
+want that, because a number says "one fleet, five branches," where community
+colours would say "five towns' buses" and quietly contradict the shared
+ownership the whole thing is for.
+
+TWO THINGS TO CHECK ON THE ASSET BEFORE COMMITTING TO A BOARDING
+INTERACTION, neither of which is a criticism of the pack — both are near-
+universal in marketplace vehicles:
+
+1. **Does it have a modelled interior?** Many vehicle assets are exterior
+   shells. If this one is, boarding is off the table and the MVP default
+   below is the only option — which is fine, and was the recommendation
+   anyway.
+2. **What is its collision?** A single convex hull or box collision makes
+   the interior solid and un-enterable. This is the SAME failure mode as the
+   Village Log House staircase, with the same fix (Collision Complexity →
+   "Use Complex Collision As Simple"). Also sanity-check scale against the
+   character capsule: a real school bus is roughly 1100 × 250 × 300 units.
+
+**MVP DEFAULT — the stop is the trigger, the bus is the landmark.** Put the
+trigger volume on the pavement at the stop rather than inside the vehicle.
+Zero collision work, no dependency on an interior existing, and it still
+reads correctly, because standing at a stop and then being somewhere else is
+exactly how riding a bus feels. Upgrade to actual boarding later if the
+asset turns out to support it.
+
+**Biofuel conversion — planted now, paid off post-MVP.** The fleet currently
+burns purchased fuel, which is a DOLLAR cost draining the Vault rather than
+a Stone trade. The stated future plan is to convert the buses to run on
+biofuels the VALLEY can help supply — feedstock from what Valley already
+produces — with the conversion work itself done in the CITY or the SUBURB,
+whichever suits. That routes the whole project through three communities and
+nets the running cost into the Stone ledger instead of the Vault.
+
+NARRATIVE ONLY for the MVP — no schema change, no `transport_services`
+resource, no fuel mechanic. It costs one line each from DeShawn and Maria to
+set up, and the payoff is available whenever it is wanted.
 
 ---
 
@@ -186,6 +370,110 @@ turbine. Timber/the sawmill are NOT gone from the world — deferred to
 post-MVP — so Sophia's location can still visually be the sawmill/workshop
 building even though her trade and dialogue no longer center on lumber.)*
 
+**NPC PLACEMENT — RESOLVED 2026-08-02. All three Hillside NPCs are in the
+SECOND-FLOOR ROOM ABOVE THE REALTY OFFICE.** Sophia, Owen and Nathan share
+one room; none of them is anywhere else in Hillside. This closes the
+long-open "one marker or spread across Hillside" question, and it closes it
+differently from City, for a reason worth stating.
+
+**City needed two markers because City has TWO TRADES.** Hillside has ONE.
+Sophia sells `engineering_services`; Owen and Nathan do not sell anything —
+they explain what went into her package. So the room holds:
+
+| NPC | Marker | Opens a trade panel? |
+| --- | --- | --- |
+| Sophia Sandoval | the trade marker | YES — `engineering_services` |
+| Owen Marsh | optional conversation | no |
+| Nathan Ferris | optional conversation | no |
+
+That still satisfies the one-trade-per-approach pattern every community
+uses: exactly one of the three approaches opens a panel. Owen and Nathan are
+pure flavour and can be cut entirely if the stop runs long, without
+touching the trade.
+
+**Two placement consequences:**
+
+1. **Space the three within the room.** Three markers in one room can
+   overlap if their interaction radii touch, and a player aiming at Nathan
+   who gets Owen will read that as a bug. Put each at their own work —
+   Sophia at the drafting table, Owen at a board, Nathan at a terminal —
+   and keep the radii clear of one another.
+2. **Sophia's directions now start with stairs.** She is on the second
+   floor, so her hand-off opens with *"Down the stairs, right as you come
+   out of the office"* rather than sending the player into the street from
+   a room they cannot walk out of. The navigation table reflects this.
+
+**THE MILL RUNS (clarified 2026-08-02).** An earlier ambient line had the
+sawmill idle — *"not running these days"* — and that was wrong. Hillside
+operates the mill. What is deferred is the **timber TRADE**, not the
+building and not the work: Sophia's tradeable output in the MVP is still
+`engineering_services` and nothing about the trade panel changes.
+
+**Sophia does NOT work in the mill** — an intermediate draft briefly had her
+drafting in a loft above it, which contradicts the placement resolved above.
+She is in the second-floor room over the realty office, and the mill is
+elsewhere in Hillside; her ambient line now places it by SOUND from that
+window rather than by her being inside it. The mill runs, she just is not
+standing in it.
+
+This costs nothing in the schema and it already fits the seeder as written.
+Mountain **Produces** `timber`; Hillside **Needs** `timber` (20). A working
+mill is exactly what consumes that — raw logs down from the Mountain,
+milled stock back out. The economy has been describing a running mill all
+along; only the dialogue said otherwise.
+
+**COMPOSITE LUMBER — Hillside is the node (added 2026-08-02, post-MVP,
+narrative only).** The mill also presses structural beam and flat board out
+of RECYCLED wood: salvage sorted by the Suburb, plus Mountain's offcuts.
+Three reasons it belongs here rather than anywhere else:
+
+1. **The building already exists and already runs.** No new set dressing,
+   no resurrection beat needed — this is an extension of working plant,
+   which is a far easier thing to believe than a mill restarted from cold.
+2. **The industry term for this is ENGINEERED WOOD.** The community that
+   sells engineering services makes engineered lumber. The connection needs
+   no line of dialogue; it is in the name.
+3. **It is the wood mirror of a supply chain the player already sees in
+   metal.**
+   DeShawn's and Mike's ambient lines already establish Suburb strips
+   salvage → City melts it → castings come back. Suburb sorts wood →
+   Hillside presses it → board and beam come back reads as *of course*
+   rather than as a new idea.
+
+**Why it matters beyond flavour: the blade molds are MDF**, which is a wood
+composite board. Right now that stock is bought, which makes it a DOLLAR
+cost draining the Vault — the same shape of problem as the bus fleet's
+fuel. A community pressing board from salvage turns the manufacturing arc's
+very first physical dependency into a Stone trade, satisfied inside the
+network instead of outside it. That is a much better opening beat for that
+arc than "and then they ordered sheet goods."
+
+**The metaphor is worth leaning on because it is literally true.** In sawn
+timber a knot is a concentrated weak point and the board is only as good as
+its worst spot; in pressed and laminated products the defects disperse, so
+strength is both higher and far more PREDICTABLE — engineered lumber
+carries tighter design values precisely because no single flaw dominates.
+Many small salvaged pieces, bonded, holding up the buildings people live
+in. That is the theme as a load-bearing object, and Sophia's ambient line
+states it as a fact about wood rather than as a moral.
+
+**Three frictions, kept rather than smoothed:**
+
+- **Adhesive is the import they cannot make.** Resin would be a dollar
+  purchase, mirroring the bus fuel exactly. Good friction — and it has an
+  out that is already in the docs: soy, starch and lignin bio-adhesives are
+  real, and the Valley is already growing feedstock for the biofuel thread.
+  Same fields, two products. PLANT IT, DO NOT RESOLVE IT.
+- **Salvaged wood is full of metal.** Nails and screws must come out before
+  anything is chipped — magnetic separation plus a lot of hand sorting.
+  That is a labour cost, and the Suburb produces `skilled_labor`, so it is
+  already priced in the economy rather than being a hole in it. Sophia's
+  line calls the nails the worst of it.
+- **The press is the hard machine.** Heat plus sustained pressure over a
+  large platen is genuinely harder than anything in the Gingery chain.
+  Worth knowing before anyone treats this as easy; also a decent thing for
+  that arc to be ABOUT.
+
 **Sophia Sandoval — Approach:**
 > "So that's the turbine that came with your land. Ambitious purchase —
 > nobody's touched that thing in years. Good news is, my two here already
@@ -216,14 +504,33 @@ not be able to conclude alone.]**
 > "Good luck up there. Come back through when it's spinning — I'd like to
 > see it."
 
-> "Right as you come out of the office, then straight on down the market
-> street — don't turn off it. Road climbs out the far end and drops you
-> into the Valley. Maria Vega'll be on her porch. She generally is."
+> "Down the stairs, right as you come out of the office, then straight on
+> down the market street — don't turn off it. Road climbs out the far end
+> and drops you into the Valley. Maria Vega'll be on her porch. She
+> generally is."
 
 **Sophia — Ambient (optional, triggered on repeat visits):**
 
-> "Old sawmill building still stands out back — not running these days,
-> but I like the space. Good light for drafting."
+> "Mill's still running — you can hear it from this window when the wind
+> sits right. Some people would call that noise. I'd rather hear it going
+> than not."
+
+**[Composite lumber — added 2026-08-02. Hillside RUNS the mill; see the
+note under this community's heading. Narrative only, no schema change.]**
+
+> "Half of what comes off that saw now isn't logs. Suburb sends us
+> salvage — old framing, pallets, whatever's been pulled out of a
+> building — and we press it back into board and beam. Takes more sorting
+> than milling does. The nails are the worst of it."
+
+> "Funny thing about a pressed beam — it's stronger than the tree it came
+> out of, and steadier with it. A sawn board is only ever as good as its
+> worst knot. Break the wood up and bond it back together and the flaws
+> are all still in there. They've just stopped being in the same place."
+
+> "The board we press flat is what your blade molds will want, when it
+> comes to that. Right now that gets bought in with dollars. It doesn't
+> have to."
 
 > "Got solar on the roof now, battery bank right beside it. Doesn't run
 > much, but it keeps the lights on through a cloudy week while these two
@@ -295,8 +602,9 @@ will need a matching pass, same as Sophia's did for engineering_services.)*
 > "Tell Hank the Valley says good luck. And tell him he still owes us from
 > last winter."
 
-> "Left out of the house and follow the dirt road down. Only road it could
-> be — you'll know you're on it."
+> "Left out of the house and follow the dirt road down — it runs all the
+> way into the Suburb. Ask for DeShawn Okafor; he works out of the realty
+> office there. Walk straight in, he won't stand on ceremony."
 
 *(That last line is a small worldbuilding hook — implies an existing
 relationship/history between communities beyond this one quest. Cut if you
@@ -328,6 +636,15 @@ added Valley assets):**
 > make — it all goes back on the fields or into the digester. Everybody's
 > got their own way of not wasting things. Ours just smells worse than
 > most."
+
+**[Biofuel set-up — added 2026-08-02. Pairs with DeShawn's line; between
+them the post-MVP conversion project is fully planted from both ends.
+Narrative only.]**
+
+> "DeShawn keeps asking what else that digester could do. Truth is, plenty
+> — we could grow and press what those buses burn, if somebody sorted out
+> the engines. That's not our end of it. But it's the first thing anybody's
+> asked us for that we'd be growing instead of just handing over."
 
 ---
 
@@ -361,6 +678,13 @@ balance visibly drops on screen:]**
 > "Tell your people to keep the ropes tied right. We'll see them when the
 > job's done."
 
+**[Navigation hand-off — added 2026-08-02. Sends the player onto the bus
+loop to City, and names Mike so the arrival has a target:]**
+
+> "City's too far to walk and I'm not sending you. Stop's on the corner —
+> take the loop. Ask for Mike Dayton, he'll be on the shop floor, and he'll
+> be the loudest thing in the building."
+
 **Ambient (optional — triggered on repeat visits; references the newly-
 added Suburb assets):**
 
@@ -376,8 +700,26 @@ added Suburb assets):**
 > comes back as castings we couldn't make ourselves. Fair trade. Neither
 > of us has the whole shop, but between us it's most of one."
 
+**[Composite lumber feedstock — added 2026-08-02. The wood counterpart to
+the metal line directly above; deliberately placed next to it so the two
+read as one pattern. Narrative only.]**
+
+> "Wood's the same story, different direction. Framing, pallets, anything
+> we pull out of a building that isn't rotted — that goes up to Hillside
+> and comes back as beam. We pull the nails here. They'd rather we did,
+> and honestly so would their saw."
+
 > "Crews eat Valley grain on every job over a week. Maria won't let me
 > send anybody up a mountain on what the canteen calls food."
+
+**[Biofuel set-up — added 2026-08-02. Plants the post-MVP conversion
+project. Narrative only; no fuel mechanic exists or is implied.]**
+
+> "Five towns, one set of buses, and every drop of fuel in them bought with
+> dollars we don't get back. That's the part that keeps me up. Maria
+> reckons the Valley could grow what we'd need instead, and converting the
+> engines is shop work — we could do it here, or City could. Nobody's
+> arguing about whether. Just about when."
 
 ---
 
@@ -385,11 +727,14 @@ added Suburb assets):**
 Sutherland (systems engineer, Software Services)
 
 *(Two NPCs at one location, since City covers two resources. New NPCs, no
-asset assignment made yet, same flag as above. Consider whether both
-should be present at the same marker or two separate markers within City —
-two markers is likely cleaner for the trade-panel interaction pattern, one
-trade per approach, matching every other community's single-resource
-stops.)*
+asset assignment made yet, same flag as above.)*
+
+**RESOLVED 2026-08-02 — two markers, one building.** Mike is on the machine-
+shop floor, Kai is in the office above it. That keeps the one-trade-per-
+approach pattern every other community uses, and because both markers sit in
+the same building the hand-off is "upstairs at the back" — no map directions,
+no navigation cost for the second marker. The player arrives from the Suburb
+on the bus loop and reaches Mike first.
 
 ### Mike Dayton — Manufactured Tools
 
@@ -424,6 +769,13 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 > "Bring it back down if it ever needs work again. We don't forget good
 > customers."
 
+**[Navigation hand-off — added 2026-08-02. Two markers, one building, so
+this needs no map directions:]**
+
+> "You'll want Kai before you go anywhere. Straight up the stairs at the
+> back — office over the shop floor. Metal's only half of what you're
+> carrying home."
+
 **Ambient (optional — triggered on repeat visits):**
 
 > "Furnace runs near round the clock in here — that's where your fittings
@@ -453,6 +805,15 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 
 **Farewell:**
 > "Good luck up there. I'll be watching the feed once it's live."
+
+**[Navigation hand-off — added 2026-08-02, revised same day. Closes the
+route into Act 3. An earlier version had the bus stop short of the summit
+and the player walk up; that is withdrawn — the loop runs all the way to
+Mountain.]**
+
+> "Loop runs back round the way you came — stays on it all the way up to
+> Mountain. Get on, and the next thing you'll be looking at is that
+> turbine. Hank'll be waiting."
 
 **Ambient (optional — triggered on repeat visits):**
 
@@ -493,10 +854,13 @@ he also cannot conclude alone. The two halves meet at Hank.]**
    of worldbuilding not established anywhere else. Fine to keep as a light
    touch, or cut if you'd rather every NPC's dialogue stay fully
    self-contained with no implied history.
-3. **City's two-NPC structure** — confirm whether Mike and Kai should
-   share one marker (both trades happen in one stop) or sit at two
-   separate markers (matches every other community's one-resource-per-stop
-   pattern more cleanly, but means City takes two visits instead of one).
+3. **City's two-NPC structure — RESOLVED 2026-08-02.** Two markers, one
+   building: Mike on the machine-shop floor, Kai in the office above it.
+   Keeps the one-trade-per-approach pattern, and the hand-off between them
+   is "upstairs at the back", so the second marker costs nothing in
+   navigation. **Hillside's equivalent question is also resolved** — see
+   the note under that community's heading; all three of its NPCs are in
+   the second-floor room above the realty office.
 4. **The Suburb Dollar Vault beat is still marked optional**, same as it
    was in the storyline doc — this dialogue includes it, but cut both the
    flagged lines above if you've decided against including it.
