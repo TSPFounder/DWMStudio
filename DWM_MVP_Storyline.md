@@ -409,17 +409,30 @@ chain — which is the theme again, in the mechanics.
   metal loop the dialogue already establishes (Suburb strips → City melts →
   castings return), and the industry term for the product is *engineered
   wood*, so the community selling engineering services making engineered
-  lumber needs no line to explain it. **The payoff is the blade molds:**
-  they are MDF, which is a wood composite board, currently bought with
-  dollars — pressing it here turns the arc's first physical dependency into
-  a Stone trade. **Adhesive is BIO-ADHESIVE as of 2026-08-02**, from two
+  lumber needs no line to explain it. **WHAT IT IS FOR, corrected
+  2026-08-02: HOUSES AND STRUCTURES** — not turbine tooling, which an
+  earlier draft wrongly led with. That makes the mill a supplier to the
+  REALTY COMPANY, whose function is placing people in housing, so the three
+  cross-community institutions interlock: the bus fleet MOVES people, the
+  realty company HOUSES them, the mill makes what the housing is built
+  from. The world already shows it — Hank's existing ambient line has new
+  houses going up at Mountain, and "new housing" is in the placed-props
+  list — so naming Hillside as the source explains set dressing the player
+  can already see. Blade molds stay a real secondary use and a forward
+  hint (MDF is a wood composite board, currently bought with dollars), just
+  not the headline. **Adhesive is BIO-ADHESIVE as of 2026-08-02**, from two
   sources: TANNIN cooked out of the mill's own bark waste — a stream that
   previously did nothing but pile up — and SOY protein grown in the Valley.
   Both are real and long-commercial. A small HARDENER fraction is still
   bought, deliberately: the residual import is kept rather than smoothed,
-  same as the biofuel thread. Mold stock goes bio before structural beam
-  does, because dry interior tooling is the easy case chemically — so the
-  arc's first physical need is also its first solvable one
+  same as the biofuel thread. **The gradient cuts AGAINST them, revised
+  2026-08-02:** bio-adhesives are strongest in dry, interior,
+  non-structural service, so interior board, panelling and tooling stock go
+  local first — while STRUCTURAL BEAM, the mill's main product now that
+  housing is the purpose, is the hardest case there is and keeps needing
+  the bought hardener longest. That is a real constraint rather than the
+  lucky break an earlier draft called it, and it is better for the story:
+  they can make everything except the part that holds the roof up
 - **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient

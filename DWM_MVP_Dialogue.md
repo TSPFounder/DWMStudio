@@ -440,13 +440,39 @@ Three reasons it belongs here rather than anywhere else:
    Hillside presses it → board and beam come back reads as *of course*
    rather than as a new idea.
 
-**Why it matters beyond flavour: the blade molds are MDF**, which is a wood
-composite board. Right now that stock is bought, which makes it a DOLLAR
-cost draining the Vault — the same shape of problem as the bus fleet's
-fuel. A community pressing board from salvage turns the manufacturing arc's
-very first physical dependency into a Stone trade, satisfied inside the
-network instead of outside it. That is a much better opening beat for that
-arc than "and then they ordered sheet goods."
+**WHAT IT IS FOR — CORRECTED 2026-08-02: HOUSES AND STRUCTURES.** An earlier
+draft of this section led with the wind-turbine blade molds. That was the
+wrong emphasis and it is now demoted. **The primary product is structural
+beam and board for BUILDINGS** — housing first, other structures after.
+Turbine tooling is a beneficiary of the capability, not the reason for it.
+
+That correction matters because of what it connects to.
+
+**It makes the mill a supplier to the REALTY COMPANY.** That company's whole
+function is placing community members in housing, and housing has to be
+built out of something. So the third cross-community institution turns out
+to feed the first, and all three now interlock around the same thing: the
+bus fleet MOVES people between communities, the realty company HOUSES them
+when they get there, and the mill makes the material the housing is made
+of. None of the three works inside one community alone, which is the theme
+carried structurally rather than said.
+
+**The world already shows this, which is why it needs no setup.** Hank's
+existing Mountain ambient line has new houses going up right now — *"Freshcan
+crew finished the new houses last week... nobody's sleeping in a barn"* —
+and "new housing" is already in the placed-props list at the top of this
+document. Those houses are made of something. Naming Hillside's mill as the
+source explains set dressing the player can already see, in the same way the
+wood salvage chain reads as obvious next to the metal one.
+
+**Post-MVP this is also the bigger economic story**, not the smaller one.
+Mold stock is a one-off for a blade programme. Housing lumber is continuous
+demand from all five communities, which makes it a far more plausible
+tradeable resource if one is ever added.
+
+*The blade molds remain a real use and are worth keeping as a forward hint —
+MDF is a wood composite board, and that stock is currently bought with
+dollars. Just do not lead with it.*
 
 **The metaphor is worth leaning on because it is literally true.** In sawn
 timber a knot is a concentrated weak point and the board is only as good as
@@ -488,15 +514,28 @@ states it as a fact about wood rather than as a moral.
   fraction remains. Same shape as the biofuel thread, which also does not
   fully close.
 
-  **There is a gradient here worth using, and it falls out of the chemistry
-  rather than being invented for drama.** Bio-adhesives are strongest in
-  DRY, INTERIOR, NON-STRUCTURAL service — which is exactly what the blade
-  molds are, since mold stock is tooling. Exterior structural beam is the
-  hard case and keeps needing the bought hardener longest. So the mill goes
-  bio on mold stock and interior board FIRST, while still importing for
-  beams. The thing the manufacturing arc needs most is the thing they can
-  solve first, which is a genuinely lucky alignment and should be played as
-  quiet good fortune, not as a triumph.
+  **THE GRADIENT — REVISED 2026-08-02, and it now cuts the OTHER WAY.** An
+  earlier draft called this a lucky alignment, on the reading that the mill
+  existed mainly to make blade molds. Once the primary product is HOUSING,
+  that reverses, and the honest version is better.
+
+  Bio-adhesives are strongest in DRY, INTERIOR, NON-STRUCTURAL service.
+  Structural beam carrying load in a building is the HARDEST case there is —
+  wet service, life safety, and the one place you cannot quietly accept a
+  weaker bond. So the mill's MAIN product is precisely the product that
+  keeps needing the bought hardener longest.
+
+  That is a real constraint, not a lucky break, and it should be written as
+  one: they can go fully local on interior board, panelling, sheathing and
+  tooling stock long before they can go local on the beams holding a roof
+  up. The bought fraction shrinks but does not disappear, and it is the
+  houses that keep it alive.
+
+  This is a BETTER position dramatically than the version it replaces. A
+  community that has solved everything except the one thing that matters
+  most is a more interesting place than one that got lucky — and "we can
+  make everything but the part that holds the roof up" is a sentence with
+  weight in a story about people being housed.
 - **Salvaged wood is full of metal.** Nails and screws must come out before
   anything is chipped — magnetic separation plus a lot of hand sorting.
   That is a labour cost, and the Suburb produces `skilled_labor`, so it is
@@ -556,14 +595,22 @@ note under this community's heading. Narrative only, no schema change.]**
 > building — and we press it back into board and beam. Takes more sorting
 > than milling does. The nails are the worst of it."
 
+> "Most of it goes back into houses. Realty office finds people somewhere
+> to live and then somebody has to actually build the somewhere — that's
+> been us for a while now. Half the new places in three towns came off
+> that saw."
+
 > "Funny thing about a pressed beam — it's stronger than the tree it came
 > out of, and steadier with it. A sawn board is only ever as good as its
 > worst knot. Break the wood up and bond it back together and the flaws
 > are all still in there. They've just stopped being in the same place."
 
-> "The board we press flat is what your blade molds will want, when it
-> comes to that. Right now that gets bought in with dollars. It doesn't
-> have to."
+> "Flat board's the easy one — panelling, sheathing, anything that lives
+> indoors and doesn't hold weight. Beams are the hard part, and beams are
+> what a house actually needs."
+
+> "Same flat board would do for your blade molds too, if that ever comes
+> to anything. Gets bought in with dollars today. It doesn't have to."
 
 **[Bio-adhesive — added 2026-08-02. Two sources and a residual import; see
 the frictions note under this community's heading. The bark line is the one
