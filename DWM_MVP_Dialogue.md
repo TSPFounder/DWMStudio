@@ -58,7 +58,7 @@ walkable without a quest marker or minimap:
 | From | Direction given | To |
 | --- | --- | --- |
 | Hank (Mountain) | Out through the gate, follow the track down | Sophia, room above the Hillside realty office |
-| Sophia (Hillside) | Right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
+| Sophia (Hillside) | Down the stairs, right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
 | Maria (Valley) | Left out of the house, down the dirt road | DeShawn, the realty office in the Suburb |
 | DeShawn (Suburb) | Out to the stop on the corner, take the bus loop | Mike, on the City machine-shop floor |
 | Mike (City) | Upstairs, same building | Kai, in the office above the shop floor |
@@ -370,12 +370,51 @@ turbine. Timber/the sawmill are NOT gone from the world — deferred to
 post-MVP — so Sophia's location can still visually be the sawmill/workshop
 building even though her trade and dialogue no longer center on lumber.)*
 
+**NPC PLACEMENT — RESOLVED 2026-08-02. All three Hillside NPCs are in the
+SECOND-FLOOR ROOM ABOVE THE REALTY OFFICE.** Sophia, Owen and Nathan share
+one room; none of them is anywhere else in Hillside. This closes the
+long-open "one marker or spread across Hillside" question, and it closes it
+differently from City, for a reason worth stating.
+
+**City needed two markers because City has TWO TRADES.** Hillside has ONE.
+Sophia sells `engineering_services`; Owen and Nathan do not sell anything —
+they explain what went into her package. So the room holds:
+
+| NPC | Marker | Opens a trade panel? |
+| --- | --- | --- |
+| Sophia Sandoval | the trade marker | YES — `engineering_services` |
+| Owen Marsh | optional conversation | no |
+| Nathan Ferris | optional conversation | no |
+
+That still satisfies the one-trade-per-approach pattern every community
+uses: exactly one of the three approaches opens a panel. Owen and Nathan are
+pure flavour and can be cut entirely if the stop runs long, without
+touching the trade.
+
+**Two placement consequences:**
+
+1. **Space the three within the room.** Three markers in one room can
+   overlap if their interaction radii touch, and a player aiming at Nathan
+   who gets Owen will read that as a bug. Put each at their own work —
+   Sophia at the drafting table, Owen at a board, Nathan at a terminal —
+   and keep the radii clear of one another.
+2. **Sophia's directions now start with stairs.** She is on the second
+   floor, so her hand-off opens with *"Down the stairs, right as you come
+   out of the office"* rather than sending the player into the street from
+   a room they cannot walk out of. The navigation table reflects this.
+
 **THE MILL RUNS (clarified 2026-08-02).** An earlier ambient line had the
 sawmill idle — *"not running these days"* — and that was wrong. Hillside
 operates the mill. What is deferred is the **timber TRADE**, not the
 building and not the work: Sophia's tradeable output in the MVP is still
-`engineering_services` and nothing about the trade panel changes. She now
-drafts in the loft above a working mill rather than in an empty one.
+`engineering_services` and nothing about the trade panel changes.
+
+**Sophia does NOT work in the mill** — an intermediate draft briefly had her
+drafting in a loft above it, which contradicts the placement resolved above.
+She is in the second-floor room over the realty office, and the mill is
+elsewhere in Hillside; her ambient line now places it by SOUND from that
+window rather than by her being inside it. The mill runs, she just is not
+standing in it.
 
 This costs nothing in the schema and it already fits the seeder as written.
 Mountain **Produces** `timber`; Hillside **Needs** `timber` (20). A working
@@ -465,14 +504,16 @@ not be able to conclude alone.]**
 > "Good luck up there. Come back through when it's spinning — I'd like to
 > see it."
 
-> "Right as you come out of the office, then straight on down the market
-> street — don't turn off it. Road climbs out the far end and drops you
-> into the Valley. Maria Vega'll be on her porch. She generally is."
+> "Down the stairs, right as you come out of the office, then straight on
+> down the market street — don't turn off it. Road climbs out the far end
+> and drops you into the Valley. Maria Vega'll be on her porch. She
+> generally is."
 
 **Sophia — Ambient (optional, triggered on repeat visits):**
 
-> "Mill's still running out back — I draft in the loft above it. Noisy,
-> but the light's good, and I'd rather hear it going than not."
+> "Mill's still running — you can hear it from this window when the wind
+> sits right. Some people would call that noise. I'd rather hear it going
+> than not."
 
 **[Composite lumber — added 2026-08-02. Hillside RUNS the mill; see the
 note under this community's heading. Narrative only, no schema change.]**
@@ -813,10 +854,13 @@ Mountain.]**
    of worldbuilding not established anywhere else. Fine to keep as a light
    touch, or cut if you'd rather every NPC's dialogue stay fully
    self-contained with no implied history.
-3. **City's two-NPC structure** — confirm whether Mike and Kai should
-   share one marker (both trades happen in one stop) or sit at two
-   separate markers (matches every other community's one-resource-per-stop
-   pattern more cleanly, but means City takes two visits instead of one).
+3. **City's two-NPC structure — RESOLVED 2026-08-02.** Two markers, one
+   building: Mike on the machine-shop floor, Kai in the office above it.
+   Keeps the one-trade-per-approach pattern, and the hand-off between them
+   is "upstairs at the back", so the second marker costs nothing in
+   navigation. **Hillside's equivalent question is also resolved** — see
+   the note under that community's heading; all three of its NPCs are in
+   the second-floor room above the realty office.
 4. **The Suburb Dollar Vault beat is still marked optional**, same as it
    was in the storyline doc — this dialogue includes it, but cut both the
    flagged lines above if you've decided against including it.

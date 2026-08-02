@@ -25,9 +25,10 @@ document: `DWM_MVP_Dialogue.md`** (drafted 2026-07-14). It contains the
 actual approach/trade/farewell lines for all five stops, including four
 newly-named NPCs for Hillside, Valley, Suburb, and City. That document has
 its own open items (NPC asset assignments, whether to keep a small Valley/
-Hank backstory hint, City's one-marker-vs-two-marker structure, and the
-Suburb Dollar Vault beat) — resolve those there before treating the
-dialogue as final.
+Hank backstory hint, and the Suburb Dollar Vault beat) — resolve those
+there before treating the dialogue as final. The marker-structure questions
+for **both** City and Hillside were resolved 2026-08-02 and are no longer
+open.
 
 ---
 
@@ -195,9 +196,15 @@ shared-Snowy-Peaks-base plan — see SCOPE.md 2026-07-17/18 entries).
 
 **NPCs: Sophia Sandoval** (engineering firm lead), **Owen Marsh** (CAD
 designer), and **Nathan Ferris** (Simulink modeler) — full approach/trade/
-farewell dialogue for all three in `DWM_MVP_Dialogue.md`, which also flags
-the open question of whether they share one marker or are spread across
-Hillside as separate points of interest.
+farewell dialogue for all three in `DWM_MVP_Dialogue.md`.
+
+**Placement RESOLVED 2026-08-02:** all three are in the SECOND-FLOOR ROOM
+ABOVE THE REALTY OFFICE, and nowhere else in Hillside. Only Sophia opens a
+trade panel — Hillside has one trade, unlike City's two — so Owen and
+Nathan are optional conversations that explain what went into her package
+and can be cut without touching the trade. Space the three markers within
+the room so their interaction radii do not overlap. Sophia's hand-off to
+the Valley now starts with the stairs, since she is a floor up.
 
 **Trade:** Mountain pays Stone for **Engineering Services** — real CAD
 drawings and a Simulink model of the turbine's expected behavior. This
