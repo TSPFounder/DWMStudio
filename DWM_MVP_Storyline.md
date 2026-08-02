@@ -168,9 +168,21 @@ checks back in with Hank partway through Act 2.)*
 
 ## Act 2 — The Search (Hillside → Valley → Suburb → City)
 
-Each stop is a full loop of the MVP's core interaction: walk to the
+Each stop is a full cycle of the MVP's core interaction: reach the
 community's economy marker, read its flavor text, initiate a trade, watch
 Stone move on both sides' balances.
+
+**How the player travels (added 2026-08-02).** Not every leg is walked. The
+first three are — Mountain → Hillside → Valley → Suburb — and the last two
+are ridden on the **bus loop**, the small fleet of school buses the five
+communities jointly run. Suburb → City and City → Mountain are the long
+legs, and they are the only ones the bus covers; keeping the short links on
+foot is deliberate, since if every leg were a ride the level design would
+stop paying off. `DWM_MVP_Dialogue.md` carries the full navigation table,
+the in-character hand-offs, and the fleet's design rules.
+
+The bus stops at the FOOT of the mountain road and cannot make the climb,
+which matters to Act 3 — see there.
 
 ### Stop 1 — Hillside (Engineering Services)
 
@@ -228,9 +240,13 @@ crane backdrop.
 
 **NPCs: Mike Dayton** (factory foreman, Manufactured Tools) **and Kai
 Sutherland** (systems engineer, Software Services) — full approach/trade/
-farewell dialogue for both in `DWM_MVP_Dialogue.md`, which also flags the
-open question of whether they share one marker or sit at two separate
-ones.
+farewell dialogue for both in `DWM_MVP_Dialogue.md`.
+
+**Marker layout RESOLVED 2026-08-02:** two markers, one building. Mike is on
+the machine-shop floor and Kai is in the office above it, so City keeps the
+one-trade-per-approach pattern every other community uses while the hand-off
+between them stays "upstairs at the back" — no map directions needed. The
+player arrives from the Suburb on the bus loop and reaches Mike first.
 
 **Trade:** Mountain buys **Manufactured Tools** *and* **Software Services**
 from City — this is the demo's second cross-community trade, and
@@ -249,6 +265,24 @@ outcome is the decision about what comes next. See SCOPE.md for the
 decision entry and what it supersedes.)*
 
 **Setting:** Mountain, turbine site, Hank's marker again.
+
+**Getting there — the walk up (added 2026-08-02).** The bus loop carries the
+player back as far as the FOOT of the mountain road and no further; the
+grade beats it. The last stretch into Mountain is walked, and that is doing
+three jobs at once rather than being a traversal inconvenience:
+
+1. **It mirrors the walk that opened the game.** Act 1 sends the player out
+   through the gate and down the track. Ending on the same climb in reverse
+   gives Act 3 an actual arrival instead of a fade-in.
+2. **It hands the plot its logistics argument for free.** If a bus cannot
+   get up there, neither can freight. That is a concrete, visible part of
+   why repairing the large turbine costs what it does — the player has just
+   physically experienced the reason, rather than being told it in a
+   dialogue box during the verdict.
+3. **It buys a beat of quiet before the payoff.** The climb is the only
+   stretch of the demo with no marker, no trade and no NPC, which makes it
+   the natural place for the player to arrive at the turbine rather than
+   simply appear beside it.
 
 **Hank (interaction-panel text):**
 
@@ -310,8 +344,9 @@ deflates — the win is the capability.)*
   set-dressing referenced already exists in the Week 5–6 schedule.
 - **No new systems required.** Dialogue is static interaction-panel text —
   same pattern as the existing economy markers, not a new dialogue engine.
-- **Covers every required MVP "done" criterion in one continuous loop:**
-  walk through all five communities, see balances on screen, execute
+- **Covers every required MVP "done" criterion in one continuous run:**
+  travel through all five communities — walking the short links, riding the
+  bus loop for the two long ones — see balances on screen, execute
   cross-community trades (three of them, escalating in complexity),
   optionally demonstrate Dollar Vault depletion, and finish on the promoted
   engineered mechanism actually running.
@@ -359,8 +394,17 @@ chain — which is the theme again, in the mechanics.
   to be something else entirely. We don't waste much out here."* No retrofit
   needed
 - **Mountain** — assembly and the turbine site
-- **Valley** — UNDECIDED. Currently only a food supplier in this arc; worth
-  giving them a role rather than leaving them out of the manufacturing story
+- **Valley** — **RESOLVED 2026-08-02: grown feedstock.** No longer only a
+  food supplier here. The bus fleet's biofuel conversion runs on what the
+  Valley grows and presses — Maria's existing digester ambient line is the
+  hook, and her new one makes the point explicitly: it is *"the first thing
+  anybody's asked us for that we'd be growing instead of just handing
+  over."* That is a genuine manufacturing-arc role rather than a courtesy
+  one, because it is an input nobody else in the network can produce.
+  It extends naturally if wanted: bio-based adhesives (soy, starch and
+  lignin routes are all real) come off the same fields, which matters if
+  the composite-lumber idea is taken up, since resin is otherwise the one
+  input that has to be bought with dollars.
 
 ## Open decisions for you
 

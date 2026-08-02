@@ -174,6 +174,39 @@ Design rules, so this stays MVP-sized:
   "repetition teaches a rule," and it gives the Suburb and City trade
   terminals a natural home instead of an arbitrary placement.
 
+**ASSET ASSIGNED (2026-08-02): HQ Retro School Bus by NotLonely**, already
+owned. This is a rare case of an asset choice that improves the fiction
+rather than merely satisfying it — a RETRO bus reads as a vehicle kept
+running long past the era that built it, which is what a salvage-and-repair
+economy would actually be riding. Nobody has to say that; the mesh says it.
+
+The fleet is intentionally UNIFORM — same bus at every stop, no per-community
+paint. Fleet numbers on the side are the right way to tell them apart if you
+want that, because a number says "one fleet, five branches," where community
+colours would say "five towns' buses" and quietly contradict the shared
+ownership the whole thing is for.
+
+TWO THINGS TO CHECK ON THE ASSET BEFORE COMMITTING TO A BOARDING
+INTERACTION, neither of which is a criticism of the pack — both are near-
+universal in marketplace vehicles:
+
+1. **Does it have a modelled interior?** Many vehicle assets are exterior
+   shells. If this one is, boarding is off the table and the MVP default
+   below is the only option — which is fine, and was the recommendation
+   anyway.
+2. **What is its collision?** A single convex hull or box collision makes
+   the interior solid and un-enterable. This is the SAME failure mode as the
+   Village Log House staircase, with the same fix (Collision Complexity →
+   "Use Complex Collision As Simple"). Also sanity-check scale against the
+   character capsule: a real school bus is roughly 1100 × 250 × 300 units.
+
+**MVP DEFAULT — the stop is the trigger, the bus is the landmark.** Put the
+trigger volume on the pavement at the stop rather than inside the vehicle.
+Zero collision work, no dependency on an interior existing, and it still
+reads correctly, because standing at a stop and then being somewhere else is
+exactly how riding a bus feels. Upgrade to actual boarding later if the
+asset turns out to support it.
+
 **Biofuel conversion — planted now, paid off post-MVP.** The fleet currently
 burns purchased fuel, which is a DOLLAR cost draining the Vault rather than
 a Stone trade. The stated future plan is to convert the buses to run on
