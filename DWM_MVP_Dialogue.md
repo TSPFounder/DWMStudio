@@ -210,12 +210,38 @@ Design rules, so this stays MVP-sized:
   draft had one and it is withdrawn — see the note under Act 3 in the
   storyline doc for what was removed and why nothing load-bearing went with
   it.
-- **The bus stops at the FOOT of the mountain road.** It cannot make the
-  climb, so the last stretch into Mountain is walked. This mirrors the walk
-  that opens the game, gives Act 3 a real arrival, and hands the plot its
-  logistics argument for free: if a bus cannot get up there, neither can
-  freight, which is part of why repairing the large turbine costs what it
-  costs.
+
+  **MOUNTAIN'S ARRIVAL — recorded 2026-08-02.** Mountain is a very large
+  terrain and its only road runs about a MILE from the village. Three
+  things follow, in order of how much they matter:
+
+  1. **SPAWN ROTATION IS THE ONLY REQUIREMENT, and it is free.** If the
+     return spawn faces the village with the road behind the player, none
+     of the rest of this is ever seen. Face them out toward the road. One
+     rotation field, and it decides whether any of the below pays off.
+  2. **THE ROAD READS; A BUS DOES NOT.** A road is a long linear feature
+     that stays legible at distance. A bus is a point object, and at a mile
+     — about 160,000 UE units — an 1,100-unit vehicle subtends roughly
+     0.39°, which is about 8 × 2 PIXELS at 1080p on a default 90° FOV.
+     Nobody will read that as a bus; they will read it as a yellow speck if
+     they notice it at all. Two defaults will erase even that: CULL
+     DISTANCE (set Desired Max Draw Distance to 0 or it vanishes long
+     before a mile) and EXPONENTIAL HEIGHT FOG. Park a bus there if it
+     pleases you, as a grace note for players who look — but do not spend
+     effort making it legible, and do not rely on it to close the ride.
+  3. **THE RIDE ALREADY CLOSES AT THE BOARDING END.** The player is told to
+     take the loop, walks into a bus in the City, and the screen fades.
+     That is the readable act. Arriving without a bus in view is how riding
+     anything works when you are not looking at it.
+
+  **THE MILE IS WORTH MORE THAN THE BUS, and it recovers something the
+  withdrawn walk cost.** A village a mile from the only road is a stronger
+  logistics argument than the grade ever was: everything reaching Mountain
+  crosses a mile of open ground. That is why repairing the large turbine
+  costs what it does — and the player does not have to WALK it to feel it,
+  only to SEE it once, from the village, facing the right way. Act 3's cost
+  argument gets visual support at zero traversal cost, which is strictly
+  better than what the walk was going to buy.
 - **Co-locate stop, support office and trade terminal.** Same three things
   in the same relationship in every community. This is the strongest form of
   "repetition teaches a rule," and it gives the Suburb and City trade
@@ -470,9 +496,40 @@ Mold stock is a one-off for a blade programme. Housing lumber is continuous
 demand from all five communities, which makes it a far more plausible
 tradeable resource if one is ever added.
 
-*The blade molds remain a real use and are worth keeping as a forward hint —
-MDF is a wood composite board, and that stock is currently bought with
-dollars. Just do not lead with it.*
+**THE MOLD APPLICATION IS STILL REAL AND WORTH KEEPING — it is the SECOND
+product, not a throwaway hint (expanded 2026-08-02).** Houses are what the
+mill is FOR. Mold stock is the other thing the same press makes, and it is
+worth its own beats for reasons that are not just cost:
+
+- **Flat board is where the bio-adhesive actually WINS COMPLETELY.** Mold
+  stock is dry, indoors, non-structural tooling — the easy chemistry case,
+  which is exactly what structural beam is not. So the mill's SECONDARY
+  product is where they reach full independence FIRST, while the primary
+  one is still importing hardener. That inversion is worth playing: the
+  thing they built the industry for is the thing they cannot finish.
+- **MDF is genuinely the standard material for this**, not a substitute for
+  something better. It is used for plugs, patterns and low-run molds
+  because it is homogeneous, has no grain to tear out, machines to a clean
+  surface and holds dimension. Recycled-fibre board with a bio-binder is
+  FIT FOR PURPOSE here in a way it is not in a roof beam — a mold carries
+  no sustained load and threatens nobody if it fails.
+- **Thick sections are LAMINATED, not solid.** A blade mold is machined
+  from boards bonded into a billet, not from one slab — which lines up with
+  the segmented-mold approach already in the manufacturing plan, and means
+  the glue-up matters as much as the board.
+- **THE REAL UNLOCK IS ITERATION, NOT COST.** Molds wear, get damaged, and
+  are superseded whenever the blade design changes. A community that must
+  buy mold stock can build *a* blade. A community that presses its own can
+  afford to make the mold again — and remaking the mold is the whole
+  difference between having a blade design and being able to IMPROVE one.
+  That is a better argument than any saving on sheet goods, and it is the
+  one to put in a character's mouth if only one survives.
+
+**Two honest limits, if this is ever detailed further.** MDF is hygroscopic
+and moves with moisture, so a mold wants sealing and does not love a damp
+shed. And the resin makes it abrasive — it eats cutting tools faster than
+solid wood does, which matters for a community that has to make or sharpen
+its own.
 
 **The metaphor is worth leaning on because it is literally true.** In sawn
 timber a knot is a concentrated weak point and the board is only as good as
@@ -611,6 +668,12 @@ note under this community's heading. Narrative only, no schema change.]**
 
 > "Same flat board would do for your blade molds too, if that ever comes
 > to anything. Gets bought in with dollars today. It doesn't have to."
+
+> "And that's the part worth having, to my mind. Anybody can build one
+> blade if they buy the board for the mold. It's making the mold AGAIN
+> that matters — you never get the first one right, and if you can't
+> afford to redo it you're stuck with whatever you managed first try.
+> That's not designing anything. That's just guessing once."
 
 **[Bio-adhesive — added 2026-08-02. Two sources and a residual import; see
 the frictions note under this community's heading. The bark line is the one
