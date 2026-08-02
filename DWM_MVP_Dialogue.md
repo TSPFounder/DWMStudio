@@ -750,9 +750,63 @@ City's foundry win instead**: reclaimed plastic pipe from the Suburb, cast
 fittings from Mike. **A world where bio solves everything is less believable
 than one where it solves most things and metal covers the rest.**
 
-*Also available if ever wanted, but needing something they do not have:*
-linoleum is completely bio (linseed oil, pine rosin, wood flour, limestone,
-jute) and has been made commercially since 1860 — but it needs flax.
+**FLAX — ADDED POST-MVP, decided 2026-08-02.** It was previously ruled out
+as "needs something they do not have". It is now in, and it turns out to be
+the best-connected crop available to them — linoleum is the least of it.
+
+**FIRST, THE CONSTRAINT, because it is a real choice and not a formality.**
+Flax is grown as one of TWO different crops from two different breeding
+lines: **fibre flax** (tall, unbranched, sown dense) for linen, and
+**linseed** (shorter, branched, more seed) for oil. Growing for both
+compromises both. So the communities have to pick a ratio, the same shape of
+decision as thatching straw versus grain.
+
+**LINSEED OIL MATTERS MORE THAN LINOLEUM, and one use matters most of all:
+WOOD FINISH AND PRESERVATIVE.** Boiled linseed oil is the traditional
+finish for timber. That is not a coincidence worth passing over — they are
+building houses out of composite lumber whose bio-adhesive is
+MOISTURE-SENSITIVE, which is that programme's weakest point. Linseed oil is
+exactly what you protect it with. **Flax shores up the composite lumber's
+single biggest vulnerability**, which is a real engineering link rather than
+a flavour one.
+
+**PAINT — and this one is VISIBLE IN ENGINE, which none of the rest are.**
+Falu red, the Swedish barn paint, is iron-oxide pigment plus linseed oil,
+rye flour and water, and has been made that way since the 1600s. The
+communities have all three inputs: **iron oxide from the City's foundry**
+(mill scale and slag), **linseed oil** from the Valley, **flour** from the
+grain. So they can make a durable exterior paint entirely from local
+materials — which means their buildings would share a distinctive colour
+*because they make the paint*. That is worldbuilding the player can SEE
+without a line of dialogue, and it is the strongest argument on this list.
+
+**Everything else flax gives them**, all of which lands on something already
+established:
+
+| Output | Goes to | Note |
+| --- | --- | --- |
+| Linen fibre | Suburb `textiles` | complements wool — linen for warm, wool for cold |
+| Flax shive (woody waste) | Hillside's press | shive particleboard is a real product |
+| Linseed meal (after pressing) | the flock | traditional livestock feed |
+| Oilcloth / waxed canvas | building wrap, tarpaulins | linseed-oiled fabric, traditional |
+| Putty | glazing | linseed oil plus whiting |
+| Rust preventative | Mike's machine shop | same role as the flock's lanolin |
+| Linoleum | flooring | linseed oil, rosin, wood flour, limestone, jute |
+
+**RETTING IS THE FRICTION, and it fits the Valley precisely.** Flax fibre
+has to be RETTED — the stem rotted to free the fibre — traditionally in
+water or on dew-wet grass. The Valley has the water. It also stinks, and
+water retting fouls what it is done in, which sits perfectly beside Maria's
+existing line about the digester: *"Ours just smells worse than most."*
+
+**⚠ AN OPEN QUESTION THIS CREATES — LAND COMPETITION.** The Valley is now
+carrying FOUR post-MVP crops on top of its actual traded output: biofuel
+feedstock, soy for the bio-adhesive, thatching straw, and now flax. Each was
+justified on its own and they are individually sound; **collectively they
+compete for the same acres**, and thatching straw and flax both reduce grain
+yield rather than using waste. Nobody has decided what the Valley gives up,
+or whether some of this belongs on Hillside's slopes instead. Worth settling
+before any of it is treated as canon.
 
 ALL OF THIS IS NARRATIVE ONLY for the MVP: no schema change, no new
 resources, nothing to implement.

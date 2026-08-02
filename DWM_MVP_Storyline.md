@@ -468,6 +468,20 @@ chain — which is the theme again, in the mechanics.
   FARM DIFFERENTLY rather than a waste stream put to use, which makes it the
   Valley's one genuine trade-off in the arc: less grain, in exchange for
   roofing nobody has to buy.
+  **A fourth, added 2026-08-02: FLAX** — post-MVP, and the best-connected
+  crop available. Linseed oil is the point rather than linoleum: it is the
+  traditional timber finish, so it protects the composite lumber at exactly
+  its weakest point (a moisture-sensitive bio-adhesive). It also gives a
+  LOCALLY-MADE EXTERIOR PAINT — Falu red is iron oxide, linseed oil, flour
+  and water, and City's foundry supplies the iron oxide — which is the only
+  item in this arc the player can SEE, since the buildings would share a
+  colour because the communities make the paint. Fibre flax also feeds the
+  Suburb's textiles, the shive feeds Hillside's press and the pressed meal
+  feeds the flock.
+  **⚠ OPEN — LAND COMPETITION.** The Valley now carries FOUR post-MVP crops
+  besides its traded grain, and thatching straw and flax both cut grain
+  yield rather than using waste. What the Valley gives up, and whether some
+  of this belongs on Hillside's slopes, is undecided
 
 ## Open decisions for you
 
