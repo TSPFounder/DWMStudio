@@ -60,9 +60,9 @@ walkable without a quest marker or minimap:
 | Hank (Mountain) | Out through the gate, follow the track down | Sophia, room above the Hillside realty office |
 | Sophia (Hillside) | Right out of the office, straight down the market street, road climbs out the far end | Maria, on her porch in the Valley |
 | Maria (Valley) | Left out of the house, down the dirt road | DeShawn, the realty office in the Suburb |
-| DeShawn (Suburb) | **NOT YET DEFINED** | ? |
-| Mike / Kai (City) | **NOT YET DEFINED** | ? |
-| Return to Mountain | **NOT YET DEFINED** | Hank, for Act 3 |
+| DeShawn (Suburb) | Out to the stop on the corner, take the loop | Mike, on the City machine-shop floor |
+| Mike (City) | Upstairs, same building | Kai, in the office above the shop floor |
+| Kai (City) | Loop back round; it stops at the foot of the mountain road, walk the last stretch up | Hank, for Act 3 |
 
 **TWO CONSEQUENCES, both worth knowing before these lines are treated as
 final:**
@@ -80,30 +80,111 @@ final:**
    wanders off-route will be holding stale instructions. Acceptable for a
    guided demo; worth knowing it is a deliberate trade.
 
-**INCOMPLETE — three links still undefined (as of 2026-08-01):**
+**COMPLETE as of 2026-08-02.** The three links that were open on 2026-08-01
+are all closed, and the shared bus fleet (see below) closed all three rather
+than one:
 
-1. **Where the player goes in the Suburb after DeShawn.** Undecided.
-2. **How they reach Mike and Kai in the City.** Undecided. Note this
-   interacts with the open one-marker-vs-two-marker question for City — if
-   Mike and Kai sit at separate markers, DeShawn's hand-off has to name
-   which one the player reaches first, and that NPC then hands off to the
-   other.
-3. **How they get back to Mountain for Act 3.** Undecided, and the largest
-   of the three: it is a route across the whole map rather than one turn.
-   This likely resolves through the level-transition system rather than
-   through walking directions — Codex's Track B task 1 is the Mountain ↔
-   Hillside transition, so the mechanism may already exist by the time this
-   is written.
+1. **Suburb after DeShawn** — he sends the player to the stop and onto the
+   loop.
+2. **Reaching Mike and Kai** — the loop runs to City; the player arrives at
+   the City stop and walks to the machine shop.
+3. **Back to Mountain for Act 3** — the loop again, as far as the foot of
+   the mountain road, then on foot up the last stretch.
 
-Until these exist the player is unguided from the Suburb onward.
+**This also settles the one-marker-vs-two question for City.** Mike is on
+the shop floor, Kai is in the office above it — two markers, one building,
+matching every other community's one-trade-per-approach pattern. The
+hand-off between them is "upstairs, same building," which needs no map
+directions at all, so the second marker costs nothing in navigation
+complexity. Update the parenthetical under the City heading, which still
+records this as undecided.
 
-**⚠ NAMING COLLISION — worth resolving before playtest.** There is now a
-"realty office" in BOTH Hillside (Sophia, in the room above it) and the
-Suburb (DeShawn, inside it). If those levels share a building asset, the two
-will also look identical. A player who gets turned around has no way to tell
-which one they are standing in, and the directions become actively
-misleading. Fix by distinguishing them in the dialogue (a sign, a colour, a
-detail on the building) or by giving one of them a different name.
+**Implementation note — use a TRIGGER VOLUME for the loop, not the E key.**
+`Interact()` already has a three-case ordering (open dialogue → trade
+terminal → NPC) that is deliberately fragile and has been verified against
+regression. Adding the bus as a fourth case means touching that function
+again. An overlap trigger is a completely separate code path and cannot
+regress it. Place the volume at the bus door or on the pavement at the stop
+so that walking past does nothing and boarding is deliberate.
+
+The loop is a SKIN on the existing level-transition system, not a second
+system: Codex's Track B task 1 is the Mountain ↔ Hillside transition, and
+once that exists, walking and riding are the same mechanism wearing
+different fiction — a trigger on a track, a trigger on a kerb.
+
+**The realty offices are deliberate, not a collision (recorded 2026-08-02).**
+An earlier draft of this section flagged the "realty office" appearing in
+both Hillside and the Suburb as a naming hazard. That was wrong, and the
+correction matters enough to write down so nobody "fixes" it later.
+
+The realty company is ESTABLISHED SHARED INFRASTRUCTURE — a cross-community
+organisation that places community members in housing and runs its offices
+as community support sites. The offices are separate places in separate
+buildings; they already carry the SAME SIGN out front in the current UE
+levels. So the repetition is a system the player learns, not an ambiguity
+they trip over: "go to the realty office" parses in any community, exactly
+like "go to the bus stop." Keep the shared sign and keep the buildings
+distinct — that combination is what makes it read as one institution with
+five branches rather than five coincidences.
+
+Two things follow from this:
+
+1. **It carries the theme without a speech.** A realty company that
+   ALLOCATES housing rather than sells it puts a familiar name on a changed
+   function. The player arrives with assumptions about what happens inside a
+   realty office and learns the economy by having them corrected — which is
+   worth more than any line of dialogue explaining mutual credit.
+2. **It is the same pattern as the shared bus fleet** (below): two
+   cross-community institutions, both concerned with moving people between
+   communities, and neither one workable by a single community alone. The
+   fleet is therefore the SECOND instance of a pattern the player has
+   already met, not a cold introduction of the unity theme.
+
+Sophia and DeShawn both stay where they are. A support office is exactly
+where a stranger would be sent, so both placements are already right. The
+only outstanding nicety is that neither location currently shows what its
+person TRADES: a drafting table with drawings pinned up in Sophia's room
+reads "engineer" instantly, and DeShawn's office looking out onto the
+sorting yard reads "recycler." Props, not relocations.
+
+**The shared bus fleet (added 2026-08-02).** The five communities jointly
+run a small fleet of school buses between them — the service is called
+**"the loop,"** which is literally true: Mountain → Hillside → Valley →
+Suburb → City → Mountain. Characters saying "catch the loop" teaches the
+shape of the map for free.
+
+Design rules, so this stays MVP-sized:
+
+- **One bus parked at every community, always.** This is the whole reason a
+  fleet beats a single bus: a player who reaches a stop and finds it empty
+  would need a timetable to explain itself. A fleet never has that problem,
+  and never needs a schedule.
+- **Walk the short links, ride the long ones.** Mountain → Hillside →
+  Valley → Suburb stay on foot. The loop covers only Suburb → City and
+  City → Mountain. If every leg is a bus ride the level design stops paying
+  off.
+- **The bus stops at the FOOT of the mountain road.** It cannot make the
+  climb, so the last stretch into Mountain is walked. This mirrors the walk
+  that opens the game, gives Act 3 a real arrival, and hands the plot its
+  logistics argument for free: if a bus cannot get up there, neither can
+  freight, which is part of why repairing the large turbine costs what it
+  costs.
+- **Co-locate stop, support office and trade terminal.** Same three things
+  in the same relationship in every community. This is the strongest form of
+  "repetition teaches a rule," and it gives the Suburb and City trade
+  terminals a natural home instead of an arbitrary placement.
+
+**Biofuel conversion — planted now, paid off post-MVP.** The fleet currently
+burns purchased fuel, which is a DOLLAR cost draining the Vault rather than
+a Stone trade. The stated future plan is to convert the buses to run on
+biofuels the VALLEY can help supply — feedstock from what Valley already
+produces — with the conversion work itself done in the CITY or the SUBURB,
+whichever suits. That routes the whole project through three communities and
+nets the running cost into the Stone ledger instead of the Vault.
+
+NARRATIVE ONLY for the MVP — no schema change, no `transport_services`
+resource, no fuel mechanic. It costs one line each from DeShawn and Maria to
+set up, and the payoff is available whenever it is wanted.
 
 ---
 
@@ -353,6 +434,15 @@ added Valley assets):**
 > got their own way of not wasting things. Ours just smells worse than
 > most."
 
+**[Biofuel set-up — added 2026-08-02. Pairs with DeShawn's line; between
+them the post-MVP conversion project is fully planted from both ends.
+Narrative only.]**
+
+> "DeShawn keeps asking what else that digester could do. Truth is, plenty
+> — we could grow and press what those buses burn, if somebody sorted out
+> the engines. That's not our end of it. But it's the first thing anybody's
+> asked us for that we'd be growing instead of just handing over."
+
 ---
 
 ## Suburb — DeShawn Okafor (labor hall foreman)
@@ -385,6 +475,13 @@ balance visibly drops on screen:]**
 > "Tell your people to keep the ropes tied right. We'll see them when the
 > job's done."
 
+**[Navigation hand-off — added 2026-08-02. Sends the player onto the loop
+to City, and names Mike so the arrival has a target:]**
+
+> "City's too far to walk and I'm not sending you. Stop's on the corner —
+> take the loop. Ask for Mike Dayton, he'll be on the shop floor, and he'll
+> be the loudest thing in the building."
+
 **Ambient (optional — triggered on repeat visits; references the newly-
 added Suburb assets):**
 
@@ -403,17 +500,29 @@ added Suburb assets):**
 > "Crews eat Valley grain on every job over a week. Maria won't let me
 > send anybody up a mountain on what the canteen calls food."
 
+**[Biofuel set-up — added 2026-08-02. Plants the post-MVP conversion
+project. Narrative only; no fuel mechanic exists or is implied.]**
+
+> "Five towns, one set of buses, and every drop of fuel in them bought with
+> dollars we don't get back. That's the part that keeps me up. Maria
+> reckons the Valley could grow what we'd need instead, and converting the
+> engines is shop work — we could do it here, or City could. Nobody's
+> arguing about whether. Just about when."
+
 ---
 
 ## City — Mike Dayton (factory foreman, Manufactured Tools) and Kai
 Sutherland (systems engineer, Software Services)
 
 *(Two NPCs at one location, since City covers two resources. New NPCs, no
-asset assignment made yet, same flag as above. Consider whether both
-should be present at the same marker or two separate markers within City —
-two markers is likely cleaner for the trade-panel interaction pattern, one
-trade per approach, matching every other community's single-resource
-stops.)*
+asset assignment made yet, same flag as above.)*
+
+**RESOLVED 2026-08-02 — two markers, one building.** Mike is on the machine-
+shop floor, Kai is in the office above it. That keeps the one-trade-per-
+approach pattern every other community uses, and because both markers sit in
+the same building the hand-off is "upstairs at the back" — no map directions,
+no navigation cost for the second marker. The player arrives from the Suburb
+on the loop and reaches Mike first.
 
 ### Mike Dayton — Manufactured Tools
 
@@ -448,6 +557,13 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 > "Bring it back down if it ever needs work again. We don't forget good
 > customers."
 
+**[Navigation hand-off — added 2026-08-02. Two markers, one building, so
+this needs no map directions:]**
+
+> "You'll want Kai before you go anywhere. Straight up the stairs at the
+> back — office over the shop floor. Metal's only half of what you're
+> carrying home."
+
 **Ambient (optional — triggered on repeat visits):**
 
 > "Furnace runs near round the clock in here — that's where your fittings
@@ -477,6 +593,15 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 
 **Farewell:**
 > "Good luck up there. I'll be watching the feed once it's live."
+
+**[Navigation hand-off — added 2026-08-02. Closes the loop and sets up the
+walk into Act 3. The bus stopping short of the summit is deliberate: see the
+format note above for why it earns its keep twice over.]**
+
+> "Loop runs back round the way you came — it'll take you as far as the
+> foot of the mountain road, and that's as far as it goes. Grade beats it
+> every time. You'll walk the last stretch, same as everything else that
+> ends up on that mountain. Hank'll be waiting."
 
 **Ambient (optional — triggered on repeat visits):**
 
