@@ -18,7 +18,7 @@ He turned to the apprentice.
 
 "Head down to the other communities. Trade fair, come back with what we need, and let's get this thing spinning again."
 
-It was not a small request, and he did not pretend it was. The Mountain had two things worth trading — timber off the slopes, and, when the turbine finally turned, power. Everything else had to come up the road. Everything on that mountain had come up the road at some point, carried the last mile by somebody's back.
+It was not a small request, and he did not pretend it was. The Mountain had two things worth trading — timber off the slopes, and, when the turbine finally turned, power. Everything else had to come up the road.
 
 *What exactly do we need?*
 
@@ -30,9 +30,19 @@ Four things, from four different places, and none of them from here.
 
 The village behind him was fuller than it had been the year before. The labour hall crew had come up from the Suburb and finished a row of new houses the week previous — DeShawn's people doing the building, Hillside's lumber doing the standing up — because the realty office had found three families and had nowhere to put them. It was crowded now. Nobody was sleeping in a barn.
 
-Up on the top ground, Hillside's sheep were grazing out the summer. Nothing else that ground was good for, and it was good for that.
+Up on the top ground, Hillside's sheep were grazing out the summer.
 
-Solar panels on the workshop roof held the place over while the turbine stood dead. They ran the lights and the radio and not much else.
+"Nothing else that ground is good for," Hank said, "and it's good for that."
+
+Solar panels on the workshop roof held the place over while the turbine stood dead. The control station kept them steady and the bank stored whatever the day didn't use.
+
+"Won't power much more than lights and the radio," he said, "but it's something."
+
+He mentioned, on the way past, that the fish trap had been good to them that season — one less thing to worry about while every pair of hands in the village was busy with the turbine. A small mercy.
+
+And by the workshop door there was a bin.
+
+"We keep a scrap bin by the workshop — bolts, offcuts, anything with metal left in it. Not much on its own. But it goes down to the Suburb with the empty carts, and something useful comes back up." He put a bracket in it as he spoke, without particularly noticing that he had. "Everybody keeps a bin now."
 
 ---
 
@@ -68,6 +78,10 @@ Then she said the thing that would take four more stops to make sense of.
 
 "One more thing, and you won't like it. Doing this properly — not patching it, properly — the design hours alone are steep. Whether that's worth paying depends on what the parts cost, and that's not my number to give you. Ask Mike in the City. Put his figure next to mine before you decide anything."
 
+There was solar on the roof of the office and a battery bank beside it.
+
+"Doesn't run much, but it keeps the lights on through a cloudy week while these two are hunched over a screen." She looked at the bank with something close to affection. "Half the fittings on that bank came up from the Suburb — somebody else's junk, cleaned up and re-cut. Saves me drawing parts that already exist."
+
 Through the window behind her the mill was running. You could hear it when the wind sat right.
 
 "Some people would call that noise," she said. "I'd rather hear it going than not."
@@ -76,15 +90,29 @@ Half of what came off that saw was no longer logs. The Suburb sent up salvage �
 
 "Most of it goes back into houses. Realty office finds people somewhere to live and then somebody has to actually build the somewhere — that's been us for a while now. Half the new places in three towns came off that saw."
 
-She said one more thing about the beams, in the tone of someone repeating a fact she found pleasing.
+The same press made other things besides. Panels of pressed wood fibre that went on the outside of a wall under the cladding, which breathed the way a timber building needs to breathe and did not trap the damp the way a sheet of plastic does. And in the loft above, bagged and waiting, fleece off the flock — scoured, carded, and stuffed between rafters, which is a thing wool has been doing in roofs for a very long time and is still better at than most of what replaced it.
+
+She said one thing about the beams in the tone of someone repeating a fact she found pleasing.
 
 "Funny thing about a pressed beam — it's stronger than the tree it came out of, and steadier with it. A sawn board is only ever as good as its worst knot. Break the wood up and bond it back together and the flaws are all still in there. They've just stopped being in the same place."
 
-There was one thing they still bought.
+Not everything came off the press equally easily, and she was clear about which was which.
+
+"Flat board's the easy one — panelling, sheathing, anything that lives indoors and doesn't hold weight. Beams are the hard part, and beams are what a house actually needs."
+
+The reason was the glue.
 
 "Glue's the part nobody thinks about. It's the one thing in that press we buy in — and we buy it in barrels." She frowned at the window. "Bark, though. We strip tons of it off the logs and it's done nothing for us but pile up. Turns out you can cook a binder out of it. Maria reckons she can grow the other half of what we'd need. Between the two we'd be most of the way there."
 
 "Most of the way, mind. There's a hardener in it we haven't a hope of making, and there's no talking a beam into holding without it."
+
+Which meant the flat board would come free of the barrels first, and the beams last — dry indoor panel being an easier thing to bond than a piece of timber holding a roof up in the rain.
+
+"Same flat board would do for your blade molds too, if that ever comes to anything. Gets bought in with dollars today. It doesn't have to."
+
+She said the next part with more energy than she had said any of the rest.
+
+"And that's the part worth having, to my mind. Anybody can build one blade if they buy the board for the mold. It's making the mold *again* that matters — you never get the first one right, and if you can't afford to redo it you're stuck with whatever you managed first try. That's not designing anything. That's just guessing once."
 
 **"Down the stairs, right as you come out of the office, then straight on down the market street — don't turn off it. Road climbs out the far end and drops you into the Valley. Maria Vega'll be on her porch. She generally is."**
 
@@ -110,6 +138,12 @@ She talked while the carts were loaded, in the manner of someone who has had the
 
 The silo had a solar panel on it now, and a battery, and a small grey control box that kept the whole arrangement from destroying itself.
 
+"Doesn't run the auger, but it keeps the moisture sensors alive through harvest, and that's the part that actually matters."
+
+"Power bank's mostly for the slow season — store up what the panels catch in the long days, spend it down when the sun's not cooperating. Same idea as the grain, really. Save when you can, draw when you need to."
+
+She nodded at the grey box.
+
 "That control box on the silo — Hillside drew it, City built it, and DeShawn's people put it in. Three towns for one little grey box." She seemed to enjoy this. "Nobody thought that was strange, which is the part I like."
 
 Nothing organic left the valley. Stalks, husks, whatever the animals produced — all of it went back on the fields or into the digester.
@@ -132,9 +166,15 @@ After harvest, Hillside's sheep came down to eat the stubble off, and the Valley
 
 "That's the whole point of it. Ground's better in spring for having had them on it, and nobody bought a sack of anything to make that happen." She was careful about the ownership. "Their flock, mind. Their wool. We just get the winter of them, and the good it does the soil. Suits everybody, which is rarer than it sounds."
 
-There was talk, she said, of the Valley growing thatching straw — not the wheat they grew now, because the combine chewed the stalk to bits and you needed it long and whole. A different seed, cut with a binder, threshed gentle. Slower, and less grain off the same ground.
+There was talk, she said, of the Valley growing thatching straw.
+
+"Not the wheat we grow now — the combine chews the stalk to bits and you need it long and whole, so it's a different seed, cut with a binder, threshed gentle. Slower. Less grain off the same ground, too."
 
 "But a thatched roof keeps a house warmer than anything anybody round here can buy, and it costs nobody a dollar. Suburb's got the hands that know how to lay it. So it's not whether — it's what we give up growing to do it."
+
+That was the shape of most decisions in the Valley, and she said it without complaint, because it was simply true: there was one quantity of ground, and every good idea anybody had wanted some of it.
+
+"DeShawn keeps asking what else that digester could do. Truth is, plenty — we could grow and press what those buses burn, if somebody sorted out the engines. That's not our end of it." She laughed once. "But it's the first thing anybody's asked us for that we'd be growing instead of just handing over."
 
 **"Left out of the house and follow the dirt road down — it runs all the way into the Suburb. Ask for DeShawn Okafor; he works out of the realty office there. Walk straight in, he won't stand on ceremony."**
 
@@ -158,7 +198,7 @@ The other side was not.
 
 "One more thing — insurance and permits for a job this size, that's not Stone. That comes out of the community vault, and it's not cheap." He looked up. "You sure Mountain can cover it?"
 
-The vault was dollars, and dollars were the thing that only went one direction. Stone moved between communities and always summed to nothing; it could be created by the act of trading and destroyed by the act of settling, and no amount of it ever left. Dollars left. Dollars went out to whoever sold permits and insurance and never came back, and the number in the vault went down, and there was no mechanism anywhere in five communities for making it go up again except selling something outward.
+The vault was dollars, and dollars were the thing that only went one direction. Stone moved between communities and always summed to nothing; it came into being the moment two people agreed a price and vanished the moment the debt was settled, and no quantity of it ever left. Dollars left. Dollars went out to whoever sold permits and insurance and did not come back, and the number in the vault went down, and there was no mechanism anywhere in five communities for making it go up again except selling something outward.
 
 The number went down.
 
@@ -174,7 +214,9 @@ Two streams left the Suburb and came back as other things.
 
 "Wood's the same story, different direction. Framing, pallets, anything we pull out of a building that isn't rotted — that goes up to Hillside and comes back as beam. We pull the nails here. They'd rather we did, and honestly so would their saw."
 
-He mentioned, without being asked, that his crews ate Valley grain on every job that ran over a week, because Maria would not let him send anybody up a mountain on what the canteen called food.
+Something came the other way too, and he mentioned it without being asked.
+
+"Crews eat Valley grain on every job over a week. Maria won't let me send anybody up a mountain on what the canteen calls food."
 
 And he mentioned the thing that kept him up.
 
@@ -186,13 +228,27 @@ And he mentioned the thing that kept him up.
 
 ---
 
-## Chapter Five — The City
+## Interlude — The Loop
 
-The bus was old, and yellow, and had been built to carry children to a school that no longer existed. It carried five communities' worth of people now, between five communities, and it had a number painted on the side rather than a town's name on it, because it did not belong to a town.
+The bus was old, and yellow, and had been built to carry children to a school that no longer existed. It carried five communities' worth of people now, between five communities, and it had a number painted on the side rather than a town's name, because it did not belong to a town.
+
+There was one parked at every stop, always, which meant nobody had ever needed to invent a timetable.
+
+Somewhere on the road, the apprentice passed back through the Mountain with a cart half full, because that is how the work actually goes, and Hank came out to look at what had arrived so far.
+
+"How's it going down there?" He turned the drawings over once and handed them back. "Whatever you've got, it's a start."
+
+---
+
+## Chapter Five — The City
 
 Mike Dayton was the loudest thing in the building.
 
 "Got Owen's CAD drawings from Hillside a few days back — went through them, worked up what it'll actually take to machine replacement parts for that mount. Good drawings, too. Made the estimate a lot less of a guess."
+
+He was more grateful for those drawings than he let on the first time.
+
+"Wouldn't have quoted this job as tight without Owen's numbers. Half our estimating headaches come from guessing at parts nobody's measured properly."
 
 The parts, when they came off the bench, were exactly what had been drawn.
 
@@ -206,11 +262,15 @@ He reached onto a shelf behind him for a bearing, and handed it over.
 
 "Here — that bearing's off our own shelf, not made for your mount. Same drawing though, so it'll drop straight in." He watched to see whether it landed. "That's the part that ought to interest you more than the invoice."
 
-The furnace ran near enough around the clock. The feedstock for it was mostly Suburb scrap — DeShawn's crews stripped it, the City melted it. Cheaper than buying billet, and it kept two towns working.
+The furnace ran near enough around the clock.
+
+"That's where your fittings came from, and half the factory's tooling besides." The feedstock for it was mostly Suburb scrap — DeShawn's crews stripped it, the City melted it. "Cheaper than buying billet and it keeps two towns working."
 
 What came off the furnace floor did not go to waste either.
 
 "Scale off the furnace floor, rust off anything not worth saving — grind it fine enough and there's your red. Roast it hotter and it goes purple. Half the paint in five towns started as something we swept up."
+
+That was the whole palette, more or less, and it was why five communities looked the way they did: reds and ochres off the furnace floor, roasted harder or softer; black from the charcoal; white from burnt limestone; and every buff and grey and stone colour that could be mixed out of those. Nothing that grew made a colour that survived a winter outdoors.
 
 He said the rest of it without any edge on it at all.
 
@@ -220,6 +280,8 @@ He said the rest of it without any edge on it at all.
 
 **"You'll want Kai before you go anywhere. Straight up the stairs at the back — office over the shop floor. Metal's only half of what you're carrying home."**
 
+"Bring it back down if it ever needs work again. We don't forget good customers."
+
 Upstairs, above the noise, Kai Sutherland had the other half.
 
 "Took Nathan's Simulink model and turned it into real controller code — C, running on the hardware, not just a diagram anymore. And since it needed a home, I laid out the controller enclosure myself in Fusion. Wind speed, load, the whole picture — that's on us. Software's not free, but neither is guessing wrong on wind speed."
@@ -228,11 +290,17 @@ The last trade went on the ledger.
 
 "Done. Controller's built, code's flashed, it'll report in real-time once it's spinning. You'll know before it does if something's wrong."
 
-The enclosure, he said, was nothing fancy — it only had to keep the electronics dry and let heat out without letting weather in. He had modelled it in an afternoon. The code had taken considerably longer than the box.
+The enclosure, he said, was nothing fancy.
+
+"Just needed to keep the electronics dry and let heat out without letting weather in. Modeled it in Fusion in an afternoon. The code took a lot longer than the box did."
 
 Half the boards in the district's control station had been pulled out of dead equipment and re-flowed. The Suburb sent up the carcasses; the City took the parts nobody else could reuse.
 
 "Cheaper than new, and there isn't a 'new' to buy most weeks anyway."
+
+He was less comfortable about the station itself.
+
+"Closest thing City's got to a single point of failure — everything downstream leans on it. I don't love that, but redesigning the whole grid isn't exactly this week's problem."
 
 **"Loop runs back round the way you came — stays on it all the way up to Mountain. Get on, and the next thing you'll be looking at is that turbine. Hank'll be waiting."**
 
@@ -282,9 +350,33 @@ Which left the question of what to do, and Hank had already decided, and so, it 
 
 "What we do with it is build our own, smaller, and build the tools to make them."
 
-Not one turbine. Not one community's turbine. Smaller machines, several of them, built to one set of drawings that everybody held a copy of — and, before any of that, the tooling to make the machines. A mill that pressed board flat enough to machine a mold from. A router to cut the mold. A foundry to cast what the router could not. A lathe that some of them would have to build before they could use it.
+---
 
-It would take years. The old turbine would carry them through the part of it that mattered.
+## Chapter Eight — What They Decided to Build
+
+Not one turbine. Not one community's turbine. Smaller machines, several of them, built to one set of drawings that everybody held a copy of.
+
+But before any of that: the tooling, because a design nobody can make is a drawing and nothing else.
+
+It went in an order, and the order was mostly determined by what depended on what. A blade needs a mold. A mold needs a great deal of flat board, machined smooth — which is why Sophia's press mattered more to the plan than anything Sophia said about beams, and why she cared more about making a mold twice than about making one at all. A mold that can be remade is a design that can be improved. A mold that cannot is a guess you are stuck with.
+
+The router to cut the mold would come from the City, along with the lathe, and one of the machines the City needed did not exist yet either, so somebody would have to build a machine in order to build the machine. That was understood and nobody found it discouraging. It had been done before by people with less.
+
+The Suburb would keep the metal coming — stripped, sorted, and sent up to be melted — and would send the wood the other way, nails pulled, to be pressed back into board. Mountain would do the assembly, and stand the machines, because Mountain was where the wind was.
+
+And the Valley, which had spent the whole story handing things over, would for the first time be asked to *grow* something for the works rather than for the table.
+
+Fuel first, for the buses, so that the one recurring bill nobody could stop paying might eventually stop being paid in dollars. Then the other half of Sophia's binder, so that the barrels might stop coming. Then, if there was ground left — and this was the difficulty, because there was only ever the one quantity of ground — flax.
+
+Flax was the crop that repaid the most arguments at once. Pressed for oil it gave the finish that would go on every timber surface those communities produced, which mattered a great deal to a mill whose glue did not much like moisture. It gave the oil for paint, and with the iron oxide already coming off Mike's furnace floor and flour off the Valley's own threshing, that was a durable outdoor paint made start to finish from things nobody had to buy. Retted and broken it gave linen, which the Suburb could weave alongside wool. What was left of the stalk went back to Hillside's press. What was left of the seed after the oil went to the flock.
+
+There was no part of it that ended up as waste, which was the general principle, and it was not stated as a principle by anyone.
+
+Roofing was the argument that stayed open longest. Thatch was warmer than anything they could buy and cost nothing but labour and the ground to grow the straw on — and it burned, and there was no fire service, and the nearest road was a mile from the Mountain's village. So it came with conditions attached, and the conditions were the interesting part. A chimney had to stand a good height clear of the ridge and be lined properly, because that is where the fires start. The underside of the thatch had to be torched with lime mortar between the rafters, which is an old trick and a good one, and which — pleasingly — wanted exactly the same lime kiln as the limewash and the white pigment, so one kiln served three purposes. And there had to be water above the roofline, which is what Maria's tower was.
+
+Every one of those was a rule that only worked if everybody kept it. That was the actual price of the cheap roof, and everybody could see it, and it was agreed the way the bus schedule was agreed — which is to say, with some grumbling, annually, and in the end.
+
+None of this was going to be quick. The old turbine would carry them through the part of it that mattered, which was the point of having repaired it.
 
 That evening the blades were still going round, and the light off the ridge was the ordinary light of a machine doing what it was for, which nobody there had seen before.
 
@@ -306,7 +398,7 @@ Mutual credit works by a piece of arithmetic that is easy to state and takes a w
 
 Which means the ledger cannot show a community that stands alone. There is no arrangement of those numbers in which one community is positive and no other is negative. The arithmetic will not permit it.
 
-Nobody in the story says this. The people in it are busy — with a saw that needs sorting, with a tower they hope they never test, with a flock that has to be walked up a mountain in May and back down in October, with straw that has to be cut a slower way if it is going to keep a roof warm. They talk about nails and glue and paint and what it costs to make a mold twice.
+Nobody in the story says this. The people in it are busy — with a saw that needs sorting, with a tower they hope they never test, with a flock that has to be walked up a mountain in May and back down in October, with straw that has to be cut a slower way if it is going to keep a roof warm, with a bin of bolts by a workshop door that goes down the hill with the empty carts and comes back as something useful. They talk about nails and glue and paint and what it costs to make a mold twice.
 
 But a small grey box on a silo in the Valley was drawn in one community, built in a second, and installed by a third, for one farm, and — as Maria said, and it is the closest anyone comes to saying it at all —
 
