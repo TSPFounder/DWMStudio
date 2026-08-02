@@ -459,11 +459,44 @@ states it as a fact about wood rather than as a moral.
 
 **Three frictions, kept rather than smoothed:**
 
-- **Adhesive is the import they cannot make.** Resin would be a dollar
-  purchase, mirroring the bus fuel exactly. Good friction — and it has an
-  out that is already in the docs: soy, starch and lignin bio-adhesives are
-  real, and the Valley is already growing feedstock for the biofuel thread.
-  Same fields, two products. PLANT IT, DO NOT RESOLVE IT.
+- **Adhesive — DECIDED 2026-08-02: BIO-ADHESIVE, from two sources, and it is
+  PARTLY solved rather than fully.** This was previously "plant it, do not
+  resolve it"; it is now the route the communities take. The chemistry is
+  real and mostly old, which is why it can be leaned on:
+
+  **Tannin from BARK is the elegant one, because a working mill already
+  makes it.** Logs get debarked; bark is the tannin source. Wattle,
+  quebracho and pine-bark tannin adhesives have been in commercial panel
+  production in South Africa, Brazil and Australia for decades. The
+  feedstock is already falling on Hillside's own floor as waste, so this
+  needs no new agriculture at all — and it turns a waste stream nobody had
+  a use for into an input.
+
+  **Soy protein from the VALLEY is the other**, and it is the
+  commercially-proven modern route: soy flour adhesives dominated US
+  plywood in the 1930s–40s before phenol-formaldehyde displaced them, and
+  came back at industrial scale in the mid-2000s. This is the source that
+  needs the Valley, so it pairs with the biofuel thread — same fields, two
+  products.
+
+  **KEEP THE RESIDUAL IMPORT. Do not write this as a clean win.** The real
+  systems need a small HARDENER fraction the communities cannot make — the
+  commercial soy route uses a petrochemical crosslinker for water
+  resistance, and tannin systems traditionally need a hardener too. Soy
+  alone is moisture-sensitive. So the honest position, and the better one
+  dramatically, is: the BULK of the adhesive is local, a small bought
+  fraction remains. Same shape as the biofuel thread, which also does not
+  fully close.
+
+  **There is a gradient here worth using, and it falls out of the chemistry
+  rather than being invented for drama.** Bio-adhesives are strongest in
+  DRY, INTERIOR, NON-STRUCTURAL service — which is exactly what the blade
+  molds are, since mold stock is tooling. Exterior structural beam is the
+  hard case and keeps needing the bought hardener longest. So the mill goes
+  bio on mold stock and interior board FIRST, while still importing for
+  beams. The thing the manufacturing arc needs most is the thing they can
+  solve first, which is a genuinely lucky alignment and should be played as
+  quiet good fortune, not as a triumph.
 - **Salvaged wood is full of metal.** Nails and screws must come out before
   anything is chipped — magnetic separation plus a lot of hand sorting.
   That is a labour cost, and the Suburb produces `skilled_labor`, so it is
@@ -531,6 +564,24 @@ note under this community's heading. Narrative only, no schema change.]**
 > "The board we press flat is what your blade molds will want, when it
 > comes to that. Right now that gets bought in with dollars. It doesn't
 > have to."
+
+**[Bio-adhesive — added 2026-08-02. Two sources and a residual import; see
+the frictions note under this community's heading. The bark line is the one
+to keep if these get cut for length: it turns a waste stream into an input
+without anybody explaining that that is what it does.]**
+
+> "Glue's the part nobody thinks about. It's the one thing in that press we
+> buy in — and we buy it in barrels."
+
+> "Bark, though. We strip tons of it off the logs and it's done nothing for
+> us but pile up. Turns out you can cook a binder out of it. Maria reckons
+> she can grow the other half of what we'd need. Between the two we'd be
+> most of the way there."
+
+> "Most of the way, mind. There's a hardener in it we haven't a hope of
+> making, and there's no talking a beam into holding without it. But the
+> flat board for your molds is an easier ask than a beam — dry, indoors,
+> nothing hanging off it. That's the part we could stop buying first."
 
 > "Got solar on the roof now, battery bank right beside it. Doesn't run
 > much, but it keeps the lights on through a cloudy week while these two

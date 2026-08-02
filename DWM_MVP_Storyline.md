@@ -412,8 +412,14 @@ chain — which is the theme again, in the mechanics.
   lumber needs no line to explain it. **The payoff is the blade molds:**
   they are MDF, which is a wood composite board, currently bought with
   dollars — pressing it here turns the arc's first physical dependency into
-  a Stone trade. Adhesive stays the one import they cannot make, which is
-  where Valley's bio-adhesive potential comes in
+  a Stone trade. **Adhesive is BIO-ADHESIVE as of 2026-08-02**, from two
+  sources: TANNIN cooked out of the mill's own bark waste — a stream that
+  previously did nothing but pile up — and SOY protein grown in the Valley.
+  Both are real and long-commercial. A small HARDENER fraction is still
+  bought, deliberately: the residual import is kept rather than smoothed,
+  same as the biofuel thread. Mold stock goes bio before structural beam
+  does, because dry interior tooling is the easy case chemically — so the
+  arc's first physical need is also its first solvable one
 - **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
@@ -428,10 +434,12 @@ chain — which is the theme again, in the mechanics.
   anybody's asked us for that we'd be growing instead of just handing
   over."* That is a genuine manufacturing-arc role rather than a courtesy
   one, because it is an input nobody else in the network can produce.
-  It extends naturally if wanted: bio-based adhesives (soy, starch and
-  lignin routes are all real) come off the same fields, which matters if
-  the composite-lumber idea is taken up, since resin is otherwise the one
-  input that has to be bought with dollars.
+  **It now extends, decided 2026-08-02:** the Valley also grows the SOY
+  that supplies half the mill's bio-adhesive. That gives the Valley two
+  distinct outputs into the manufacturing arc rather than one — fuel for
+  the fleet and binder for the press — off the same fields, and makes it a
+  supplier to Hillside as well as to the buses. Neither is a courtesy role;
+  both are inputs nobody else in the network can produce.
 
 ## Open decisions for you
 
