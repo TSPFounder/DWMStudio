@@ -627,6 +627,72 @@ states it as a fact about wood rather than as a moral.
   Worth knowing before anyone treats this as easy; also a decent thing for
   that arc to be ABOUT.
 
+**OTHER BIO BUILDING MATERIALS (recorded 2026-08-02).** Composite lumber is
+not the only thing these communities can make from what they grow and mill.
+The useful test for anything proposed here is: **does it reuse equipment or
+a waste stream they already have?** That test sorts the candidates cleanly,
+and it is also what keeps this from sprawling into a materials catalogue.
+
+**THATCH — Valley straw, Suburb labour. The strongest of these.** Life is
+25–40+ years for water reed and 15–25 for wheat straw, and the insulation is
+genuinely excellent (around 0.07 W/mK, so a 300 mm roof lands near modern
+insulated-roof performance) with no manufactured product in it at all — no
+fasteners, no plant, no imports.
+
+*The constraint is the good part and must not be smoothed away.*
+Combine-harvested straw is crushed and short and useless for thatching. You
+need long unbroken stems, which means a reaper-binder, gentle threshing, and
+usually a long-stemmed variety grown on purpose. **So thatching straw is not
+collected waste — it is a decision to farm differently**, which is a far
+better beat than "we had straw lying about" and makes the Valley choose
+something. It is also apprenticed, skill-heavy work, which suits an economy
+where labour is the tradeable thing: Valley grows it, the Suburb's
+`skilled_labor` lays it, Hillside frames the roof beneath it.
+
+*Honest downside, worth KEEPING rather than solving:* fire. It is why thatch
+was banned in cities after 1666. For a village a mile from the nearest road
+with no fire service, that is a live tension.
+
+**WOOD-FIBRE SHEATHING as the building wrap — the one that costs least.**
+Real product line (Gutex, Steico, Pavatex): wood-fibre panels, often
+wax-impregnated, vapour-open, used as external sheathing and weather
+barrier. It comes off **the same press as the composite lumber**, from the
+same salvage and mill fines — a new product with no new machine. Vapour-open
+also happens to be the correct building science for a timber structure,
+which is where plastic housewrap gets people into trouble.
+
+**WOOL INSULATION — nearly free, given what Hillside already produces.**
+Sheep's wool insulation is commercial and real (Thermafleece, Havelock), at
+roughly 0.038–0.040 W/mK, essentially matching mineral wool, and it handles
+moisture better than most. Hillside already produces `wool`. No press
+needed — scouring and batting.
+
+**ROOFING — mill shingles, and a consistency check.** Wood shingles are the
+obvious mill product and need no justification. But **composite roof tiles
+hit the wall already established for structural beam**: roofing is exterior
+wet service, the hard case for bio-adhesive. Do not let the press quietly
+solve everything. Salvaged-plastic shingles are a real product and would
+fall to the Suburb instead.
+
+**PIPES — the honest place bio LOSES, and worth keeping that way.** Bio-PE
+and bio-PVC are chemically identical to the fossil versions but come from
+bioethanol via a real chemical plant, far beyond five communities; PLA is
+too weak and heat-sensitive for pressure. The genuine bio answer is **wood
+stave pipe**, which is historically real — bored logs and later banded
+staves carried water mains across North America into the 20th century, some
+still in service — and fine for low-pressure water and irrigation, which
+Hillside can make from logs. For pressure and potable, **salvage and the
+City's foundry win instead**: reclaimed plastic pipe from the Suburb, cast
+fittings from Mike. **A world where bio solves everything is less believable
+than one where it solves most things and metal covers the rest.**
+
+*Also available if ever wanted, but needing something they do not have:*
+linoleum is completely bio (linseed oil, pine rosin, wood flour, limestone,
+jute) and has been made commercially since 1860 — but it needs flax.
+
+ALL OF THIS IS NARRATIVE ONLY for the MVP: no schema change, no new
+resources, nothing to implement.
+
 **Sophia Sandoval — Approach:**
 > "So that's the turbine that came with your land. Ambitious purchase —
 > nobody's touched that thing in years. Good news is, my two here already
@@ -830,6 +896,20 @@ Narrative only.]**
 > — we could grow and press what those buses burn, if somebody sorted out
 > the engines. That's not our end of it. But it's the first thing anybody's
 > asked us for that we'd be growing instead of just handing over."
+
+**[Thatching straw — added 2026-08-02. The point of this line is that it is
+a FARMING DECISION, not a waste stream: long-stemmed straw has to be grown
+and harvested deliberately. See the bio-materials note under Hillside.]**
+
+> "There's talk of us growing thatching straw. Not the wheat we grow now —
+> the combine chews the stalk to bits and you need it long and whole, so
+> it's a different seed, cut with a binder, threshed gentle. Slower. Less
+> grain off the same ground, too."
+
+> "But a thatched roof keeps a house warmer than anything anybody round
+> here can buy, and it costs nobody a dollar. Suburb's got the hands that
+> know how to lay it. So it's not whether — it's what we give up growing
+> to do it."
 
 ---
 

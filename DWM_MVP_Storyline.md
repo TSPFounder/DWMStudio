@@ -438,7 +438,9 @@ chain — which is the theme again, in the mechanics.
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
   line already establishes this: *"half that control station's housing used
   to be something else entirely. We don't waste much out here."* No retrofit
-  needed
+  needed. **Plus the building trades** (added 2026-08-02): the labour hall
+  crew builds the houses, and THATCHING is apprenticed skilled work, so the
+  Suburb supplies the hands for both
 - **Mountain** — assembly and the turbine site
 - **Valley** — **RESOLVED 2026-08-02: grown feedstock.** No longer only a
   food supplier here. The bus fleet's biofuel conversion runs on what the
@@ -453,6 +455,13 @@ chain — which is the theme again, in the mechanics.
   the fleet and binder for the press — off the same fields, and makes it a
   supplier to Hillside as well as to the buses. Neither is a courtesy role;
   both are inputs nobody else in the network can produce.
+  **A third, added 2026-08-02: THATCHING STRAW** — and unlike the other two
+  it is not a byproduct. Long-stemmed straw for thatch cannot be
+  combine-harvested; it needs a different variety, a reaper-binder and
+  gentle threshing, at a lower grain yield per acre. So it is a DECISION TO
+  FARM DIFFERENTLY rather than a waste stream put to use, which makes it the
+  Valley's one genuine trade-off in the arc: less grain, in exchange for
+  roofing nobody has to buy.
 
 ## Open decisions for you
 
