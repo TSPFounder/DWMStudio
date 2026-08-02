@@ -441,7 +441,13 @@ chain — which is the theme again, in the mechanics.
   needed. **Plus the building trades** (added 2026-08-02): the labour hall
   crew builds the houses, and THATCHING is apprenticed skilled work, so the
   Suburb supplies the hands for both
-- **Mountain** — assembly and the turbine site
+- **Mountain** — assembly and the turbine site, **plus SUMMER GRAZING**
+  (added 2026-08-02). Hillside's flock is summered on the top ground, which
+  is the in-fiction answer to what a mile of open upland between the village
+  and the road is FOR — and the practical answer to dressing a very large,
+  very empty terrain. Scattered sheep read that ground as pasture rather
+  than as unfinished level, at the cost of a cheap common asset well inside
+  SCOPE's "static or simply-animated dressing" allowance
 - **Valley** — **RESOLVED 2026-08-02: grown feedstock.** No longer only a
   food supplier here. The bus fleet's biofuel conversion runs on what the
   Valley grows and presses — Maria's existing digester ambient line is the

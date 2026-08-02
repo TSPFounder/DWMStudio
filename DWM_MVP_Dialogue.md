@@ -389,6 +389,14 @@ the story. The realty office having three families and nowhere to put them
 does the same narrative job (it explains why houses were built) using an
 institution that IS in the story. Revert if a storm is wanted back.
 
+**[Summer grazing — added 2026-08-02. Doubles as the in-fiction reason
+the open upland is not empty; see the sheep note under Hillside for the
+level-dressing point.]**
+
+> "Sheep'll be up on the top ground till the weather turns — Hillside's
+> flock, summered up here. Nothing else that ground is good for, and it's
+> good for that."
+
 > "Solar panels are holding the mountain over while the turbine's down.
 > Control station keeps it steady, and the bank stores what we don't use
 > by day. Won't power much more than lights and the radio, but it's
@@ -626,6 +634,62 @@ states it as a fact about wood rather than as a moral.
   large platen is genuinely harder than anything in the Gingery chain.
   Worth knowing before anyone treats this as easy; also a decent thing for
   that arc to be ABOUT.
+
+**SHEEP AND WOOL — decided 2026-08-02. A SHARED FLOCK, MOVED SEASONALLY
+BETWEEN THREE COMMUNITIES.** Wool has been in the economy since the seed
+data and no character has ever mentioned it, which is a gap worth closing:
+Hillside PRODUCES `wool`, the Valley NEEDS it, and the Suburb turns it into
+`textiles`, so it already crosses three communities on the ledger while
+being invisible on screen.
+
+The flock moves the way real upland flocks do — **transhumance**, which is
+ancient, practised everywhere from the Alps to the Pyrenees to the Scottish
+hills, and which happens to require exactly the thing this story is about:
+
+| Season | Where | Why there |
+| --- | --- | --- |
+| Summer | **Mountain** | rough upland grazing that supports nothing else |
+| Home | **Hillside** | the permanent flock, the lambing, the clip |
+| Winter | **Valley** | stubble after harvest — and the manure |
+
+**THE VALLEY'S REASON IS THE GOOD ONE, and it is real history: the GOLDEN
+HOOF.** Before artificial fertiliser, sheep were folded on arable land
+overnight specifically to manure it — grazing rough ground by day, penned on
+the crop fields by night. It was central to English mixed farming for
+centuries. So the Valley does not tolerate the flock, it WANTS it: the sheep
+are how it keeps its soil fertile without buying anything. That also sits
+naturally beside Maria's existing composting and digester lines — same
+principle, different animal.
+
+**NO SCHEMA CHANGE, and the reason is worth stating so nobody "fixes" it.**
+Grazing is not the same as owning the clip. The flock stays HILLSIDE'S — it
+keeps the wool, stays the producer, and the seeded rows are untouched
+(`hillside` Produces `wool`, `valley` Needs `wool`). Mountain lends summer
+grass, the Valley trades winter stubble for manure. Every row in the seeder
+stays exactly as it is.
+
+**THE PRACTICAL WIN: SHEEP POPULATE THE EMPTY MOUNTAIN TERRAIN.** Mountain
+is a very large landscape with roughly a mile of open ground between the
+village and the only road. Scattered grazing sheep turn that from *unfinished
+level* into *pasture* — which is what a mile of empty upland between a
+village and a road would actually be. They are cheap, common assets, and
+static or lightly-animated dressing is already inside SCOPE's allowance (the
+same clause that covers Hank's movement). This is the highest
+value-per-effort item in this whole note.
+
+**Other things a flock gives them**, if any are ever wanted: tallow for
+candles, soap and lubricant; skins; some milk; and **LANOLIN**, the wool
+grease — a genuine rust preventative and salve, which quietly links the
+flock to the City's machine shop. Maria's existing line already mentions
+"some meat," so that end is covered.
+
+**FRICTION TO KEEP:** transhumance needs agreement on grazing rights, on
+timing, and on who walks the flock. It is renegotiated every year rather
+than settled once. That is a recurring cooperation cost — the same note the
+bus schedule sounds, and worth keeping for the same reason: unity that costs
+nothing reads as preaching.
+
+---
 
 **OTHER BIO BUILDING MATERIALS (recorded 2026-08-02).** Composite lumber is
 not the only thing these communities can make from what they grow and mill.
@@ -887,6 +951,18 @@ added Valley assets):**
 > make — it all goes back on the fields or into the digester. Everybody's
 > got their own way of not wasting things. Ours just smells worse than
 > most."
+
+**[Sheep and the golden hoof — added 2026-08-02. The Valley WANTS the
+flock; it is not doing Hillside a favour. See the sheep note under
+Hillside.]**
+
+> "Hillside's sheep come down to us after harvest. Eat the stubble off,
+> and we fold them on the fields at night — that's the whole point of it.
+> Ground's better in spring for having had them on it, and nobody bought
+> a sack of anything to make that happen."
+
+> "Their flock, mind. Their wool. We just get the winter of them, and the
+> good it does the soil. Suits everybody, which is rarer than it sounds."
 
 **[Biofuel set-up — added 2026-08-02. Pairs with DeShawn's line; between
 them the post-MVP conversion project is fully planted from both ends.
