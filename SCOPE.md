@@ -16,6 +16,15 @@ The MVP is shipped when a person can, without developer intervention:
 4. Watch a Dollar Vault deplete and a Cascading Failure warning state trigger when a vault is exhausted.
 5. Observe one engineered system promoted through DWM_Dev → verification gate → DWM (the Mountain wind-turbine, driven for the MVP by the **R2011a Simulink turbine model** — see the 2026-08-02 entry; the Simscape-physics option is now a post-MVP upgrade and the analytic fallback below is no longer needed).
 
+> **Item 5 status, 2026-08-03 — the data half is DONE and the UE half is NOT.**
+> One command now runs the R2011a model and produces a verified world package
+> (`turbine_ramp.db`: 18001 rotor samples, 90005 `SimSamples` rows, five blocks),
+> and that half has automated coverage plus a freshness check that makes a green
+> result evidence rather than assertion. What remains is entirely UE-side and is
+> ONE THING: `AssetBindings` still carries `REPLACE_ME` paths, so nothing binds
+> and nothing renders. Item 5 says *observe*, and a turbine nobody can see does
+> not satisfy it. **Do not read the working pipeline as item 5 being met.**
+
 ---
 
 ## CONTINGENCY: Turbine Data Source Is Decoupled From the MVP Launch Date
@@ -55,6 +64,26 @@ analytic/hand-tuned curve.
 > in without touching anything UE-side.
 
 **The plan:**
+
+> **⚑ SUPERSEDED 2026-08-03 — the first two bullets below are dead letters and are kept
+> only so the reasoning stays legible.** Neither branch is the one that happened. The
+> turbine ships on **R2011a Simulink model output**, and as of today that output is
+> produced by a single automated command rather than by hand: `wtRunSimulation` →
+> `wtExportSimSamples` → `WriteTurbine` → verified `.db`, in 9.4 s, with no manual step
+> between MATLAB and the package.
+>
+> The second bullet is not merely unused — **it is now actively wrong for the turbine**,
+> for exactly the reason set out in the correction above: `WriteTurbine` throws rather
+> than substituting a curve, and the automated stage additionally refuses any CSV that
+> predates the run it just started. "Ship on a hand-tuned motion curve" is no longer a
+> path the code will take without being told to by name, and that is deliberate.
+>
+> What survives from this section is the **honesty clause** in the final bullet, which
+> now cuts the other way and in our favour: the live data source IS model output, so
+> demo materials may say so. The limits stated on 2026-08-02 still bind — a
+> lumped-parameter engineering model, NOT Simscape Multibody, NOT CAD-linked multibody
+> dynamics.
+
 - **If Simscape Multibody is licensed and the real CAD-linked turbine model is verified through
   the gate before Week 7 — ship with real Simscape physics data**, exactly as originally planned.
 - **If not — ship Week 7 with the turbine driven by a hand-tuned or analytic motion curve**
@@ -69,6 +98,39 @@ analytic/hand-tuned curve.
   recording — don't imply real CAD-verified physics if shipping on the fallback curve. The
   engineering-rigor thesis is still demonstrated by the PIPELINE and the GATE (the promotion
   ceremony, the verification discipline) even when the underlying motion data is provisional.
+
+---
+
+## Turbine Pipeline — Current State (2026-08-03)
+
+One place to see what runs and what does not, so nobody has to reconstruct it from the
+Decisions Log. **Everything from MATLAB to the `.db` works. Nothing UE-side does yet.**
+
+| Stage | State | Evidence / what is blocking |
+| --- | --- | --- |
+| R2011a Simulink model | **works** | Builds and simulates; soft-stiff tower check PASS, four post-run checks PASS |
+| `wtGui` scenario picker | **works** | Programmatic R2011a GUI; six embedded plots; ramp default |
+| `wtExportSimSamples` | **works** | Five channel CSVs, 18001 samples each at 30 Hz |
+| `WriteTurbine` → `.db` | **works** | 5 blocks, 90005 `SimSamples` rows, verified by a fresh ReadOnly reopen |
+| Automated MATLAB stage | **works** | One command, 9.4 s, no manual step; 32 tests on the orchestration |
+| UE reads the package | **NOT DONE** | No turbine-side reader exists; the pendulum tracer is the only proven UE consumer |
+| Turbine renders in UE | **BLOCKED** | `AssetBindings` still `REPLACE_ME/...` — binds nothing, **with no error** |
+
+**The one blocking item is the asset path.** It is a four-row edit, not a piece of
+engineering, and it is the only thing standing between a verified package and a turbine
+on screen. A tripwire test fails deliberately until it is set, so it cannot be forgotten
+— but it also cannot be fixed from this side, because the real content path lives in
+DWM_Dev.
+
+**Scenario of record for export: `ramp`.** Gust holds rotor speed nearly constant by
+design — that is what the pitch controller is for — so a gust export looks almost
+identical to a constant-rate placeholder. Ramp sweeps the full operating range
+(0.576 → 1.58 rad/s) and is the one where the machine visibly does something.
+
+**Open engineering question, unaffected by any of the above:** the model reports
+`f_tower = 0.320 Hz`; the independent MYSTRAN beam deck predicts **0.2815 Hz**. Both pass
+the soft-stiff window (0.257–0.630 Hz), but at 24% and 9.5% margin respectively. The deck
+has not been run. Same verdict, very different comfort.
 
 ---
 
