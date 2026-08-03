@@ -179,15 +179,8 @@ static int TurbineFromCsv(string rotorCsv, string outPath, string worldId, bool 
 
 static int TurbineFromMatlab(string[] a, string matlabDir, string outPath, string worldId)
 {
-    if (!OperatingSystem.IsWindows())
-    {
-        Console.Error.WriteLine(
-            "--matlab-dir drives MATLAB over Windows COM automation and cannot work here.\n" +
-            "Run the export inside MATLAB yourself (wtGui, or wtRunSimulation + wtExportSimSamples)\n" +
-            "and then use --csv against the files it wrote.");
-        return 1;
-    }
-
+    // Argument parsing happens BEFORE the platform check so a typo in --scenario is reported
+    // on any platform, not only where MATLAB could have run.
     var scenarioText = (GetOption(a, "--scenario") ?? "ramp").ToLowerInvariant();
     if (!TryParseScenario(scenarioText, out var scenario))
     {
@@ -203,49 +196,30 @@ static int TurbineFromMatlab(string[] a, string matlabDir, string outPath, strin
         return 1;
     }
 
-    var request = new MatlabStageRequest
+    // POSITIVE guard, deliberately. CA1416 recognises `if (OperatingSystem.IsWindows())` around
+    // a call to a [SupportedOSPlatform("windows")] member; the Windows-only work lives in
+    // TurbineMatlabRunner, which carries that attribute on the type where the analyzer can see
+    // it. See that file for why a local function and a lambda both failed to express this.
+    if (OperatingSystem.IsWindows())
     {
-        TurbineCodeDirectory = matlabDir,
-        Scenario = scenario,
-        CsvBaseName = GetOption(a, "--base-name") ?? "wtSimSamples.csv",
-        CsvOutputDirectory = GetOption(a, "--csv-dir"),
-        SampleRateHz = rate,
-        OutputPackagePath = outPath,
-        WorldId = worldId,
-        RequireAllChannels = HasFlag(a, "--require-all-channels")
-    };
-
-    var allowLaunch = !HasFlag(a, "--no-launch");
-
-    Console.WriteLine($"[turbine] Scenario    : {scenario.ToMatlabToken()}");
-    Console.WriteLine($"[turbine] MATLAB code : {matlabDir}");
-    Console.WriteLine($"[turbine] Sample rate : {rate} Hz");
-    Console.WriteLine(allowLaunch
-        ? "[turbine] MATLAB      : attach to a running instance; launch one only if none is found."
-        : "[turbine] MATLAB      : attach only (--no-launch); will fail if none is running.");
-    Console.WriteLine("[turbine] This BLOCKS for the whole simulation. A 600 s run is tens of seconds of");
-    Console.WriteLine("[turbine] wall clock, and COM Execute gives no progress. Nothing has hung.");
-    Console.WriteLine();
-
-    var result = new MatlabStageService(() => CreateComSession(allowLaunch)).RunAndExport(request);
-
-    Console.WriteLine();
-    Console.WriteLine($"[turbine] Finished in {result.Duration.TotalSeconds:F1} s.");
-    Console.WriteLine($"[turbine] MATLAB      : {(result.AttachedToExistingMatlab ? "attached to a session already open" : "launched by this command")}");
-    Console.WriteLine($"[turbine] Channels    : {string.Join(", ", result.ChannelsExported)}");
-    if (result.ChannelsMissing.Count > 0)
-        Console.WriteLine($"[turbine] NOT PRESENT : {string.Join(", ", result.ChannelsMissing)}");
-
-    foreach (var warning in result.Warnings)
-    {
-        Console.WriteLine();
-        Console.WriteLine("[turbine] WARNING: " + warning);
+        return DWMStudio.WorldPackageCli.TurbineMatlabRunner.Run(
+            matlabDir,
+            outPath,
+            worldId,
+            scenario,
+            rate,
+            GetOption(a, "--base-name") ?? "wtSimSamples.csv",
+            GetOption(a, "--csv-dir"),
+            HasFlag(a, "--require-all-channels"),
+            allowLaunch: !HasFlag(a, "--no-launch"),
+            dumpDatabase: DumpDatabase);
     }
 
-    Console.WriteLine();
-    Console.WriteLine($"[verify] Re-opening '{outPath}' fresh (ReadOnly) immediately after export...");
-    DumpDatabase(outPath);
-    return 0;
+    Console.Error.WriteLine(
+        "--matlab-dir drives MATLAB over Windows COM automation and cannot work here.\n" +
+        "Run the export inside MATLAB yourself (wtGui, or wtRunSimulation + wtExportSimSamples)\n" +
+        "and then use --csv against the files it wrote.");
+    return 1;
 }
 
 /// <summary>
@@ -291,12 +265,6 @@ static bool TryParseScenario(string text, out TurbineScenario scenario)
         default: scenario = TurbineScenario.Ramp; return false;
     }
 }
-
-// MatlabComSession's constructor guards at run time too and throws
-// PlatformNotSupportedException off Windows; the attribute here is so the platform analyzer
-// can see the guard in TurbineFromMatlab rather than flagging the call site.
-[SupportedOSPlatform("windows")]
-static IMatlabSession CreateComSession(bool allowLaunch) => new MatlabComSession(allowLaunch);
 
 static void PrintTurbineUsage()
 {
