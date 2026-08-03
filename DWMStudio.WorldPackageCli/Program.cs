@@ -212,6 +212,7 @@ static int TurbineFromMatlab(string[] a, string matlabDir, string outPath, strin
             GetOption(a, "--csv-dir"),
             HasFlag(a, "--require-all-channels"),
             allowLaunch: !HasFlag(a, "--no-launch"),
+            progId: GetOption(a, "--progid"),
             dumpDatabase: DumpDatabase);
     }
 
@@ -279,6 +280,13 @@ static void PrintTurbineUsage()
     Console.Error.WriteLine("    --csv-dir <dir>                        default: the MATLAB code directory");
     Console.Error.WriteLine("    --require-all-channels                 fail if any of the five is absent");
     Console.Error.WriteLine("    --no-launch                            attach only; never start MATLAB");
+    Console.Error.WriteLine("    --progid <progid>                      which MATLAB; default matlab.application");
+    Console.Error.WriteLine();
+    Console.Error.WriteLine("  WITH MORE THAN ONE MATLAB INSTALLED, PASS --progid. The generic ProgID");
+    Console.Error.WriteLine("  resolves to one release -- whichever registered last -- and the attach looks");
+    Console.Error.WriteLine("  for THAT release in the Running Object Table. It will miss an open R2011a and");
+    Console.Error.WriteLine("  launch the newer one instead. R2011a is matlab.application.7.12; list what is");
+    Console.Error.WriteLine("  registered with:  reg query HKCR /f \"matlab.application\" /k");
     Console.Error.WriteLine();
     Console.Error.WriteLine("  Give exactly one of --csv or --matlab-dir.");
     Console.Error.WriteLine("  --csv builds from files already on disk and CANNOT detect stale ones;");

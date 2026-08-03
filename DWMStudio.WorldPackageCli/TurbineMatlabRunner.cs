@@ -40,6 +40,7 @@ namespace DWMStudio.WorldPackageCli
             string? csvOutputDirectory,
             bool requireAllChannels,
             bool allowLaunch,
+            string? progId,
             Action<string> dumpDatabase)
         {
             var request = new MatlabStageRequest
@@ -57,9 +58,18 @@ namespace DWMStudio.WorldPackageCli
             Console.WriteLine($"[turbine] Scenario    : {scenario.ToMatlabToken()}");
             Console.WriteLine($"[turbine] MATLAB code : {matlabDir}");
             Console.WriteLine($"[turbine] Sample rate : {sampleRateHz} Hz");
+            Console.WriteLine($"[turbine] ProgID      : {progId ?? MatlabComSession.DefaultProgId}");
             Console.WriteLine(allowLaunch
                 ? "[turbine] MATLAB      : attach to a running instance; launch one only if none is found."
                 : "[turbine] MATLAB      : attach only (--no-launch); will fail if none is running.");
+
+            if (string.IsNullOrWhiteSpace(progId))
+            {
+                Console.WriteLine("[turbine] NOTE        : the generic ProgID resolves to ONE release -- whichever");
+                Console.WriteLine("[turbine]               registered last, usually the newest installed. If that is");
+                Console.WriteLine("[turbine]               not R2011a, the attach will MISS an open R2011a and launch");
+                Console.WriteLine("[turbine]               the newer one instead. Pass --progid matlab.application.7.12");
+            }
             Console.WriteLine("[turbine] This BLOCKS for the whole simulation. A 600 s run is tens of seconds");
             Console.WriteLine("[turbine] of wall clock, and COM Execute gives no progress. Nothing has hung.");
             Console.WriteLine();
@@ -70,11 +80,12 @@ namespace DWMStudio.WorldPackageCli
             // user had open and set up, or a bare new one -- was only ever printed on success.
             var service = new MatlabStageService(() =>
             {
-                var session = new MatlabComSession(allowLaunch);
+                var session = new MatlabComSession(allowLaunch, progId);
                 Console.WriteLine(session.IsAttachedToExistingInstance
-                    ? "[turbine] MATLAB      : ATTACHED to a session that was already open."
-                    : "[turbine] MATLAB      : LAUNCHED a new instance (none was running). Its path and\n" +
-                      "[turbine]               current folder are whatever a fresh MATLAB starts with.");
+                    ? $"[turbine] MATLAB      : ATTACHED to an already-open '{session.ProgId}'."
+                    : $"[turbine] MATLAB      : LAUNCHED a new '{session.ProgId}' (none was running).\n" +
+                      "[turbine]               Its path and current folder are whatever a fresh MATLAB\n" +
+                      "[turbine]               starts with -- CHECK THE VERSION IN ITS TITLE BAR.");
                 return session;
             });
 
