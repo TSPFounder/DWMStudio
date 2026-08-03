@@ -136,13 +136,52 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void RunAndExport_UsesAddPathNotCd_SoTheUsersCurrentFolderIsLeftAlone()
+        public void AttachedMatlab_IsNotCdElsewhere_BecauseTheCurrentFolderIsTheUsersOwn()
         {
             var session = ExportingSession();
+            session.IsAttachedToExistingInstance = true;
 
             new MatlabStageService(() => session).RunAndExport(Request());
 
             Assert.DoesNotContain(session.Commands, c => c.Contains("cd(", StringComparison.Ordinal));
+        }
+
+        [Fact]
+        public void LaunchedMatlab_IsCdSomewhereWritable_BecauseAFreshOneStartsInProgramFiles()
+        {
+            // A MATLAB started over COM begins in its own install directory, which is read-only.
+            // wtBuildModel saves wtTurbine3MW.mdl relative to the current folder, so without this
+            // the run dies with "Permission denied" on a path nobody chose -- which is exactly
+            // what happened on the first real launched run.
+            var session = ExportingSession();
+            session.IsAttachedToExistingInstance = false;
+
+            new MatlabStageService(() => session).RunAndExport(Request());
+
+            Assert.Contains("cd(", session.Commands[0]);
+            Assert.Contains(_dir, session.Commands[0]);
+            Assert.Contains("addpath(", session.Commands[1]);
+        }
+
+        [Fact]
+        public void ExplicitWorkingDirectory_IsHonouredEvenWhenAttached()
+        {
+            var session = ExportingSession();
+            session.IsAttachedToExistingInstance = true;
+
+            var elsewhere = Path.Combine(_dir, "run_here");
+            Directory.CreateDirectory(elsewhere);
+
+            var request = new MatlabStageRequest
+            {
+                TurbineCodeDirectory = _dir,
+                OutputPackagePath = Path.Combine(_dir, "turbine.db"),
+                WorkingDirectory = elsewhere
+            };
+            new MatlabStageService(() => session).RunAndExport(request);
+
+            Assert.Contains("cd(", session.Commands[0]);
+            Assert.Contains(elsewhere, session.Commands[0]);
         }
 
         [Theory]
@@ -512,8 +551,15 @@ namespace DWMStudio.Tests
             public List<string> Commands { get; } = new();
             public Queue<string> ErrorsToReturn { get; } = new();
             public Action<string>? OnExecute { get; set; }
-            public bool IsAttachedToExistingInstance { get; set; }
             public bool Disposed { get; private set; }
+
+            /// <summary>
+            /// DEFAULTS TO TRUE, which is not the arbitrary choice it looks like: an attached
+            /// session is the one the stage leaves alone, so it produces the minimal command
+            /// sequence (addpath, run, export). Tests asserting on command ORDER and INDEX
+            /// depend on that. The launched case adds a CD in front and has its own tests.
+            /// </summary>
+            public bool IsAttachedToExistingInstance { get; set; } = true;
 
             private string _lastError = string.Empty;
 

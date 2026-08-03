@@ -210,6 +210,7 @@ static int TurbineFromMatlab(string[] a, string matlabDir, string outPath, strin
             rate,
             GetOption(a, "--base-name") ?? "wtSimSamples.csv",
             GetOption(a, "--csv-dir"),
+            GetOption(a, "--working-dir"),
             HasFlag(a, "--require-all-channels"),
             allowLaunch: !HasFlag(a, "--no-launch"),
             progId: GetOption(a, "--progid"),
@@ -278,6 +279,11 @@ static void PrintTurbineUsage()
     Console.Error.WriteLine("    --rate <hz>                            default 30");
     Console.Error.WriteLine("    --base-name <name.csv>                 default wtSimSamples.csv");
     Console.Error.WriteLine("    --csv-dir <dir>                        default: the MATLAB code directory");
+    Console.Error.WriteLine("    --working-dir <dir>                    MATLAB's current folder for the run;");
+    Console.Error.WriteLine("                                           defaults to the code directory when this");
+    Console.Error.WriteLine("                                           LAUNCHES MATLAB (a fresh one starts in");
+    Console.Error.WriteLine("                                           Program Files, which is read-only), and");
+    Console.Error.WriteLine("                                           leaves an ATTACHED session where it is");
     Console.Error.WriteLine("    --require-all-channels                 fail if any of the five is absent");
     Console.Error.WriteLine("    --no-launch                            attach only; never start MATLAB");
     Console.Error.WriteLine("    --progid <progid>                      which MATLAB; default matlab.application");
