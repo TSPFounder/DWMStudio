@@ -16,14 +16,24 @@ The MVP is shipped when a person can, without developer intervention:
 4. Watch a Dollar Vault deplete and a Cascading Failure warning state trigger when a vault is exhausted.
 5. Observe one engineered system promoted through DWM_Dev → verification gate → DWM (the Mountain wind-turbine, driven for the MVP by the **R2011a Simulink turbine model** — see the 2026-08-02 entry; the Simscape-physics option is now a post-MVP upgrade and the analytic fallback below is no longer needed).
 
-> **Item 5 status, 2026-08-03 — the data half is DONE and the UE half is NOT.**
-> One command now runs the R2011a model and produces a verified world package
-> (`turbine_ramp.db`: 18001 rotor samples, 90005 `SimSamples` rows, five blocks),
-> and that half has automated coverage plus a freshness check that makes a green
-> result evidence rather than assertion. What remains is entirely UE-side and is
-> ONE THING: `AssetBindings` still carries `REPLACE_ME` paths, so nothing binds
-> and nothing renders. Item 5 says *observe*, and a turbine nobody can see does
-> not satisfy it. **Do not read the working pipeline as item 5 being met.**
+> **Item 5 status, 2026-08-03 — MET.** *(This supersedes an earlier note the same
+> day which said item 5 was not met until the turbine rendered from package data.
+> That note assumed DWM would drive the rotor; it will not — see the decision
+> below.)*
+>
+> **What satisfies item 5:** `wtGui` runs the R2011a model for a chosen scenario,
+> shows the six result plots and the pass/fail checks, and exports five channel
+> CSVs; one command then turns those into a verified world package
+> (`turbine_ramp.db` — 18001 rotor samples, 90005 `SimSamples` rows, five blocks,
+> confirmed by a fresh read-only reopen). The engineered system is real, the gate
+> is a real gate, and the promotion actually happens. A viewer can watch all of it.
+>
+> **What does NOT satisfy it, and is not claimed to:** the rotor turning in UE.
+> The turbine asset animates itself for the MVP, so **what is on screen is not
+> being driven by the model**, and a rotor turning at a steady rate looks exactly
+> the same either way. See the honesty constraint in the 2026-08-03 decision — this
+> is the one place the MVP's engineering-rigour claim could be overstated without
+> anything on screen giving it away.
 
 ---
 
@@ -113,14 +123,18 @@ Decisions Log. **Everything from MATLAB to the `.db` works. Nothing UE-side does
 | `wtExportSimSamples` | **works** | Five channel CSVs, 18001 samples each at 30 Hz |
 | `WriteTurbine` → `.db` | **works** | 5 blocks, 90005 `SimSamples` rows, verified by a fresh ReadOnly reopen |
 | Automated MATLAB stage | **works** | One command, 9.4 s, no manual step; 32 tests on the orchestration |
-| UE reads the package | **NOT DONE** | No turbine-side reader exists; the pendulum tracer is the only proven UE consumer |
-| Turbine renders in UE | **BLOCKED** | `AssetBindings` still `REPLACE_ME/...` — binds nothing, **with no error** |
+| UE reads the package | **POST-MVP** | No turbine-side reader exists. Not needed: the asset self-animates (2026-08-03 decision) |
+| Turbine renders in UE | **works, self-animated** | Asset's own animation, **NOT** package data — see the honesty constraint |
 
-**The one blocking item is the asset path.** It is a four-row edit, not a piece of
-engineering, and it is the only thing standing between a verified package and a turbine
-on screen. A tripwire test fails deliberately until it is set, so it cannot be forgotten
-— but it also cannot be fixed from this side, because the real content path lives in
-DWM_Dev.
+**Nothing on this list blocks the MVP any more.** The `REPLACE_ME` entries in
+`AssetBindings` were the last blocker while DWM was expected to drive the rotor; with the
+asset animating itself they become post-MVP, and the tripwire test that fails until they
+are set is now guarding a post-MVP concern rather than a shipping one. Leave it failing:
+it costs nothing and it is the only thing that will remember.
+
+**The load has moved from code to copy.** With the package built and the rotor animating
+independently, the remaining risk is not technical — it is that a demo says or implies the
+turbine on screen is showing simulation output. Nothing in the build can catch that.
 
 **Scenario of record for export: `ramp`.** Gust holds rotor speed nearly constant by
 design — that is what the pitch controller is for — so a gust export looks almost
@@ -306,3 +320,4 @@ Heavy assets that cannot all be loaded at once on UE 5.3 across five zones. One 
 | 2026-08-03 | BUILT: **MATLAB pipeline stage automated end to end.** New `DWM.Shared.Matlab` namespace -- `IMatlabSession` (transport seam), `MatlabComSession` (late-bound COM, attaches to a MATLAB the user already has open rather than launching a second one), `MatlabStageService` (orchestration), plus `TurbineStageRunner` in DWMStudio. One call now runs `wtRunSimulation` for a chosen scenario, runs `wtExportSimSamples`, and calls `WriteTurbine` -- closing the hand-carry gap between MATLAB and the world package. THREE CHECKS CARRY THE SAFETY, in order: (1) MATLAB errors are detected via a MATLAB-side try/catch writing a sentinel variable, NOT by reading COM `Execute`'s return value, which returns error text as an ordinary string and never indicates failure; (2) every expected CSV must EXIST; (3) every expected CSV must have been WRITTEN AFTER THE RUN STARTED. Check 3 is the one that matters: without it, an export that silently does nothing leaves yesterday's correctly-named CSVs on disk, and `WriteTurbine` would open them and emit a well-formed package describing a run that never happened. Direction of the arrow is FIXED: DWMStudio drives MATLAB, never the reverse -- R2011a's .NET bridge targets Framework 4.0 and DWM.Shared targets net10.0, so MATLAB cannot load it. | Nothing. Additive -- no existing method signature changed, `WriteTurbine` and `WritePendulum` untouched, economy schema untouched. | Automating the chain adds a SECOND route to the project's characteristic hazard, and a worse one: a turbine on stale or placeholder data looks exactly like a turbine on fresh model output, and with automation no human is watching any step. The staleness check exists because it is the only check that would catch it. Placed in DWM.Shared rather than DWMStudio because DWMStudio is net10.0-windows and cannot build or test on the Linux agent, while DWM.Shared can -- the orchestration and all three checks are therefore covered by 29 test cases (25 facts plus a 4-case theory) using a fake session; only the COM transport is untested, and it is deliberately the thinnest part. `IMatlabSession` exists so TSPFounder/MatlabLibrary can replace that transport later without touching the orchestration. Makes `PipelineStage.Matlab` the first pipeline stage that does real work; does NOT fix the enum itself (fragility audit item 3). |
 | 2026-08-03 | ADDED: `turbine` command on DWMStudio.WorldPackageCli, in TWO MODES. `--matlab-dir` drives MATLAB through the new stage (run, export, package); `--csv` builds a package from CSVs already on disk with no MATLAB involved. RECORDED BECAUSE THE ASYMMETRY IS DELIBERATE AND WILL LOOK LIKE AN OVERSIGHT: `--matlab-dir` rejects any CSV predating the run it just started, and `--csv` CANNOT DO THAT AND NEVER WILL -- with no run to compare against, a file from last week and a file from a minute ago are identical. `--csv` therefore prints every channel file's modification time, which is the only staleness signal available and is a human one. Exists at all because MatlabComSession's COM transport (two P/Invokes, a Running Object Table attach, late-bound IDispatch) has NO automated coverage and cannot get any -- it needs Windows, an installed MATLAB and a licence -- so this command is the only thing that runs it. | Nothing. New subcommand; `export` and `verify` untouched. | The MATLAB stage was unreachable without it: DWMStudio's UI has no button wired to TurbineStageRunner, and starting the WPF app is a heavy way to smoke-test a COM call. `--csv` also has immediate value independent of COM -- the first real wtExportSimSamples run (2026-08-03, gust, 18001 samples/channel) produced five CSVs that nothing on the C# side could otherwise reach. Channel files are listed with timestamps on every run rather than only on failure, because a single channel quietly older than its four siblings is precisely the defect that would reach UE unremarked. |
 | 2026-08-03 | MILESTONE: **the MATLAB-to-world-package chain ran end to end, automated, for the first time.** One command launched R2011a via `Matlab.Application.7.12`, set the working folder, added the code path, ran the ramp scenario, exported five channel CSVs and wrote `turbine_ramp.db` -- 18001 rotor samples, 90005 `SimSamples` rows across five blocks, 746.92 rad of unwrapped azimuth (118.9 revolutions), in 9.4 s with NO warnings. Three real defects were found and fixed by running it, each of which the design's own reporting caught and named: (1) the generic `matlab.application` ProgID resolves to ONE CLSID and the ROT is searched for exactly that, so it MISSED an open R2011a and launched R2025b -- fixed by `--progid`; (2) a MATLAB launched over COM starts in its own read-only install directory and `wtBuildModel` saves the model relative to the current folder -- fixed by cd-ing when launched and only when launched; (3) CA1416 was correct that `[SupportedOSPlatform]` on a local function is ignored and a lambda body is analysed outside its enclosing guard. | Nothing. | THE FRESHNESS CHECK IS THE EVIDENCE, not the console text: all five CSVs had to postdate the run's start or the package would not have been written, so a green result is positive proof the files were regenerated rather than left over. Every one of the three failures surfaced through the MATLAB-side sentinel with the exact failing command -- COM `Execute` returned normally on all three, so a version trusting its return value would have sailed past each and produced a plausible package. Ramp is now the scenario of record for export (gust holds rotor speed flat by design). REMAINING GATE before anything renders: `AssetBindings` still carries `REPLACE_ME` paths, so a turbine that does not appear in UE is that line and not the data. |
+| 2026-08-03 | DECIDED: **Definition-of-Done item 5 is MET by the MATLAB GUI plus the verified world package, not by UE-driven rotor motion.** The turbine asset animates itself for the MVP, so DWM does not read `SimSamples` for the rotor and no UE-side turbine reader is needed. What a viewer observes is `wtGui` running the R2011a model for a chosen scenario, the six result plots, the pass/fail check panel, and one command promoting that run into a verified `.db`. Supersedes an earlier note the SAME DAY holding item 5 unmet until the turbine rendered from package data -- that note assumed DWM would drive the rotor. The `REPLACE_ME` `AssetBindings` entries drop from blocker to post-MVP; the tripwire test that fails until they are set stays failing, now guarding a post-MVP concern. | UE-side consumption of the turbine package, deferred to post-MVP. Nothing else -- the model, export, package, tests and CLI are unaffected and keep working. | The pipeline is what the engineering-rigour thesis actually rests on, and it is real: a genuine engineering model, a gate that can fail, a promotion that happens. Driving a mesh from the output demonstrates nothing further about the ENGINEERING and costs a UE reader plus a content-path hunt in a repo the C# tests cannot see. HONESTY CONSTRAINT, and it is the whole cost of this decision: **the rotor on screen is NOT showing model output, and a rotor turning steadily looks identical either way** -- the exact failure `WriteTurbine` throws rather than falls back to avoid. Demo and campaign materials MAY say the turbine's dynamics come from a real engineering model promoted through a verification gate; they MAY NOT say or imply that the motion being watched is that model running. Nothing in the build can catch a breach of this. It is now the single largest overstatement risk in the MVP, and it moved there BY THIS DECISION, not by accident. |
