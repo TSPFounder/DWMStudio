@@ -12,7 +12,8 @@ namespace DWMStudio.ViewModels
 {
     public sealed partial class MainViewModel : ObservableObject,
         IRecipient<OpenWizardMessage>,
-        IRecipient<OpenWorldMessage>
+        IRecipient<OpenWorldMessage>,
+        IRecipient<WorldCreatedMessage>
     {
         private readonly ToolStatusService _toolStatus;
 
@@ -88,6 +89,34 @@ namespace DWMStudio.ViewModels
             CurrentView = new WorldDetailViewModel(message.World);
             ActiveNavItem = "World";
             IsWizardOpen = false;
+        }
+
+        /// <summary>
+        /// THE WIZARD'S COMPLETION HANDLER, WHICH DID NOT EXIST.
+        ///
+        /// NewWorldWizardViewModel has always ended by sending WorldCreatedMessage, and until
+        /// now NOTHING ANYWHERE IMPLEMENTED IRecipient&lt;WorldCreatedMessage&gt;. RegisterAll
+        /// only registers the recipient interfaces a type actually implements, so the message
+        /// was sent into an empty room: no world added, no navigation, and the overlay left
+        /// open exactly as it was. From the outside that is indistinguishable from a hang, and
+        /// it happened even when the name was filled in correctly.
+        ///
+        /// A messenger send with no recipient is silent BY DESIGN -- that is what makes
+        /// WeakReferenceMessenger decoupled, and it is also why this class of bug does not
+        /// announce itself. Adding a message type and forgetting the handler compiles, runs,
+        /// and does nothing.
+        /// </summary>
+        public void Receive(WorldCreatedMessage message)
+        {
+            Dashboard.Worlds.Add(message.World);
+
+            IsWizardOpen = false;
+            Wizard.Reset();
+
+            // Open the thing that was just made, mirroring OpenWorldMessage. The new card is
+            // also on the dashboard behind this, so navigating away loses nothing.
+            CurrentView = new WorldDetailViewModel(message.World);
+            ActiveNavItem = "World";
         }
     }
 }
