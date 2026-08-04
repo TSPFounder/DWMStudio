@@ -31,6 +31,10 @@
     <!-- Day 13 golden-scenario regression fixture, copied to the test output dir so
          GoldenWorldPackageTests.cs can open it by relative path. -->
     <None Include="Fixtures\golden_world_economy.db" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Real MYSTRAN 19.0.0 output from the 2026-08-03 tower run. NastranF06Parser was
+         written from the Nastran-standard layout before any output from this solver
+         existed; this fixture is what turns that from an assumption into a checked fact. -->
+    <None Include="Fixtures\wtTowerModal.f06" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
