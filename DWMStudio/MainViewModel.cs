@@ -39,12 +39,49 @@ namespace DWMStudio.ViewModels
         // Construction
         // ------------------------------------------------------------------
 
+        private readonly WorldLibraryService _library = new();
+
         public MainViewModel()
         {
             _toolStatus = new ToolStatusService();
             CurrentView = Dashboard;
 
+            LoadLibrary();
+
             WeakReferenceMessenger.Default.RegisterAll(this);
+        }
+
+        private void LoadLibrary()
+        {
+            var worlds = _library.Load();
+
+            foreach (var world in worlds)
+                Dashboard.Worlds.Add(world);
+
+            // Seed the samples ONLY on a genuinely empty first run. Adding them whenever the
+            // list is empty would resurrect them every launch, so deleting the last world
+            // would appear to work and then undo itself on restart.
+            if (worlds.Count == 0 && _library.LoadMessage is null)
+                Dashboard.SeedSampleWorlds();
+
+            if (_library.LoadMessage is not null)
+                Dashboard.StatusMessage = _library.LoadMessage;
+        }
+
+        private void SaveLibrary()
+        {
+            try
+            {
+                _library.Save(Dashboard.Worlds);
+            }
+            catch (Exception ex)
+            {
+                // A failed save must SAY SO. Swallowing it would leave the world visible on
+                // screen and absent from disk -- looking saved is worse than failing to save,
+                // because nobody retries something that appeared to work.
+                Dashboard.StatusMessage =
+                    $"Could not save the world library to {_library.Path}: {ex.Message}";
+            }
         }
 
         // ------------------------------------------------------------------
@@ -109,6 +146,7 @@ namespace DWMStudio.ViewModels
         public void Receive(WorldCreatedMessage message)
         {
             Dashboard.Worlds.Add(message.World);
+            SaveLibrary();
 
             IsWizardOpen = false;
             Wizard.Reset();
