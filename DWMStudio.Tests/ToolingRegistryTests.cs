@@ -58,6 +58,65 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public void MatlabToolboxes_MatchTheVerOutput_BecauseARememberedInventoryIsNotAnInventory()
+        {
+            // THE TEST THIS PAIR EXISTS FOR. On 2026-08-05 this project's recollected toolbox
+            // list named six products where `ver` reports eleven, and on the strength of that
+            // omission a confident claim was made that Simulink Control Design and Simulink
+            // Design Optimization were NOT licensed and would block OOSEM phase H. Both are
+            // licensed. The two named here are pinned first, because they are the two the
+            // wrong answer was about.
+            var matlab = new ToolRegistry().Require(ToolRegistry.Matlab);
+
+            Assert.True(matlab.HasComponent("Simulink Control Design"));
+            Assert.True(matlab.HasComponent("Simulink Design Optimization"));
+
+            // Aerospace Blockset and Aerospace Toolbox are DISTINCT PRODUCTS. Collapsing them
+            // into one "Aerospace" entry is precisely how the earlier inventory lost count.
+            Assert.True(matlab.HasComponent("Aerospace Blockset"));
+            Assert.True(matlab.HasComponent("Aerospace Toolbox"));
+
+            Assert.Equal(11, matlab.Components.Count);
+
+            // Every component version-stamped. A version-less toolbox name is what produced the
+            // wrong claim, and pinning tool versions per project is a standing principle.
+            Assert.All(matlab.Components, c =>
+            {
+                Assert.False(string.IsNullOrWhiteSpace(c.Name));
+                Assert.False(string.IsNullOrWhiteSpace(c.Version));
+            });
+
+            Assert.Equal("1.0.18",
+                matlab.Components.Single(c => c.Name.StartsWith("Partial Differential")).Version);
+        }
+
+        [Fact]
+        public void PdeToolboxIs2DOnly_AndThatLimitReachesSomewhereItCanBeRead()
+        {
+            // A limit nobody can read is not a limit. The run-history template collected
+            // warnings for two builds into a control that never rendered them, so a component
+            // limitation that stopped at the descriptor would be the same bug -- which is why
+            // AllLimitations folds into the one property the UI already shows.
+            var matlab = new ToolRegistry().Require(ToolRegistry.Matlab);
+            var pde = matlab.Components.Single(c => c.Name.StartsWith("Partial Differential"));
+
+            Assert.Contains("2-D ONLY", pde.KnownLimitation);
+
+            // Reaches AllLimitations WITHOUT displacing the tool's own limitation -- the ProgID
+            // warning and a toolbox's capability are different facts and both have to survive.
+            var all = matlab.AllLimitations;
+            Assert.Contains("2-D ONLY", all);
+            Assert.Contains("generic ProgID", all);
+
+            // And reaches the workspace model, which is what actually renders.
+            var model = ToolWorkspaceFactory.Build(
+                ProjectPipeline.Default(), new ToolRegistry(), _dir)
+                .Single(m => m.ToolId == ToolRegistry.Matlab);
+
+            Assert.Contains("2-D ONLY", model.KnownLimitation);
+        }
+
+        [Fact]
         public void Mystran_IsABatchTool_BecauseItHasNoApiOfAnyKind()
         {
             var mystran = new ToolRegistry().Require(ToolRegistry.Mystran);
