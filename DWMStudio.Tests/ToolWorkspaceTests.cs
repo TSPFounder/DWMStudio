@@ -45,6 +45,44 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public void AnAbsoluteDeckPath_IsUsedAsIs_NotJoinedToTheProjectRoot()
+        {
+            // A deck normally lives with the FEA work, not under the Simulink model that
+            // happens to be the project root. Path.Combine returns a rooted second argument
+            // unchanged, so this needs no special case -- but it does need a test, because
+            // "silently prefixed with the project root" would produce a path that looks
+            // plausible and points nowhere.
+            var deck = Path.Combine(_root, "elsewhere", "wtTowerModal.dat");
+            Directory.CreateDirectory(Path.GetDirectoryName(deck)!);
+            File.WriteAllText(deck, "SOL 103\n");
+
+            var tiles = ToolWorkspaceFactory.Build(
+                ProjectPipeline.WithStructuralAnalysis(deck), new ToolRegistry(),
+                Path.Combine(_root, "some", "other", "root"), Installed);
+
+            var solve = tiles.Single(t => t.StageId == "fea-solve");
+
+            Assert.Equal(deck, solve.ArtifactPath);
+            Assert.True(solve.ArtifactExists);
+            Assert.True(solve.CanEdit);
+        }
+
+        [Fact]
+        public void BothFeaStages_NameTheSameDeck_BecauseItIsTheHandoff()
+        {
+            // FEMAP writes it, MYSTRAN reads it, FEMAP reads the results back. If the two
+            // stages ever drift onto different paths, the mesher and the solver stop talking
+            // to each other and each one still looks fine on its own.
+            var tiles = ToolWorkspaceFactory.Build(
+                ProjectPipeline.WithStructuralAnalysis(@"C:\decks\tower.dat"),
+                new ToolRegistry(), _root, Installed);
+
+            Assert.Equal(
+                tiles.Single(t => t.StageId == "fea-mesh").ArtifactPath,
+                tiles.Single(t => t.StageId == "fea-solve").ArtifactPath);
+        }
+
+        [Fact]
         public void StagesWithNoTool_GetNoTile()
         {
             // Co-Sim names no tool. A tile offering nothing to do is worse than no tile.

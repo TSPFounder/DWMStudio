@@ -40,12 +40,27 @@ namespace DWMStudio.ViewModels
             BuildTiles();
         }
 
+        /// <summary>
+        /// The tower modal deck, used when a world does not name its own.
+        ///
+        /// A machine-specific absolute path, and deliberately HERE rather than in DWM.Shared:
+        /// the pipeline library must not know where one developer keeps their files. A world
+        /// that sets FeaDeckPath overrides it, and that value is persisted, so this constant
+        /// is only ever the starting point for a project that has not said otherwise.
+        /// </summary>
+        private const string DefaultFeaDeckPath =
+            @"C:\DreamWorldMaker\Repos\DWM_Dev\Models\Mystran\wtTowerModal.dat";
+
         private void BuildTiles()
         {
             // WithStructuralAnalysis rather than Default, so FEMAP and MYSTRAN appear now that
             // both are installed. Once pipelines are stored per project this comes from the
             // project instead of being chosen here.
-            var pipeline = ProjectPipeline.WithStructuralAnalysis();
+            var deckPath = string.IsNullOrWhiteSpace(World.FeaDeckPath)
+                ? DefaultFeaDeckPath
+                : World.FeaDeckPath;
+
+            var pipeline = ProjectPipeline.WithStructuralAnalysis(deckPath);
 
             var projectRoot = string.IsNullOrWhiteSpace(World.SimulinkModelPath)
                 ? System.Environment.CurrentDirectory
