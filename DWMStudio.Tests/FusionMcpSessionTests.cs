@@ -146,15 +146,90 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void TheFactory_RefusesMcpWithNothingToLaunch_RatherThanFailingLater()
+        public void TheDefaultMcpEndpoint_IsTheOneFusionPrints()
+        {
+            // VERIFIED, NOT GUESSED. Fusion's Text Commands panel prints
+            // "MCP - http://127.0.0.1:65517/mcp", and netstat confirmed 127.0.0.1:65517
+            // LISTENING. Pinned so a later edit cannot quietly move it back to a guess.
+            var options = new FusionMcpOptions();
+
+            Assert.NotNull(options.ServerUrl);
+            Assert.Equal(65517, options.ServerUrl!.Port);
+            Assert.Equal("/mcp", options.ServerUrl.AbsolutePath);
+        }
+
+        [Fact]
+        public void TheFactory_ConnectsOverHttpRatherThanLaunchingAnything()
+        {
+            // The server is already running, so connecting beats launching: nothing to start,
+            // nothing to own, nothing to orphan. An earlier version assumed stdio and would
+            // have tried to spawn a process that was already there.
+            using var session = FusionSessionFactory.For(FusionTransport.Mcp)();
+
+            Assert.IsType<FusionMcpSession>(session);
+        }
+
+        [Fact]
+        public void TheFactory_RefusesMcpWithNothingToReach_RatherThanFailingLater()
         {
             // A misconfigured transport should fail where it is configured, not on the first
             // build three screens away.
             var ex = Assert.Throws<InvalidOperationException>(
-                () => FusionSessionFactory.For(FusionTransport.Mcp));
+                () => FusionSessionFactory.For(FusionTransport.Mcp,
+                    mcp: new FusionMcpOptions { ServerUrl = null }));
 
-            Assert.Contains("ServerCommand", ex.Message);
+            Assert.Contains("ServerUrl", ex.Message);
             Assert.Contains("Bridge", ex.Message);
+        }
+
+        [Theory]
+        [InlineData("application/json")]
+        [InlineData(null)]
+        public void APlainJsonBody_IsParsedDirectly(string? mediaType)
+        {
+            var msg = HttpJsonRpcChannel.ParseMessage(
+                @"{""jsonrpc"":""2.0"",""id"":1,""result"":{""tools"":[]}}", mediaType);
+
+            Assert.True(msg.TryGetProperty("result", out _));
+        }
+
+        [Fact]
+        public void AnSseBody_IsParsed_BecauseAStreamableServerMayAnswerEitherWay()
+        {
+            // A streamable-HTTP server is free to answer application/json OR text/event-stream
+            // for the same request. A client that only parses JSON gets a parse error on a
+            // perfectly good response.
+            var sse = "event: message\n" +
+                      "data: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"ok\":true}}\n\n";
+
+            var msg = HttpJsonRpcChannel.ParseMessage(sse, "text/event-stream");
+
+            Assert.True(msg.TryGetProperty("result", out _));
+        }
+
+        [Fact]
+        public void SseNotifications_DoNotDisplaceTheActualReply()
+        {
+            // Servers send progress notifications before the result. A notification has no
+            // result and no error; letting the last frame win regardless would return nothing.
+            var sse = "data: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/progress\"}\n\n" +
+                      "data: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"tools\":[]}}\n\n" +
+                      "data: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/message\"}\n\n";
+
+            var msg = HttpJsonRpcChannel.ParseMessage(sse, "text/event-stream");
+
+            Assert.True(msg.TryGetProperty("result", out _));
+        }
+
+        [Fact]
+        public void AnSseStreamWithNoReply_SaysSoRatherThanReturningNothing()
+        {
+            var sse = ": keep-alive\n\ndata: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/progress\"}\n\n";
+
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => HttpJsonRpcChannel.ParseMessage(sse, "text/event-stream"));
+
+            Assert.Contains("no JSON-RPC reply", ex.Message);
         }
 
         [Fact]
