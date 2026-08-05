@@ -348,6 +348,66 @@ The bug underneath it was worse than the missing file: `WorldCreatedMessage` was
 
 ---
 
+## Tools the OOSEM spreadsheet assumes — reconciled against DWM, 2026-08-05
+
+Every tool named in a parenthesis in `DWM_OOSEM_Criteria_and_Tasks.xlsx`'s Inputs and Outputs
+columns, counted by mention. **This is what the method assumes it has**, which is not the same
+as what DWM has or wants.
+
+| Mentions | Tool | Status |
+| --- | --- | --- |
+| 91 | Word | Document artifacts. Fine, not automated |
+| 76 | UModel | **Registered.** The SysML tool |
+| 72 | SharePoint | CM and lists backbone of phases A/B. **Status unconfirmed — see below** |
+| 41 | Excel | HoQ, traceability matrices, WBS. Fine |
+| 22 | Simulink | **Registered** (R2011a) |
+| 14 | MATLAB | **Registered** (`Matlab.Application.7.12`) |
+| 12 | Code / Visual Studio | Software implementation |
+| 10 | **MS Project** | **OBE** |
+| 8 | **Visio** | **OBE** |
+| 10 | **SolidWorks** | **OBE** |
+| 6 | **STK** | Not owned. Aerospace-template inheritance |
+| 6 | FEMAP | **Registered**, and now driven end to end |
+| 6 | "FEA App" | Generic. **MYSTRAN fills this**, and is registered |
+| 6 | PDE Toolbox | Licensed under R2011a |
+| 5 | Flow / PowerApps | Microsoft 365 automation |
+| 4 | Outlook | Notifications |
+| 4 | Minitab | Fishbone (C.4.3), statistics |
+| 1 each | Eagle, LT Spice | Electrical analysis (H.3). Neither registered |
+| 1 each | Control System, Optimization, Mupad | Licensed under R2011a |
+| 1 each | **Simulink Controls Design**, **Simulink Design Optimization** | **Not in the licensed set** |
+
+### What this reconciliation turns up
+
+**Four tools are OBE or unowned:** MS Project, Visio, SolidWorks (all confirmed OBE
+2026-08-05) and STK. That is **34 mentions** of tooling the spreadsheet assumes and DWM will
+not be using — concentrated in phases A, I and J, plus C.4.2/C.8.2.
+
+**No CAD tool remains named that DWM will use.** SolidWorks was the spreadsheet's CAD tool
+across phases I and J (tooling, machine, facility and inspection models). Fusion is what the
+registry holds, and Fusion appears **nowhere** in the spreadsheet. One of the two has to give
+before manufacturing work starts; neither is urgent now.
+
+**Unreal is not named anywhere in the spreadsheet.** No criteria, no outputs, no mentions —
+yet "simulate them in UE" is the closing step of DWM's whole loop. The method the spreadsheet
+encodes ends at verification and demonstration (phases K, M) without ever reaching the
+simulation target. That is the largest structural gap between the process as written and DWM
+as described, and it is a different gap from TOOLING.md's own unbuilt step 4.
+
+**Two MATLAB toolboxes are named but not licensed.** *Simulink Control Design* and *Simulink
+Design Optimization* are separate products; the R2011a full licence per the 2026-07-02
+decision covers Control System, Optimization, Aerospace, Symbolic Math, PDE and Simulink V&V —
+not those two. Cheap to catch now, expensive to discover in the middle of phase H.
+
+**SharePoint's status needs an answer, and cannot be inferred.** At 72 mentions it is the
+second-most-named tool in the sheet and the entire CM, lists and traceability backbone of
+phases A and B. Everything else confirmed OBE so far is Microsoft project/authoring tooling,
+which makes SharePoint's continued use a fair question rather than a safe assumption — but
+"probably also OBE" is a guess, and a wrong guess here silently invalidates a fifth of the
+spreadsheet. **Asked, not assumed.**
+
+---
+
 ## The one failure mode, seen five times
 
 Worth naming, because it stopped being a coincidence some time around the third instance.

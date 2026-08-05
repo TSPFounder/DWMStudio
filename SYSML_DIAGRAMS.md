@@ -181,7 +181,61 @@ is therefore the most consequential of the gaps found here, not the smallest.
    like an artifact of the template's aerospace origin. For DWM the mission model is far more
    likely to be Simulink alone — or the existing economy simulation — but that is a tailoring
    decision, not something to discover mid-phase. Note that Simulink V&V *is* available: the
-   R2011a full licence includes it.
+   R2011a full licence includes it. See TOOLING.md's tool reconciliation — STK is one of
+   several tools the template assumes and DWM has not chosen.
+
+---
+
+## C.10.1 House of Quality — the prioritisation mechanism
+
+**This is where "communities prioritise the products they need" actually happens**, and it is
+one of the additions beyond Chapter 17 — Figure 17.5 has no equivalent. That absence makes
+sense: the book is written for a company that already knows it is building a security system.
+DWM has to *decide* what to build, so it needs a step the reference does not.
+
+A sample template was supplied 2026-08-05 (`HoQ_Template.xlsx`, an APU example — bleed air,
+shaft horsepower, turbine inlet temperature, containment rings). The content is not DWM's;
+the structure is what carries.
+
+### How it maps to DWM's loop
+
+| HoQ element | DWM meaning |
+| --- | --- |
+| **WHATs** (rows, grouped *Functional* / *Performance*) | Community needs — `CommunityResources.Role = 'Needs'` |
+| **Priority** (column D, 1–5) | **The prioritisation itself.** This column is the mechanism |
+| **HOWs** (columns) | Technical characteristics — the same objects as **C.6.1 MoE Parameter Diagrams** |
+| **Relationships** (¤ strong, ¡ moderate, ¨ weak) | Which characteristic serves which need, and how strongly |
+| **Roof** (strong/mild × positive/negative) | Interactions between characteristics — the trade-offs, feeding phase **H** |
+| **Target Value** + units row | Becomes mission requirements and constraints (**C.6.2**) |
+| **Technical Difficulty** (1–5) | Cost side of the prioritisation |
+| **Competitive Evaluation** (We / Comp. 1 / Comp. 2) | Ties to **C.4.2**'s *Competitive Systems List* |
+| **Importance Rating** (bottom row) | **The output** — derived priority over technical characteristics, i.e. what gets developed |
+
+The Importance Rating is `Σ (need priority × relationship weight)` with `¤ = 5, ¡ = 3,
+¨ = 1`. So community priorities in, engineering targets out. That is the whole bridge from
+economy to engineering, in one row of arithmetic.
+
+### Two defects in the template, worth fixing before it is used
+
+Both are this project's recurring shape — **correct-looking, and silent about being stale.**
+
+**1. Two Importance Rating cells are hardcoded, not formulas.** Six of the eight are live
+formulas (`E59 = D29*5+D30*3+D31*3`). **`AC59 = 40` and `AG59 = 20` are literals.** They are
+arithmetically right *today* — AC checks out as `D29*5 + D32*5 = 15+25 = 40`, AG as
+`D30*5 = 20` — which is precisely what makes them dangerous. Change a community's priority
+and six columns move while two silently do not, and the row still looks like a computed
+result. Identical in kind to the stale-CSV and stale-`.f06` problems the tooling already
+guards against.
+
+**2. The symbol and its weight are stored separately.** The cell displays `¤`; the formula
+types `*5` by hand. **Nothing connects them.** Change a relationship symbol and the
+Importance Rating does not follow — the same failure as the first, running the other way.
+
+Neither is hard to fix in Excel, and both argue something larger: **a HoQ is a weighted matrix
+over (needs × MoEs), which is data.** It is the same argument this project already made about
+the pipeline enum and the tool registry — the spreadsheet is a fine editor and a poor system
+of record. Note also that the HoQ carries **units on its target values**, which Fragility Audit
+item 1 flags `SimSamples` for lacking.
 
 ---
 
@@ -347,12 +401,15 @@ Phases I and J carry them at both component and system level, and the pairing is
 | I.2.4 | J.2.4 | Inspection Systems Models & Drawings |
 | I.2.2 | J.2.2 | Facilities Drawings (Visio) |
 
-**`ToolRegistry` has no SolidWorks entry.** Fusion is the registered CAD tool. Yet a
-substantial `SolidworksLibrary` C# project already exists — `CAD_Part`, `CAD_Assembly`,
-`FeatureBuilder`, `DrawingBuilder`, and an `Automation/` bridge carrying
-`MatlabSimulinkSimscapeAdapter` and `ParameterMappingProfile`. Registering SolidWorks is a
-registry entry plus an accent colour, which is the whole point of the registry — but it
-should happen when manufacturing comes into scope, not be discovered then.
+**The spreadsheet names SolidWorks; DWM will not be using it.** `SolidworksLibrary` is **OBE
+as of 2026-08-05** and is not in near-term plans, so the earlier suggestion here — register
+SolidWorks in `ToolRegistry` — is **withdrawn.** Fusion remains the registered CAD tool.
+
+What survives the retraction is the underlying gap: **phases I and J assume a CAD tool for
+tooling, machine, facility and inspection models, and which tool that is has not been
+decided.** Registering the wrong one early would have been worse than registering none. Treat
+"SolidWorks & Visio" in those rows as inherited from the template, in the same category as
+C.4.2's STK dependency — a tool the source assumed and DWM has not chosen.
 
 ### Reuse is decided in phase C, which is where we are starting
 
