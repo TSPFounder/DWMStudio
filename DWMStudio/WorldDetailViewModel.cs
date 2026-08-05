@@ -51,6 +51,18 @@ namespace DWMStudio.ViewModels
         private const string DefaultFeaDeckPath =
             @"C:\DreamWorldMaker\Repos\DWM_Dev\Models\Mystran\wtTowerModal.dat";
 
+        /// <summary>
+        /// The turbine MATLAB sources, used when a world does not name its own.
+        ///
+        /// Without this the project root fell back to Environment.CurrentDirectory, which for
+        /// a running WPF app is its bin folder. That fails in the WORST possible way: ADDPATH
+        /// ON A FOLDER WITH NO .m FILES SUCCEEDS, so MATLAB opens, the path command reports no
+        /// error, and only `wtGui` fails -- with "Undefined function", pointing at the function
+        /// rather than at the path. Exactly the trail chased on 2026-08-03 through the CLI.
+        /// </summary>
+        private const string DefaultMatlabCodePath =
+            @"C:\DreamWorldMaker\Repos\DWM_Dev\Models\Simulink\MVP_WindTurbine";
+
         private void BuildTiles()
         {
             // WithStructuralAnalysis rather than Default, so FEMAP and MYSTRAN appear now that
@@ -63,7 +75,7 @@ namespace DWMStudio.ViewModels
             var pipeline = ProjectPipeline.WithStructuralAnalysis(deckPath);
 
             var projectRoot = string.IsNullOrWhiteSpace(World.SimulinkModelPath)
-                ? System.Environment.CurrentDirectory
+                ? DefaultMatlabCodePath
                 : World.SimulinkModelPath;
 
             foreach (var tile in ToolWorkspaceFactory.Build(

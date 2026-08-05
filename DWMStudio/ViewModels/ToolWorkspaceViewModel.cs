@@ -168,7 +168,7 @@ namespace DWMStudio.ViewModels
                     session.Execute(MatlabStageService.BuildGuardedCommand(
                         $"addpath({MatlabStageService.MatlabLiteral(codeDirectory)});"));
 
-                    var pathError = session.GetCharArray("dwmStageErr");
+                    var pathError = session.GetCharArray(MatlabStageService.ErrorSentinel);
                     if (!string.IsNullOrWhiteSpace(pathError))
                         throw new MatlabStageException($"MATLAB could not add the path: {pathError}");
 
@@ -176,9 +176,20 @@ namespace DWMStudio.ViewModels
                     // user's session -- MATLAB stays open and is theirs from here.
                     session.Execute(MatlabStageService.BuildGuardedCommand("wtGui"));
 
-                    var guiError = session.GetCharArray("dwmStageErr");
+                    var guiError = session.GetCharArray(MatlabStageService.ErrorSentinel);
+                    // THE SESSION IS THE USER'S NOW. Without this, Dispose would quit the
+                    // MATLAB this just launched -- taking wtGui with it -- and the whole
+                    // hand-off would look like nothing had happened.
+                    session.Detach();
+
                     if (!string.IsNullOrWhiteSpace(guiError))
-                        throw new MatlabStageException($"wtGui did not start: {guiError}");
+                        throw new MatlabStageException(
+                            $"wtGui did not start.\n\n  MATLAB said: {guiError}\n\n" +
+                            $"  Path added: {codeDirectory}\n\n" +
+                            "ADDPATH SUCCEEDS ON A FOLDER WITH NO .m FILES IN IT, so a wrong "
+                            + "folder surfaces here rather than one step earlier. In MATLAB, "
+                            + "run `which wtGui` and set the world's Simulink model path to "
+                            + "the folder it reports.");
                 });
 
                 StatusMessage =

@@ -155,6 +155,24 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public void InteractiveToolWithUnknownAvailability_CanStillBeRun()
+        {
+            // THE BUG THIS TEST EXISTS FOR. A COM tool reports Unknown on purpose -- checking
+            // whether a server is registered says nothing about whether the release the project
+            // needs is available -- and CanRun used to treat Unknown as "no". That disabled the
+            // MATLAB button outright, so clicking it did nothing and no tooltip explained why.
+            //
+            // Attempting IS the probe for these tools: attach or launch, then report the truth.
+            var tile = ToolWorkspaceFactory.Build(
+                    ProjectPipeline.Default(), new ToolRegistry(), _root,
+                    _ => ToolAvailability.Unknown)
+                .Single(t => t.ToolId == ToolRegistry.Matlab);
+
+            Assert.True(tile.CanRun);
+            Assert.Null(tile.WhyNot(ToolAction.Run));
+        }
+
+        [Fact]
         public void ToolNotInstalled_ExplainsThatThePathsAreOnlyDefaults()
         {
             var tile = FeaSolveTile(availability: ToolAvailability.NotFound, writeDeck: true);
