@@ -8,6 +8,18 @@
 > set of diagram kinds **DWM_Dev must support its users in producing, for systems this project
 > will never see.**
 >
+> **What DWM_Dev is:** communities prioritise the products they need, those products get
+> developed, and they are simulated in UE. So an SoI is **a product some community needs** —
+> which is why 17.3.2 *Analyze Stakeholder Needs* is the natural entry point rather than
+> merely the methodologically first one: **the community is the stakeholder**, and the need
+> already exists as data. `CommunityResources.Role` is `'Produces'` or `'Needs'` in
+> `economy_schema.sql` today.
+>
+> **MVP is limited to the wind turbine use case** — one community need, one SoI, one pass.
+> The seeded economy already contains it: Mountain *produces* `wind_power`, Hillside *needs*
+> it. The turbine is not a demo mechanism bolted on beside the economy; it is **the first
+> instance of the general loop**, and the loop is what the rest of this document describes.
+>
 > Read every row as a requirement of the form *"a user must be able to create, edit, track and
 > version a `<kind>` for their SoI"*, not as a task assigned to anyone here.
 >
