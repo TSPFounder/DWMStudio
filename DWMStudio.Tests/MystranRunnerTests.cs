@@ -190,6 +190,53 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public void WarningsInTheErrLog_AreNotLost_EvenWhenTheF06IsClean()
+        {
+            // THE REAL CASE. The 2026-08-03 tower run produced a .f06 with no warnings at all
+            // and an .ERR carrying "THE L-SET MASS MATRIX HAS ONLY 30 NONZEROS ON ITS
+            // DIAGONAL" -- a real statement about what the model can tell you. Reporting
+            // "0 warnings" while that sat unread would give a cleaner account of the solve
+            // than the solver did.
+            var deck = WriteDeck();
+            var runner = new MystranRunner(FakeDescriptor(), new FakeProcessRunner
+            {
+                ExitCode = 0,
+                F06Content = GoodF06,
+                F06Dir = _dir,
+                BeforeReturning = () => File.WriteAllText(
+                    Path.Combine(_dir, "tower.ERR"),
+                    " *WARNING    : THE L-SET MASS MATRIX HAS ONLY 30 NONZEROS ON ITS DIAGONAL\n")
+            });
+
+            var result = runner.Run(deck);
+
+            Assert.True(result.Succeeded);
+            Assert.Contains(result.Run.Warnings, w => w.Contains("L-SET MASS MATRIX"));
+            Assert.Equal(ToolRunStatus.SucceededWithWarnings, result.Run.Status);
+            Assert.NotNull(result.ErrPath);
+        }
+
+        [Fact]
+        public void FatalInTheErrLog_FailsTheRun_EvenWhenTheF06LooksClean()
+        {
+            var deck = WriteDeck();
+            var runner = new MystranRunner(FakeDescriptor(), new FakeProcessRunner
+            {
+                ExitCode = 0,
+                F06Content = GoodF06,
+                F06Dir = _dir,
+                BeforeReturning = () => File.WriteAllText(
+                    Path.Combine(_dir, "tower.ERR"),
+                    " *FATAL: singular stiffness matrix at grid 7\n")
+            });
+
+            var result = runner.Run(deck);
+
+            Assert.False(result.Succeeded);
+            Assert.Contains("FATAL in the .ERR", result.Run.FailureMessage);
+        }
+
+        [Fact]
         public void StaleF06_FromAnEarlierRun_IsCaught()
         {
             // The FEA version of the stale-CSV hazard: yesterday's .f06 parses, has
