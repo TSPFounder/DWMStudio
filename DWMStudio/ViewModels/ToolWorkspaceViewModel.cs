@@ -185,7 +185,16 @@ namespace DWMStudio.ViewModels
                     $"Loaded into FEMAP: model from {Path.GetFileName(result.DeckPath)}, results " +
                     $"from {Path.GetFileName(result.ResultsPath)}. Cleared to an empty model " +
                     "first, so this is one clean copy however many times you press it. Switch " +
-                    "to FEMAP's PostProcessing tab for the deformed shapes." +
+                    "to FEMAP's PostProcessing tab for the deformed shapes.\n\n" +
+                    // THE TREE LIES, AND SAYING SO IS PART OF THE RESULT. FEMAP's Model Info
+                    // does not repaint for entities that arrive over the API, so a load that
+                    // worked can leave the Results node looking empty -- which on 2026-08-05
+                    // read exactly like a failed import and sent three runs chasing a bug that
+                    // was not there. FemapApiNames.RefreshUi tries to fix it over the API, but
+                    // those three call names are guesses and may all be wrong. This click is not.
+                    "If the Results node looks empty, press Reload from Model (second button " +
+                    "on the Model Info toolbar). FEMAP's tree does not repaint for entities " +
+                    "that arrive over the API -- the results are loaded either way." +
                     (result.Run.Warnings.Count == 0
                         ? string.Empty
                         : "\n\n" + string.Join("\n", result.Run.Warnings));

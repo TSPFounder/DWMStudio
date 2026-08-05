@@ -1,7 +1,10 @@
 # TOOLING.md — External Tool Integration Design
 
-**Status:** step 1 implemented (`DWM.Shared/Tooling`, 19 tests). Steps 2–5 proposed.
+**Status:** steps 1–3 implemented and verified against the real tools. Step 5 partly built.
+Step 4 (Unreal) not started.
 **Started:** 2026-08-03, when FEMAP and MYSTRAN were installed.
+**Chain closed:** 2026-08-05 — deck → MYSTRAN → `.op2` → FEMAP → six mode shapes on screen,
+driven from a DWMStudio button, on the machine that has the tools.
 
 ---
 
@@ -82,29 +85,59 @@ where the tests run. Wiring `WorldProject` to it is a separate change, made wher
 
 ---
 
-## Step 2 — the batch tool shape *(proposed)*
+## Step 2 — the batch tool shape *(implemented, 2026-08-04)*
 
-`IMatlabSession` already exists for attached tools and works. Add its sibling:
+`IMatlabSession` already existed for attached tools. Its sibling now exists too:
 
-```
-IToolSession   Execute(command), read values          MATLAB, FEMAP, UModel, Fusion
-IBatchTool     Run(exe, args, workdir) -> artifacts   MYSTRAN, DATCOM
-```
+| Type | Role |
+| --- | --- |
+| `IProcessRunner` | Spawn, capture stdout/stderr, resolve the executable |
+| `MystranRunner` | Solve a deck; read `.f06` **and** `.ERR`; report the `.op2` |
+| `NastranF06Parser` | Eigenvalues out of the `.f06`, with the soft-stiff window check |
 
-Both produce a `ToolRun`. **MYSTRAN is the forcing function** — build the batch shape against
-it and DATCOM follows almost free, since both are "write a deck, spawn a process, parse the
-output file".
+Both shapes produce a `ToolRun`. **MYSTRAN was the forcing function** as predicted, and
+DATCOM should follow nearly free.
 
-The parser matters more than the process runner. MYSTRAN writes `.f06` (text) and `.op2`
-(binary); reading eigenvalues out of the `.f06` is the piece worth testing, and it can be
-tested with a captured sample file and no solver installed.
+### Four things that were wrong before they were right
+
+**The executable is version-stamped.** `mystran-19.0.0-windows-x86_64.exe`, not
+`mystran.exe`. Three guesses failed before `ls -R /c/Mystran` settled it in one command.
+Fixed with a glob (`mystran*.exe`) over `ExecutableSearchRoots` plus deterministic ordering,
+because the next version bump renames the binary again.
+
+**`ResolveExecutable` returned an unchecked bare filename**, so a tile reported *"Found on
+disk"* when nothing had been found and `Process.Start` threw an unhandled `Win32Exception`
+on click. Null now means not found. Same failure family as everything else in this file:
+*something reported success without having checked.*
+
+**The `.ERR` file was never read.** A run reported zero warnings while the `.ERR` beside it
+carried MYSTRAN's L-SET mass-matrix warning. Both files are read now.
+
+**Async stdout/stderr reads.** Sequential `ReadToEnd` on both pipes deadlocks a child that
+fills the other buffer. Not hit in practice; fixed anyway, because the failure is a hang with
+no output rather than an error.
+
+### The parser was worth more than the process runner, as expected
+
+MYSTRAN's `.f06` is hostile in three specific ways, and each one was caught by running the
+parser's logic against a real captured file rather than a synthetic one:
+
+- The section header is printed **letter-spaced**: `R E A L   E I G E N V A L U E S`.
+  Matched whitespace-insensitively.
+- Fortran **exponent shorthand**: `2.815-1` means `2.815e-1`. There is no `E`.
+- Eigenvector GRID rows are **structurally identical to eigenvalue rows** — two leading
+  integers then numerics. Without a table terminator the parser reported **72 modes** for a
+  6-mode run. `IsSectionHeader` now includes `>>LINK`, and a fixture test pins it.
+
+The fixture is real MYSTRAN 19.0.0 output, checked into `DWMStudio.Tests/Fixtures/`. Tests
+run on the Linux agent with no solver installed.
 
 ---
 
-## Step 3 — FEMAP, which completes a workflow *(proposed)*
+## Step 3 — FEMAP, which completes a workflow *(implemented, 2026-08-05)*
 
 FEMAP's COM API is the same shape as MATLAB's, so the adapter is largely the one that
-already works. The value is the pairing:
+already worked. The value is the pairing:
 
 ```
 FEMAP  (geometry, mesh, write .bdf)
@@ -115,10 +148,97 @@ FEMAP  (geometry, mesh, write .bdf)
 FEMAP does not solve; MYSTRAN does not mesh. Together they are a complete FEA capability
 with no gap, and they retire the hand-written `wtTowerModal.dat` approach.
 
-**First real job for it:** the open tower disagreement. The Simulink model reports
-`f_tower = 0.320 Hz`; the independent 10-element beam deck predicts **0.2815 Hz**. Both pass
-the soft-stiff window (0.257–0.630 Hz), but at 24% and 9.5% margin. A meshed FEMAP model
-solved by MYSTRAN would settle it.
+`FemapComSession` / `FemapPostProcessor` in `DWM.Shared/Tooling/Fea`, 13 tests.
+
+### The verified call shapes
+
+Pinned on 2026-08-05 against FEMAP 10.2 (64-bit) — **confirmed by FEMAP's own `Out: 6`, not
+by the calls failing to throw**, a distinction this project has now had to make about four
+separate tools:
+
+| Job | Call | Returns |
+| --- | --- | --- |
+| Clear | `feFileNew()` | `-1` |
+| Model | `feFileReadNastran(setId, filename)` | `-1` |
+| Results | `feFileReadNastranResults(setId, filename)` | `-1` |
+
+**`-1` is success.** It is VB `TRUE`, and it is now *checked*, not merely reported. Same
+family as MATLAB's `Execute` returning error text as an ordinary string and MYSTRAN exiting 0
+after a FATAL: **the status lives somewhere other than where a caller would naturally look.**
+Until `-1` was known, a refused call and an accepted one were indistinguishable — which is
+exactly how three consecutive runs reported success while leaving `Out: 0` in FEMAP.
+
+There was also a genuinely harmful fallback in the results candidate list: it ended with
+`feFileReadNastran(setId, filename)`, feeding the `.OP2` to the **model** reader. It did not
+throw, so the try-each-shape loop accepted it. Removed. A fallback that cannot fail is worse
+than no fallback.
+
+### Two orderings that are not stylistic
+
+**Model before results.** MYSTRAN's `.op2` for this deck holds six `OUGV1` eigenvector blocks
+and **no `GEOM` datablocks** — results without geometry. Read on its own it produces *"Your
+model does not currently contain Nodes and Elements"*. The deck is read first to build the
+mesh; node and element ids match because both come from the same file.
+
+**Clear before importing, but only from the button.** A repeat load into a populated FEMAP
+does not replace, it collides — *"Overwriting existing Property 101..110"*, twelve output sets
+where six belong. `startNewModel` therefore defaults to **off** in the library and is turned
+**on** by the DWMStudio button. Asymmetric damage: a duplicated results tree is one
+`File > New` away from fixed; somebody's unsaved meshing is not. The button knows it will be
+pressed repeatedly and is made idempotent; the library, which cannot know what is open,
+declines to destroy anything.
+
+That the button gets pressed twice is not a user error — it happened because the *first*
+press appeared to do nothing, for the reason two sections down.
+
+### Proving it by hand first is why this worked at all
+
+The manual run took two minutes and caught something that would have been near
+undiagnosable over COM: FEMAP's Import dialog defaults to **Femap Neutral** with a blank
+NASTRAN flavour, which happily accepts a Nastran deck, reports *"Database Update Completed.
+No Errors."*, and imports nothing. Through the API that is a silent no-op with a success
+return.
+
+**This is the method, not an anecdote:** drive the workflow by hand, watch what the dialogs
+actually default to, then automate the thing you saw work.
+
+### One thing the UI does that the API cannot see
+
+FEMAP's Model Info tree **does not repaint for entities that arrive over the API**. A load
+that fully worked leaves the Results node looking empty — which reads precisely like a failed
+import, and cost several runs chasing a bug that was not there.
+
+The fix is the tree's own **Reload from Model** button (second on the Model Info toolbar),
+confirmed 2026-08-05: it populated all six modes instantly, no re-import. `RefreshUi` carries
+three unverified candidate calls, all attempted, all ignored on failure — acceptable guessing
+precisely because the fallback is one known click. **Nothing downstream treats a repainted
+tree as evidence the import worked, or an empty one as evidence it did not.** The status
+bar's output-set count is the fact; the tree is cosmetics.
+
+### What it settled
+
+**The tower disagreement — the first real job for it, and it delivered.** The Simulink model
+assumes `f_tower = 0.320 Hz`. Three independent methods now agree with each other and
+disagree with it:
+
+| Method | First tower bending |
+| --- | --- |
+| numpy 10-element beam | 0.2815 Hz |
+| MYSTRAN 19.0.0 `.f06` | 0.2810991 Hz |
+| FEMAP reading the `.op2` | 0.281099 Hz |
+
+0.14% apart, and the Simulink figure is the outlier at **+13.8%**. Both still pass the
+soft-stiff window (0.257–0.630 Hz), so nothing is broken — but the model's number is not the
+structure's number.
+
+FEMAP also showed something the `.f06` scan did not make obvious: the six output sets are
+**three physical modes in orthogonal pairs** (0.281099 ×2, 2.221241 ×2, 6.633947 ×2), which
+is what an axisymmetric tower must produce. That is a check on the deck in its own right, and
+it came free from looking at the tree.
+
+Implied `K_t = m_t·ω² = 2.105e5 × 1.766198² = 6.566e5 N/m`, against the model's 8.508e5
+(**−23%**). **Recorded, deliberately not applied** — changing a tuned model's stiffness
+mid-MVP is a separate decision from measuring it. See SCOPE.md.
 
 ---
 
@@ -134,35 +254,124 @@ Deferred because it is the most speculative and the least blocking.
 
 ---
 
-## Step 5 — the GUI *(proposed)*
+## Step 5 — the GUI *(Edit / Run built; Create not started)*
 
 ### Three verbs per stage, and only three
 
-| Verb | Means |
-| --- | --- |
-| **Create** | Scaffold the artifact from a template (`.f3d`, `.slx`, `.ump`, `.bdf`, `.uproject`) |
-| **Edit** | **Launch the native app on the file.** That is what edit means |
-| **Run** | Automate: a COM command sequence, or a batch process |
+| Verb | Means | State |
+| --- | --- | --- |
+| **Create** | Scaffold the artifact from a template (`.f3d`, `.slx`, `.ump`, `.bdf`, `.uproject`) | **not built** |
+| **Edit** | **Launch the native app on the file.** That is what edit means | built |
+| **Run** | Automate: a COM command sequence, or a batch process | built for MATLAB, MYSTRAN, FEMAP |
 
 **DWMStudio should never try to be an editor.** Editing happens in the tool that owns the
 format. This is not a limitation to apologise for — it is the only division of labour that
 stays true as tools are added.
 
-### A run history, not a checkbox
+### One window per tool, and it is not one window per tool in the source
+
+Each tile opens its own workspace window. There is **one** `ToolWorkspaceWindow`,
+parameterised by a `ToolWorkspaceModel` built from the registry and the pipeline — because the
+alternative was the thing this whole document exists to stop: adding FEMAP would have meant a
+fifth Border in XAML, a fifth command, a fifth stage accessor, spread over four files and two
+languages, one of which cannot be compiled on the build agent.
+
+So `WorldDetailView`'s four hand-written Borders became a data-driven `ItemsControl`, and the
+*decision* about what a tool can do lives in `DWM.Shared/Tooling/ToolWorkspaceModel.cs` where
+it is data and has 12 tests. FEMAP/MYSTRAN tiles cost a registry entry.
+
+**`CanRun` is blocked only by a positive `NotFound`, never by `Unknown`.** An interactive COM
+tool reports `Unknown` *on purpose* — checking whether a COM server is registered tells you
+almost nothing worth having. Treating that as "cannot run" disabled the MATLAB button
+entirely and made clicking it do nothing. **Attempting is the probe.** And every disabled
+button carries a `WhyNot()` tooltip, because a dead control with no explanation is the same
+bug as the Create World button that silently did nothing.
+
+### Hand over; do not reimplement
+
+The MATLAB tile's Run button says **"Open wtGui in MATLAB"**, not "Run". `wtGui` already
+picks the scenario, shows the six plots and the pass/fail panel, and exports the channel
+CSVs — under R2011a, which is the release the model needs. Rebuilding any of that in WPF
+would be a worse copy of a tool the project already owns.
+
+**This taught the COM lifetime rule the hard way.** MATLAB kept closing the instant the
+hand-off finished. The first fix — suppressing `Quit()` via `Detach()` — was wrong, because a
+COM server *launched by a client is owned by it* and exits when the last reference is
+released; no `Quit()` is involved. The real fix is to attach over COM if MATLAB is already
+running, and otherwise launch `matlab.exe -r "addpath(...); wtGui"` as an **ordinary
+process**, which nobody owns. FEMAP inherits the same rule, one tool along.
+
+### A run history, not a checkbox *(built)*
 
 `MarkStageComplete` sets a boolean. That cannot express *"ran, passed, three warnings"* —
-which is exactly what a turbine export produces when a channel is missing or the gust
-scenario was used. A green tick over a run with warnings is the same class of problem as a
-placeholder that looks like model output: correct-seeming, and silent about the one thing
-worth knowing.
+exactly what a turbine export produces when a channel is missing. A green tick over a run
+with warnings is the same class of problem as a placeholder that looks like model output:
+correct-seeming, and silent about the one thing worth knowing.
 
-Each stage should show its runs: when, how long, status, warnings, which tool version.
+`ToolRun` now carries status, duration, outputs, warnings and the resolved tool version, and
+`ToolRunStatus` includes `SucceededWithWarnings` and `StaleOutputs` as first-class outcomes.
+
+**And a warning nobody can read is not a warning.** The run-history template silently failed
+to render the `Warnings` collection for two builds — during which the FEMAP work was
+generating precisely the diagnostic that would have shortened it, into a control that did not
+display it. Fixed, *and* the same text is now appended to the status line: one fact, two
+places, because the cost of duplication is far below the cost of it being invisible again.
 
 ### Status dots that tell the truth
 
 Four booleans become per-tool `ToolStatus`, showing *not installed* / *found* / *running* /
 *connected* — with the resolved ProgID or executable path in the tooltip, so "which MATLAB?"
 is answerable at a glance.
+
+---
+
+## Worlds are saved now *(2026-08-05)*
+
+Not strictly tooling, but it landed with this work and it was load-bearing: **new worlds were
+never persisted.** They lived in an `ObservableCollection` and vanished on exit.
+
+`WorldLibraryStore` writes `%APPDATA%\DWMStudio\worlds.json`. Three decisions worth keeping:
+
+- **Atomic writes** — temp file plus `File.Replace`, so a crash mid-save cannot leave a
+  truncated library where a valid one was.
+- **A corrupt file is quarantined, never deleted.** Renamed aside so the app starts, with the
+  original still there to look at. Deleting somebody's library because it failed to parse
+  would be the worst possible response to a parse bug.
+- **`SchemaVersion` is actually read**, and a future version is *refused* rather than
+  best-effort parsed. A field that is written but never checked is decoration.
+
+Sample worlds now seed only on a genuinely empty first run, rather than reappearing forever
+beside the user's real ones.
+
+The bug underneath it was worse than the missing file: `WorldCreatedMessage` was sent and
+**no type anywhere implemented `IRecipient<WorldCreatedMessage>`** — see the last section.
+
+---
+
+## The one failure mode, seen five times
+
+Worth naming, because it stopped being a coincidence some time around the third instance.
+Every tool integration on this project has failed the same way at least once:
+
+| Tool | It said | It meant |
+| --- | --- | --- |
+| MATLAB | `Execute` returned a string | The string *was* the error text |
+| MATLAB | `addpath` succeeded | The folder had no `.m` files in it |
+| MYSTRAN | Exit code 0 | FATAL in the `.f06`; nothing solved |
+| FEMAP | The call did not throw | Return code `0`; import refused |
+| FEMAP | *"Database Update Completed. No Errors."* | Wrong importer; read nothing |
+| DWMStudio | Tile said "Found on disk" | `ResolveExecutable` returned an unchecked guess |
+
+**Something reported success without having checked.** In every case the status existed
+somewhere other than where a caller would naturally look — a return code, a second file, a
+string's contents, a dialog's default.
+
+Two habits follow, and they are the practical content of this document:
+
+1. **Find where the tool actually keeps its verdict, and read that.** Not the exception, not
+   the exit code, not the absence of a crash.
+2. **Drive it by hand once before automating it.** Two minutes in the UI beats an afternoon
+   of a silent no-op returning success.
 
 ---
 
