@@ -50,87 +50,41 @@
                                Converter={StaticResource BoolToOpacityConverter}}" />
             </Grid>
 
-            <!-- Stage panels -->
-            <UniformGrid Columns="2">
-
-                <!-- SysML -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 12 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="SysML / Architecture"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmSysmlBrush}" />
-                        <TextBlock Margin="0 6 0 0" Style="{StaticResource MutedLabelStyle}">
-                            <Run Text="{Binding World.RequirementCount, Mode=OneWay}" />
-                            <Run Text="requirements, " />
-                            <Run Text="{Binding World.ActorCount, Mode=OneWay}" />
-                            <Run Text="actors, " />
-                            <Run Text="{Binding World.UseCaseCount, Mode=OneWay}" />
-                            <Run Text="use cases" />
-                        </TextBlock>
-                        <Button Content="Open in UModel"
-                                Command="{Binding OpenInUModelCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
-
-                <!-- CAD -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 0 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="CAD / Fusion 360"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmCadBrush}" />
-                        <TextBlock Text="{Binding World.FusionDocumentPath,
-                                       FallbackValue='No Fusion document linked'}"
-                                   Style="{StaticResource MutedLabelStyle}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Margin="0 6 0 0" />
-                        <Button Content="Open in Fusion"
-                                Command="{Binding OpenInFusionCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
-
-                <!-- MATLAB -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 12 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="MATLAB / Simulink"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmSimBrush}" />
-                        <TextBlock Text="{Binding World.SimulinkModelPath,
-                                       FallbackValue='Model not built yet'}"
-                                   Style="{StaticResource MutedLabelStyle}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Margin="0 6 0 0" />
-                        <Button Content="Build Simulink Model"
-                                Command="{Binding BuildSimulinkModelCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
-
-                <!-- UE -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 0 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="Unreal Engine"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmRuntimeBrush}" />
-                        <TextBlock Text="Co-simulation and runtime"
-                                   Style="{StaticResource MutedLabelStyle}"
-                                   Margin="0 6 0 0" />
-                        <Button Content="Launch in Unreal"
-                                Command="{Binding OpenInUnrealCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
-
-            </UniformGrid>
+            <!-- Stage panels.
+                 ONE TEMPLATE, DRIVEN BY DATA. These used to be four hand-written Borders
+                 with a hardcoded command each; adding FEMAP and MYSTRAN that way would have
+                 meant two more of both. The tiles now come from the project's pipeline plus
+                 the tool registry, so a new tool is a registry row and appears here with no
+                 XAML change at all. -->
+            <ItemsControl ItemsSource="{Binding Tiles}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 12 12">
+                            <StackPanel Margin="16">
+                                <TextBlock Text="{Binding Title}"
+                                           FontWeight="SemiBold" FontSize="14"
+                                           Foreground="{Binding AccentColor}" />
+                                <TextBlock Text="{Binding Subtitle}"
+                                           Style="{StaticResource MutedLabelStyle}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="0 6 0 0" />
+                                <Button Content="Open workspace"
+                                        Command="{Binding DataContext.OpenWorkspaceCommand,
+                                            RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource GhostButtonStyle}"
+                                        HorizontalAlignment="Left"
+                                        Margin="0 12 0 0" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
             <!-- Status line -->
             <TextBlock Text="{Binding StatusMessage}"
