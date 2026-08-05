@@ -113,6 +113,10 @@ namespace DWMStudio.ViewModels
                         await OpenMatlabGuiAsync();
                         break;
 
+                    case ToolRegistry.Femap:
+                        await OpenInFemapAsync();
+                        break;
+
                     default:
                         // Say so plainly rather than showing a spinner over nothing. Only
                         // MATLAB and MYSTRAN have runners; the rest are TOOLING.md steps 3-5.
@@ -126,6 +130,45 @@ namespace DWMStudio.ViewModels
             {
                 IsBusy = false;
                 RunCommand.NotifyCanExecuteChanged();
+            }
+        }
+
+        /// <summary>
+        /// Load the solved deck and its results into FEMAP.
+        ///
+        /// Two imports, in order, because MYSTRAN's .op2 for this deck carries eigenvectors
+        /// and NO geometry -- results with nowhere to land until the model exists. That is
+        /// what produced FEMAP's "Your model does not currently contain Nodes and Elements"
+        /// when the .op2 was tried on its own.
+        ///
+        /// FEMAP is left open, which is the whole point: the user ends up looking at mode
+        /// shapes rather than at a status line saying some did once exist.
+        /// </summary>
+        private async Task OpenInFemapAsync()
+        {
+            if (Model.ArtifactPath is null)
+            {
+                StatusMessage = "This stage has no deck configured, so there is nothing to post-process.";
+                return;
+            }
+
+            var deck = Model.ArtifactPath;
+
+            var result = await Task.Run(() =>
+                new FemapPostProcessor(() => new FemapComSession(allowLaunch: true)).Load(deck));
+
+            Runs.Add(result.Run);
+
+            if (result.Succeeded)
+            {
+                StatusMessage =
+                    $"Loaded into FEMAP: model from {Path.GetFileName(result.DeckPath)}, results " +
+                    $"from {Path.GetFileName(result.ResultsPath)}. Switch to FEMAP's " +
+                    "PostProcessing tab for the deformed shapes.";
+            }
+            else
+            {
+                StatusMessage = result.Run.FailureMessage ?? "FEMAP failed for an unrecorded reason.";
             }
         }
 
