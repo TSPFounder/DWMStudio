@@ -39,8 +39,8 @@ the rest.
 
 | Phase | Criteria | OOSEM activity | Fig |
 | --- | --- | --- | --- |
-| **A** | 76 | *Manage System Development* — WBS, IMP, IMS, SEMP, the plans | 17.1 |
-| **B** | 36 | *Manage System Development* — CM, cost, risk, suppliers | 17.1 |
+| **A** | 76 | **Not from Chapter 17.** WBS, IMP, IMS, SEMP, the plans — program-management practice, sitting where Fig 17.1's *Manage System Development* box is | — |
+| **B** | 36 | **Not from Chapter 17.** CM, cost estimating, risk, supplier rating — same | — |
 | **C** | 20 | **17.3.2 Analyze Stakeholder Needs** — as-is analysis, mission requirements, MoEs, use cases | 17.2 |
 | **D** | 21 | **17.3.3 Analyze System Requirements** — scenarios, black-box BDD, state machines | 17.2 |
 | **E** | 10 | **17.3.4 Define Logical Architecture** — SoI logical decomposition | 17.2 |
@@ -51,6 +51,14 @@ the rest.
 | **J** | 9 | *Integrate and Verify System* — integration | 17.1 |
 | **K** | 10 | *Integrate and Verify System* — inspection | 17.1 |
 | **M** | 3 | *Integrate and Verify System* — demonstration and validation | 17.1 |
+
+**Phases A and B are not a tailoring of Chapter 17 — they are additional.** Figure 17.1 has a
+*Manage System Development* box, and the chapter describes it in general terms (planning,
+project control, life-cycle model selection, tailoring), but it populates none of it. A WBS,
+an IMP/IMS, control accounts and work packages, cost point estimates, schedule risk
+mitigation and supplier rating are program-management practice from elsewhere. **Do not read
+the phase letters as one continuous OOSEM sequence** — C through H are the method, A and B
+are the program wrapped around it, and I through M are the right-hand side of the Vee.
 
 **This confirms the recursion is the method, not a naming coincidence.** The structural claim
 below — *phase G is E+F run again per component* — was inferred from diagram names before the
@@ -65,9 +73,75 @@ applied to successively lower levels."* Phases E, F and G are one process at two
   SharePoint requirements list). Reasonable; traceability is continuous in the figure too,
   running alongside the other activities rather than after them.
 - **17.3.1 Set-up Model** appears to have **no criteria at all.** In the chapter this is where
-  modelling guidelines and model organisation are established — which is precisely the UModel
-  package-structure question left open at the end of this document. Worth checking whether it
-  was deliberately dropped or simply not reached yet.
+  modelling guidelines and model organisation are established. Worth checking whether it was
+  deliberately dropped or simply not reached yet — the chapter's own answer is below, and it
+  is the piece the spreadsheet is missing.
+
+---
+
+## Model organisation — Figure 17.4, the ESS model structure
+
+The chapter's answer to *"how is the UModel project laid out?"*, which is the question the
+missing 17.3.1 criteria would have covered. Reproduced from the ESS example's browser view:
+
+```
+OOSEM Profile Extensions
+Model
+├── Process Guidance          -- the OOSEM process itself, as activity diagrams
+├── Security Domain as-is     -- what exists today, and what of it can be reused
+├── Security Domain to-be
+│   ├── Installation          -- one package per life-cycle phase
+│   └── Operational           -- (could also hold Manufacturing, Support, Disposal)
+│       ├── 1-Requirements
+│       ├── 2-Structure
+│       ├── 3-Use Cases
+│       ├── 4-Behavior
+│       ├── 5-Parametrics
+│       ├── 6-Interface Definitions
+│       └── ESS               -- the system of interest
+│           ├── 1-Black Box Specification
+│           ├── 2-Logical Design
+│           ├── 3-Node Logical Design
+│           ├── 4-Node Physical Design
+│           └── 5-Verification
+├── Value Types               -- imports SI Definitions; reused at every level
+└── Viewpoints                -- stakeholder viewpoints and their views
+```
+
+**The ESS sub-packages are the spreadsheet's phases.** The correspondence is exact, and it is
+the clearest confirmation yet that the two describe one process:
+
+| ESS package | Phase |
+| --- | --- |
+| 1-Black Box Specification | **D** — SoI Black-Box BDD, system requirements, state machines |
+| 2-Logical Design | **E** — SoI Logical BDD, subsystem decomposition |
+| 3-Node Logical Design | **F.2** — SoI Logical Node Architecture BDD, node IBDs |
+| 4-Node Physical Design | **F.3** — SoI Physical Node BDDs, allocation |
+| 5-Verification | **J / K / M** — integration, inspection, demonstration |
+
+### This closes both open UModel-structure questions
+
+They were listed at the end of this document as unanswered. They are answered:
+
+**How is phase G's per-component recursion represented?** *"The model organization typically
+includes a recursive package structure that mirrors the system hierarchy. A package may be
+defined for a block that is further decomposed."* So: **a package per decomposed block**, and
+the `ESS` package's five sub-packages are the template that repeats at each level. Phase G is
+literally a copy of that structure one level down — which is the same recursion the diagram
+inventory showed, now visible in the package tree rather than in diagram names.
+
+**What about things reused across levels?** They sit **outside** the hierarchy: *"The model
+organization also includes other packages that are not nested within the system hierarchy
+packages… such as packages for value types and viewpoints."* Value Types and Viewpoints are
+siblings of the domain packages, not children — which is why the Views & Viewpoints diagrams
+appear at C.2.2 and are then pulled from a library at C.3.1 and C.4.3 rather than rebuilt.
+
+Two smaller conventions worth copying if this is ever built:
+
+- **Numeric name prefixes** (`1-Requirements`, `2-Structure`) exist purely to force browser
+  ordering. The numbers are not part of the names in prose.
+- **`Process Guidance` holds the method itself** — Figure 17.2 and the 17.3.x activity
+  diagrams live *in the model*. The process is modelled alongside the system it produces.
 
 ---
 
@@ -311,9 +385,11 @@ Deliberately out of scope for this extraction, and each one is real work:
 - **Diagram dependencies.** The sheet's Inputs column names them (C.4.3 consumes the Views &
   Viewpoints diagrams, C.3.1 pulls them from the library) and a real build order could be
   derived from it. Not done here.
-- **UModel project structure.** Package layout, naming conventions, and how the recursion in
-  phase G is represented — one package per component, or one model with a component
-  hierarchy — is a modelling decision, not a list.
+- ~~**UModel project structure.**~~ **Answered** — see *Model organisation* above. Figure 17.4
+  gives the package layout, the naming convention, and the recursion rule (a package per
+  decomposed block, with reusable packages held outside the hierarchy). What remains is
+  whether DWM would adopt it as-is, which is only worth deciding if the work is ever
+  scheduled.
 
 ---
 
