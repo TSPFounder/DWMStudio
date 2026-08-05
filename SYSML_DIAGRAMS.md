@@ -1,36 +1,40 @@
 # SYSML_DIAGRAMS.md — The UModel Diagram Inventory
 
-> ## THIS GUIDES WHAT DWM_Dev PRODUCES — out of MVP scope, not out of use
+> ## A CAPABILITY REQUIREMENT ON DWM_Dev — not a modelling backlog
 >
-> **Standing purpose, 2026-08-05: this document is the reference that determines which SysML
-> diagrams DWM_Dev needs to produce.** It is not an archive of a road not taken. When the
-> diagram set is selected, it gets selected from here, against the OOSEM structure recorded
-> below, rather than assembled from memory or from whichever diagram type came to mind first.
+> **Settled 2026-08-05, and it inverts what this document is.** DWM_Dev is **not** the System
+> of Interest. The SoI is **whatever system the user is developing**, and DWM users will bring
+> a great many of them. So the list below is not a set of diagrams to draw of DWM — it is the
+> set of diagram kinds **DWM_Dev must support its users in producing, for systems this project
+> will never see.**
 >
-> **And it is out of MVP scope.** Both are true and they do not conflict. The Frozen Scope
-> Table has listed *"SysML/OOSEM authoring in UModel feeding the pipeline (XMI)"* in its Out
-> of Scope column since the scope was frozen, and it stays there — confirmed 2026-08-05. What
-> changed is standing, not schedule: **out of scope for the MVP, and the governing reference
-> when it is in scope.** Nothing here is an MVP deliverable, and nothing here is dead.
+> Read every row as a requirement of the form *"a user must be able to create, edit, track and
+> version a `<kind>` for their SoI"*, not as a task assigned to anyone here.
 >
-> **Consequence for how this is maintained.** A reference that decides future work has to
-> stay correct, so the six sheet inconsistencies listed near the end are worth fixing in the
-> source spreadsheet rather than merely noted here, and the model organisation from Figure
-> 17.4 is worth adopting before the first diagram exists rather than after.
+> **What this changes:**
 >
-> **What is unaffected:** UModel stays a registered tool with a workspace tile, and the
-> pipeline keeps its SysML stage. The tooling is in scope; the diagram production is what is
-> deferred. Pulling any subset forward is a new decision with its own dated entry in
-> SCOPE.md's Decisions Log.
+> - **The count stops being an estimate and becomes a coverage list.** 79 was previously a
+>   worrying amount of drawing. As a capability list it is the opposite of worrying — the
+>   *kinds* are what must be supported, and there are only **15 distinct types** behind the 79
+>   rows. See the totals table.
+> - **The recursion multiplier stops blocking anything.** The blank `Recursive` column was
+>   flagged as preventing an estimate. It no longer needs filling in: the platform must simply
+>   **not assume a fixed depth**, because the user's system tree decides it. That is the same
+>   finding as Fragility Audit item 3 — a pipeline that is an enum cannot represent a hierarchy
+>   whose depth it does not know.
+> - **Model organisation becomes a per-project template, not a one-time decision.** Figure 17.4
+>   puts a single SoI at the centre of the package tree. A platform serving many users with
+>   many systems needs that structure **scaffolded per project**, which is exactly TOOLING.md's
+>   unbuilt **Create** verb. See *One SoI per project* below.
 >
-> **One reading to confirm.** "What diagrams DWM_Dev needs to produce" is taken here to mean
-> **DWM_Dev is the System of Interest** — the diagrams describe the DWM software itself, which
-> matches the Fragility Audit's framing of DWM_Dev as a platform "intended to support the
-> design and development of virtually any engineering system." The alternative reading — that
-> the SoI is the wind turbine, or whichever system a user brings — produces a different model
-> organisation entirely, since the ESS structure puts the SoI at the centre of the package
-> tree. Worth settling before 17.3.1 *Set-up Model* is done, because everything nests inside
-> that choice.
+> **Still out of MVP scope.** The Frozen Scope Table has listed *"SysML/OOSEM authoring in
+> UModel feeding the pipeline (XMI)"* under Out of Scope since the scope was frozen, and it
+> stays there. Nothing here is an MVP deliverable — but as a requirements source rather than a
+> backlog, it now bears on how the *tooling* is shaped, and the tooling is in scope.
+>
+> **Consequence for maintenance.** A document that carries requirements has to stay correct,
+> so the six inconsistencies near the end are worth fixing in the source spreadsheet rather
+> than merely noted here.
 
 **Source:** `DWM_OOSEM_Criteria_and_Tasks.xlsx`, sheet `Criteria`, 499 rows, extracted
 2026-08-05. Every row below is a named entry in that sheet's **Outputs** column — nothing
@@ -97,7 +101,8 @@ applied to successively lower levels."* Phases E, F and G are one process at two
 
 ## Starting point: 17.3.2 Analyze Stakeholder Needs (phase C)
 
-**Decided 2026-08-05.** DWM_Dev's UModel work starts here. Phase C is Figure 17.5's
+**Decided 2026-08-05.** The UModel work starts here — meaning **DWM_Dev must support a user
+doing 17.3.2 for their own SoI first**, before any later activity. Phase C is Figure 17.5's
 *Analyze Stakeholder Needs* activity almost action for action, which is the strongest
 confirmation available that the spreadsheet and the chapter describe one process:
 
@@ -111,10 +116,10 @@ confirmation available that the spreadsheet and the chapter describe one process
 | capture measures of effectiveness | C.6.1 |
 | conduct mission requirements review | **no criterion** |
 
-### The actual starting set: six diagrams, not seventy-nine
+### The first capability increment: six diagram kinds, not seventy-nine
 
-Every UModel artifact in phase C. `C.5.2` updates `C.2.2` rather than adding a diagram, so
-the count of distinct diagrams is six:
+Every UModel artifact in phase C — the set DWM_Dev must support first. `C.5.2` updates
+`C.2.2` rather than adding a diagram, so the count of distinct kinds is six:
 
 | Order | Criteria | Diagram | Type |
 | --- | --- | --- | --- |
@@ -126,16 +131,22 @@ the count of distinct diagrams is six:
 | 6 | C.6.1 | MoE Parameter Diagrams | `par` |
 | 7 | C.9.1 | Mission Use Case Diagrams | `uc` |
 
-**That is a tractable first increment** — six diagrams against a full-method total of 79, and
-it produces the one thing every later phase consumes: mission requirements with measures of
-effectiveness traced to them.
+**A tractable first increment** — six kinds against fifteen in the full method, and it lands
+on the one output every later phase consumes: mission requirements with measures of
+effectiveness traced to them. A platform that supports only phase C is already useful to a
+user, which is not true of most single-phase subsets further down.
 
-### Do 17.3.1 first anyway
+### Do 17.3.1 first — and for a platform it is not optional
 
 **Set-up Model has no criteria in the spreadsheet, and it precedes this.** C.2.2 is a package
 diagram; it has to be created *somewhere*, and the somewhere is the model organisation from
-Figure 17.4 below. Deciding the package structure after the first six diagrams exist means
-moving them. This is the cheapest possible moment to settle it.
+Figure 17.4 below.
+
+For a single team modelling one system, skipping it costs a rearrangement later. **For a
+platform it is the deliverable itself** — the user cannot be asked to hand-build the package
+tree before drawing their first viewpoint diagram, so *scaffolding the structure is the
+prerequisite feature, not the preliminary decision.* 17.3.1 having no criteria in the sheet
+is therefore the most consequential of the gaps found here, not the smallest.
 
 ### Four things to reconcile before starting
 
@@ -237,6 +248,60 @@ Four conventions worth copying:
   hierarchy. So a diagram is not filed by hand — it is filed by what it is drawn on. Related:
   a model element from another package appears with its **fully qualified name**, which is
   what keeps two same-named elements in different packages distinguishable.
+
+---
+
+## One SoI per project — what a multi-user platform does with Figure 17.4
+
+**Figure 17.4 holds exactly one System of Interest.** `ESS` sits at the centre of
+`Operational`, with `Security Domain as-is` and `Security Domain to-be` named for that one
+problem. It is the model organisation for *a* system, and it assumes there is one.
+
+DWM_Dev serves users with many systems. The structure therefore cannot be a fixture of the
+product — it has to be **instantiated per project**, with the SoI's name substituted
+throughout:
+
+```
+<Project>.ump
+├── OOSEM Profile Extensions        -- product-supplied, identical every time
+├── Process Guidance                -- product-supplied, identical every time
+├── <Domain> as-is                  -- named for the user's problem domain
+├── <Domain> to-be
+│   └── Operational
+│       ├── 1-Requirements … 6-Interface Definitions
+│       └── <SoI>                   -- named for the user's system
+│           ├── 1-Black Box Specification
+│           ├── 2-Logical Design
+│           ├── 3-Node Logical Design
+│           ├── 4-Node Physical Design   -- hardware / software / data / procedures
+│           └── 5-Verification
+├── Value Types                     -- product-supplied; user extends
+├── Viewpoints                      -- user-authored (C.2.2)
+└── Navigation                      -- hyperlink BDD, generated
+```
+
+**This is TOOLING.md's `Create` verb, and it is the strongest case yet for building it.**
+`Create` is defined there as *"scaffold the artifact from a template"* and is the one verb of
+the three still unbuilt. For every other tool it is a convenience — a `.slx` or a `.f3d` can
+be made in the native application just as easily. **For UModel it is the feature.** Nobody
+should be hand-building a fourteen-package tree correctly, per project, from a book they may
+not own; and a structure that is wrong in project one is wrong in every diagram that lands
+inside it thereafter.
+
+Three consequences worth carrying into that work:
+
+- **Product-supplied packages must be distinguishable from user content.** `OOSEM Profile
+  Extensions`, `Process Guidance` and the `Value Types` base library ship with the platform
+  and should be updatable without touching what a user has authored. Nothing in Figure 17.4
+  marks that boundary — the chapter had no reason to care, having one model and one team.
+- **The SoI name is a parameter, not a constant.** It appears in the package tree, in
+  qualified names on diagrams, and in the as-is/to-be domain names. Renaming a system after
+  the fact is where a hand-built model becomes unusable.
+- **Depth is a parameter too.** Phase G is `2-Logical Design` through `5-Verification`
+  repeated one level down. A user with a three-level system tree needs it three times. The
+  scaffolder must therefore generate structure from a declared hierarchy rather than emit a
+  fixed template — the same demand `ProjectPipeline` already makes of the stage list, for the
+  same reason.
 
 ---
 
@@ -468,23 +533,26 @@ after 79 diagrams exist.
 
 Deliberately out of scope for this extraction, and each one is real work:
 
-- **Which diagrams DWM actually needs.** This is the full OOSEM set for a ground-up
-  development. The MVP is a wind turbine in a LETS economy simulation, and most of phases F
-  and G describe a level of decomposition it will never reach. Settled for the MVP — see the
-  banner — but note that **cutting it down is OOSEM-conformant, not a deviation from it.**
-  Chapter 17 makes tailoring part of the management process, driven by *"the extent to which
-  the system is a new design…, the system size and complexity, the available time and
-  resources, and the level of experience of the development team."* The book itself ships a
-  tailored subset: the simplified method in its Chapter 3 §3.4 **omits the logical
-  architecture activity entirely** and takes only part of the rest.
+- **How much of the method a given user should follow.** This is the full OOSEM set for a
+  ground-up development, and most users will not want all of it. Worth building **tailoring
+  in as a feature rather than treating a subset as a shortcut**: Chapter 17 makes tailoring
+  part of the management process, driven by *"the extent to which the system is a new
+  design…, the system size and complexity, the available time and resources, and the level of
+  experience of the development team."* The book itself ships a tailored subset — the
+  simplified method in its Chapter 3 §3.4 **omits the logical architecture activity
+  entirely.** A platform that only supports the full 79 supports almost nobody.
 - **Diagram dependencies.** The sheet's Inputs column names them (C.4.3 consumes the Views &
   Viewpoints diagrams, C.3.1 pulls them from the library) and a real build order could be
-  derived from it. Not done here.
-- ~~**UModel project structure.**~~ **Answered** — see *Model organisation* above. Figure 17.4
-  gives the package layout, the naming convention, and the recursion rule (a package per
-  decomposed block, with reusable packages held outside the hierarchy). What remains is
-  whether DWM would adopt it as-is, which is only worth deciding if the work is ever
-  scheduled.
+  derived from it. Worth doing — under the platform framing this is what a *guided* workflow
+  would need, rather than a list of diagrams a user is left to sequence themselves. Not done
+  here.
+- ~~**UModel project structure.**~~ **Answered** — see *Model organisation* and *One SoI per
+  project* above. Figure 17.4 gives the layout, the naming conventions and the recursion rule;
+  the per-project instantiation of it is the `Create` verb TOOLING.md has not built yet.
+- **How a user's SoI hierarchy is declared.** The scaffolder needs to know the system tree
+  before it can generate structure for it, and nothing in the spreadsheet or the chapter says
+  where that declaration lives. It is the same question `ProjectPipeline` answers for stages,
+  one dimension over.
 
 ---
 
