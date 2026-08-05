@@ -32,12 +32,57 @@ namespace DWMStudio.ViewModels
         /// <summary>One tile per pipeline stage that names a tool.</summary>
         public ObservableCollection<ToolWorkspaceModel> Tiles { get; } = new();
 
+        /// <summary>
+        /// The world's contents as a tree: stages, the artifacts they author, the results
+        /// their tools produced, and this session's runs.
+        ///
+        /// A COLLECTION HOLDING ONE ROOT, because TreeView binds ItemsSource to a sequence.
+        /// Binding it to a bare node would render that node's CHILDREN as the top level and
+        /// lose the world's own row -- the one that names the thing being looked at.
+        /// </summary>
+        public ObservableCollection<WorldTreeNode> Tree { get; } = new();
+
         private readonly ToolRegistry _registry = new();
 
         public WorldDetailViewModel(WorldProject world)
         {
             World = world;
             BuildTiles();
+            RefreshTree();
+        }
+
+        /// <summary>
+        /// Rebuild the tree from disk.
+        ///
+        /// EXPLICIT RATHER THAN LIVE, and deliberately so. Nothing here sits behind a
+        /// database: the world's identity is JSON under %APPDATA%, its artifacts are ordinary
+        /// files wherever the engineering work happens, and its run history is in memory. So
+        /// nothing can notify this view that a solver has just written an .op2 -- the tree is
+        /// a snapshot, and a control that looked live while silently not being live is worse
+        /// than one that plainly asks to be refreshed.
+        ///
+        /// That is the lesson FEMAP's Model Info tree taught on 2026-08-05 from the other
+        /// side: six output sets loaded correctly and the tree went on showing the old state,
+        /// because nothing had told it. Reload from Model was the telling. This is that button.
+        /// </summary>
+        [RelayCommand]
+        public void RefreshTree()
+        {
+            Tree.Clear();
+
+            var deckPath = string.IsNullOrWhiteSpace(World.FeaDeckPath)
+                ? DefaultFeaDeckPath
+                : World.FeaDeckPath;
+
+            var projectRoot = string.IsNullOrWhiteSpace(World.SimulinkModelPath)
+                ? DefaultMatlabCodePath
+                : World.SimulinkModelPath;
+
+            Tree.Add(WorldTreeBuilder.Build(
+                World.Name,
+                ProjectPipeline.WithStructuralAnalysis(deckPath),
+                _registry,
+                projectRoot));
         }
 
         /// <summary>
