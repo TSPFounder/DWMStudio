@@ -163,23 +163,29 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void ARefusedCallShape_FallsThroughToTheNextOne()
+        public void ANonSuccessReturnCode_IsAFailure_NotAnAcceptedCall()
         {
-            // THE REAL FAILURE, from 2026-08-05: feFileReadNastran(filename) came back
-            // DISP_E_TYPEMISMATCH. That told us the ProgID was right and the METHOD EXISTS --
-            // a wrong name raises MissingMethodException -- and only the argument shape was
-            // wrong. Guessing one harder would have been the same mistake again, so the shapes
-            // are tried in order instead.
+            // THE BUG THIS CLOSES. FEMAP signals failure with a return code, not an exception,
+            // so before -1 was known to mean success a refused call was indistinguishable from
+            // an accepted one. Three runs reported success while leaving Out: 0 in FEMAP.
             var (deck, op2) = WriteRun();
-            var session = new FakeFemapSession
-            {
-                RefuseArgCount = 2   // the two-argument shapes are refused; one-arg wins
-            };
+            var session = new FakeFemapSession { ReturnValue = 0 };   // 0 = FEMAP said no
 
             var result = new FemapPostProcessor(() => session).Load(deck, op2);
 
-            Assert.True(result.Succeeded);
-            Assert.Contains(session.Calls, c => c.Args.Length == 1);
+            Assert.False(result.Succeeded);
+            Assert.Contains("returned 0, not -1", result.Run.FailureMessage);
+        }
+
+        [Fact]
+        public void TheVerifiedShapes_AreTheOnesShipped()
+        {
+            // Pinned from a run confirmed by FEMAP's own Out: 6, not by the call not throwing.
+            var api = new FemapApiNames();
+
+            Assert.Equal("feFileReadNastran", Assert.Single(api.ReadNastranModel).Method);
+            Assert.Equal("feFileReadNastranResults", Assert.Single(api.ReadNastranResults).Method);
+            Assert.Equal(-1, FemapApiNames.Success);
         }
 
         [Fact]
@@ -254,6 +260,9 @@ namespace DWMStudio.Tests
 
             public bool RefuseEverything { get; set; }
 
+            /// <summary>What every call returns. -1 is FEMAP's success value.</summary>
+            public int ReturnValue { get; set; } = -1;
+
             public object? Invoke(string method, params object[] args)
             {
                 if (method == ThrowOn) throw new FemapSessionException(ThrowWith ?? "boom");
@@ -270,7 +279,7 @@ namespace DWMStudio.Tests
                 }
 
                 Calls.Add((method, args));
-                return 0;
+                return ReturnValue;
             }
 
             public void Detach() => Detached = true;
