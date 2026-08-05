@@ -388,11 +388,21 @@ across phases I and J (tooling, machine, facility and inspection models). Fusion
 registry holds, and Fusion appears **nowhere** in the spreadsheet. One of the two has to give
 before manufacturing work starts; neither is urgent now.
 
-**Unreal is not named anywhere in the spreadsheet.** No criteria, no outputs, no mentions —
-yet "simulate them in UE" is the closing step of DWM's whole loop. The method the spreadsheet
-encodes ends at verification and demonstration (phases K, M) without ever reaching the
-simulation target. That is the largest structural gap between the process as written and DWM
-as described, and it is a different gap from TOOLING.md's own unbuilt step 4.
+**Unreal is not named anywhere in the spreadsheet — but the process has a slot for it.**
+*Corrected the same day it was written.* This was first recorded as "the largest structural
+gap between the process as written and DWM as described." That overstated it, by reading a
+missing tool name as a missing activity.
+
+Phase M is exactly the slot: **M.1 Demonstration Procedures Written, M.2 Demonstration
+Environment Created, M.3 System of Interest Validity Demonstrated.** *"Demonstration
+Environment Created"* is UE. The process reaches the simulation target; only the tool binding
+is absent, and tool bindings are the OBE layer. **A small gap in the layer being replaced,
+not a hole in the method.**
+
+What does remain true is narrower and still worth knowing: phase M is **three criteria** —
+the thinnest phase in the sheet — for what is, in DWM, the step the whole loop exists to
+reach. Thin because a book about a security system treats demonstration as a closing
+formality, whereas for DWM it is the product.
 
 **Two MATLAB toolboxes are named but not licensed.** *Simulink Control Design* and *Simulink
 Design Optimization* are separate products; the R2011a full licence per the 2026-07-02

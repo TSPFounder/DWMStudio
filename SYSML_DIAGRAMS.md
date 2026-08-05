@@ -646,15 +646,20 @@ and UML component/class diagrams but **no software IBD at all**.
 
 ---
 
-## Six things in the sheet that need a decision
+## Six things in the sheet that need a decision — two of which have since dissolved
 
-Found while extracting; none of them are blocking, all of them are cheaper to fix now than
-after 79 diagrams exist.
+> **Read these through the process/tool-binding split (2026-08-05).** The spreadsheet's
+> **process** is durable; its **specific tool bindings are largely OBE**. Findings about the
+> tool layer are therefore not worth acting on — they are defects in a layer being replaced.
+> **Findings 1 and 2 below are of that kind and are struck through.** Findings 3–6 are about
+> the process and stand.
+
+Found while extracting; none are blocking.
 
 | # | Where | What | Suggested resolution |
 | --- | --- | --- | --- |
-| 1 | **G.2.4** | Output `Component Subsystem BDD's` has **no tool in parentheses**. Every other artifact names one. | Almost certainly `(Umodel)` — it is a BDD, and its siblings G.2.1/G.2.5 are UModel. Confirm and fill in. |
-| 2 | **G.8.4** | `Component Data Flow Diagrams (Visio)` — but its own SoI-level counterpart **F.6.4 is (Umodel)**. The same artifact, one level down, in a different tool. | Pick one. Splitting a diagram type across two tools by nesting depth guarantees they drift, and the DFD is exactly where that hurts. |
+| ~~1~~ | ~~**G.2.4**~~ | ~~Output `Component Subsystem BDD's` has no tool in parentheses.~~ **DISSOLVED** — a missing entry in the tool-binding layer, which is OBE. It is a BDD; it goes wherever BDDs go. | **No action.** |
+| ~~2~~ | ~~**G.8.4**~~ | ~~`Component Data Flow Diagrams (Visio)` against F.6.4's `(Umodel)`.~~ **DISSOLVED** — **Visio is OBE**, so the split resolves itself: both are whatever the modelling tool ends up being. The underlying point survives in general form — *the same artifact should not change tool by nesting depth* — but there is nothing here to fix. | **No action.** |
 | 3 | **D.1.1** | One output bundles **two diagram types**: `Scenario Activity & Sequence Diagrams`. Counted here as one row, as the sheet has it. | Split into two criteria, or accept that this row is two diagrams. Everywhere else the sheet keeps activity and sequence separate (E.2.1/E.2.2, F.2.2/F.2.3). |
 | 4 | **D.3.1** | Produces **two diagrams under one criterion** — `System Parameter Diagram` *and* `System Requirements Diagram` — and the criterion's description mentions neither ("Constraints Added to Systems Requirements Specification and List"). | Give the requirements diagram its own criterion; it is a major artifact hidden inside a documentation task. |
 | 5 | **F.5.1 vs G.7.1** | F.5.1 produces **two** hardware BDDs (architecture *and* node). G.7.1 produces **one** — there is no component-level hardware-node BDD. | The only break in an otherwise exact E+F → G correspondence. Either it is deliberate (components have no internal hardware nodes) or G.7 is missing an entry. |
