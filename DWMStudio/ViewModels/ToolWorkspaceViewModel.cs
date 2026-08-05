@@ -134,14 +134,24 @@ namespace DWMStudio.ViewModels
         ///
         /// wtGui already does this job: scenario picker with ramp as default, the six result
         /// plots, the post-run pass/fail panel, and the channel CSV export. Rebuilding any of
-        /// it in WPF would be a worse copy of a tool the project already owns and would have
-        /// to be kept in step with the model by hand. So this stage opens MATLAB, puts the
-        /// model folder on the path, and starts wtGui.
+        /// it in WPF would be a worse copy of a tool the project already owns.
         ///
-        /// The ProgID is PINNED to R2011a. The generic "Matlab.Application" resolves to
-        /// whichever release registered last, and an attach using it MISSES an open R2011a and
-        /// launches R2025b instead -- which the turbine model cannot run under. That cost four
-        /// rounds of debugging on 2026-08-03 and is not a mistake worth making twice.
+        /// WHY THIS DOES NOT LAUNCH MATLAB THROUGH COM
+        ///
+        /// A MATLAB started as a COM automation server IS OWNED BY ITS CLIENT. When the last
+        /// reference is released it shuts down -- no Quit() involved, that is simply how an
+        /// out-of-process COM server's lifetime works. So the first version of this launched
+        /// R2011a, opened wtGui, reported success, and then took MATLAB down with it the
+        /// moment the session was disposed. Suppressing the explicit Quit did not help,
+        /// because the Quit was never the mechanism.
+        ///
+        /// So there are two paths, and which one runs depends on what is already open:
+        ///
+        ///   ATTACH  A MATLAB the user started is theirs, not ours. Releasing our reference
+        ///           cannot close it, so COM is safe here and lands wtGui in the session they
+        ///           are already watching.
+        ///   LAUNCH  Start matlab.exe as an ORDINARY PROCESS with -r. It belongs to the user
+        ///           from the first instant, outlives DWMStudio, and is never ours to close.
         /// </summary>
         private async Task OpenMatlabGuiAsync()
         {
@@ -155,49 +165,29 @@ namespace DWMStudio.ViewModels
             }
 
             var startedUtc = DateTime.UtcNow;
+            string? failure = null;
 
             try
             {
-                await Task.Run(() =>
+                var attached = await Task.Run(() => TryOpenInRunningMatlab(codeDirectory));
+
+                if (attached)
                 {
-                    using var session = new MatlabComSession(
-                        allowLaunch: true, progId: MatlabProgId);
-
-                    // Same two commands the CLI's turbine stage issues, and for the same
-                    // reason: addpath rather than cd, so the user's current folder is theirs.
-                    session.Execute(MatlabStageService.BuildGuardedCommand(
-                        $"addpath({MatlabStageService.MatlabLiteral(codeDirectory)});"));
-
-                    var pathError = session.GetCharArray(MatlabStageService.ErrorSentinel);
-                    if (!string.IsNullOrWhiteSpace(pathError))
-                        throw new MatlabStageException($"MATLAB could not add the path: {pathError}");
-
-                    // wtGui returns as soon as its figure is up, so this does not block on the
-                    // user's session -- MATLAB stays open and is theirs from here.
-                    session.Execute(MatlabStageService.BuildGuardedCommand("wtGui"));
-
-                    var guiError = session.GetCharArray(MatlabStageService.ErrorSentinel);
-                    // THE SESSION IS THE USER'S NOW. Without this, Dispose would quit the
-                    // MATLAB this just launched -- taking wtGui with it -- and the whole
-                    // hand-off would look like nothing had happened.
-                    session.Detach();
-
-                    if (!string.IsNullOrWhiteSpace(guiError))
-                        throw new MatlabStageException(
-                            $"wtGui did not start.\n\n  MATLAB said: {guiError}\n\n" +
-                            $"  Path added: {codeDirectory}\n\n" +
-                            "ADDPATH SUCCEEDS ON A FOLDER WITH NO .m FILES IN IT, so a wrong "
-                            + "folder surfaces here rather than one step earlier. In MATLAB, "
-                            + "run `which wtGui` and set the world's Simulink model path to "
-                            + "the folder it reports.");
-                });
-
-                StatusMessage =
-                    $"wtGui is open in MATLAB ({MatlabProgId}). Run the scenario and export the " +
-                    "channel CSVs there; the world package is built from those.";
+                    StatusMessage =
+                        $"wtGui is open in the MATLAB you already had running ({MatlabProgId}). " +
+                        "Run the scenario and export the channel CSVs there.";
+                }
+                else
+                {
+                    LaunchMatlabWithGui(codeDirectory);
+                    StatusMessage =
+                        "Starting MATLAB with wtGui. A cold R2011a start takes a little while, and " +
+                        "this session is yours -- closing DWMStudio will not close it.";
+                }
             }
             catch (Exception ex)
             {
+                failure = ex.Message;
                 StatusMessage = ex.Message;
             }
             finally
@@ -205,8 +195,82 @@ namespace DWMStudio.ViewModels
                 Runs.Add(ToolRun.Complete(
                     Model.StageId, ToolRegistry.Matlab, startedUtc,
                     expectedOutputs: Array.Empty<string>(),
+                    failureMessage: failure,
                     resolvedVia: MatlabProgId));
             }
+        }
+
+        /// <summary>
+        /// Run wtGui in an ALREADY-RUNNING MATLAB. Returns false when there is none, which is
+        /// not a failure -- it is the signal to launch one instead.
+        /// </summary>
+        private static bool TryOpenInRunningMatlab(string codeDirectory)
+        {
+            MatlabComSession session;
+            try
+            {
+                // allowLaunch: false is the whole point. Letting this launch would recreate
+                // the bug: a COM-launched MATLAB dies with our reference.
+                session = new MatlabComSession(allowLaunch: false, progId: MatlabProgId);
+            }
+            catch (MatlabStageException)
+            {
+                return false;
+            }
+
+            using (session)
+            {
+                session.Detach();   // belt and braces; we did not launch it, so it is not ours
+
+                session.Execute(MatlabStageService.BuildGuardedCommand(
+                    $"addpath({MatlabStageService.MatlabLiteral(codeDirectory)});"));
+
+                var pathError = session.GetCharArray(MatlabStageService.ErrorSentinel);
+                if (!string.IsNullOrWhiteSpace(pathError))
+                    throw new MatlabStageException($"MATLAB could not add the path: {pathError}");
+
+                session.Execute(MatlabStageService.BuildGuardedCommand("wtGui"));
+
+                var guiError = session.GetCharArray(MatlabStageService.ErrorSentinel);
+                if (!string.IsNullOrWhiteSpace(guiError))
+                    throw new MatlabStageException(
+                        $"wtGui did not start.\n\n  MATLAB said: {guiError}\n\n" +
+                        $"  Path added: {codeDirectory}\n\n" +
+                        "ADDPATH SUCCEEDS ON A FOLDER WITH NO .m FILES IN IT, so a wrong folder " +
+                        "surfaces here rather than one step earlier. In MATLAB, run " +
+                        "`which wtGui` and set the world's Simulink model path to the folder " +
+                        "it reports.");
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Start matlab.exe with -r, so the session is an ordinary user process rather than an
+        /// automation server we own.
+        /// </summary>
+        private void LaunchMatlabWithGui(string codeDirectory)
+        {
+            var descriptor = new ToolRegistry().Require(ToolRegistry.Matlab);
+            var executable = ProcessRunner.ResolveExecutable(descriptor);
+
+            if (executable is null)
+                throw new MatlabStageException(
+                    "No MATLAB is running, and matlab.exe was not found to start one. Looked for:\n  " +
+                    string.Join("\n  ", descriptor.ExecutableCandidates) +
+                    "\n\nOpen MATLAB yourself and press this again -- it will attach to it.");
+
+            // Single-quoted MATLAB strings need no backslash escaping, which is what makes a
+            // Windows path safe to drop straight in; a quote inside one is doubled.
+            var command = $"addpath({MatlabStageService.MatlabLiteral(codeDirectory)}); wtGui";
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = executable,
+                Arguments = $"-r \"{command}\"",
+                WorkingDirectory = codeDirectory,
+                UseShellExecute = true
+            });
         }
 
         /// <summary>
