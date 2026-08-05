@@ -176,11 +176,19 @@ namespace DWMStudio.ViewModels
 
             if (result.Succeeded)
             {
+                // The accepted call signatures go in the STATUS LINE as well as the run
+                // history. They are the one fact that turns three candidate shapes into one
+                // known-good one, and a fact that exists only somewhere nobody reads is not
+                // much better than not having it -- the run history collected these warnings
+                // for two builds before anyone noticed the template never rendered them.
                 StatusMessage =
                     $"Loaded into FEMAP: model from {Path.GetFileName(result.DeckPath)}, results " +
-                    $"from {Path.GetFileName(result.ResultsPath)}. FEMAP was cleared to an " +
-                    "empty model first, so this is one clean copy however many times you press " +
-                    "it. Switch to FEMAP's PostProcessing tab for the deformed shapes.";
+                    $"from {Path.GetFileName(result.ResultsPath)}. Cleared to an empty model " +
+                    "first, so this is one clean copy however many times you press it. Switch " +
+                    "to FEMAP's PostProcessing tab for the deformed shapes." +
+                    (result.Run.Warnings.Count == 0
+                        ? string.Empty
+                        : "\n\n" + string.Join("\n", result.Run.Warnings));
             }
             else
             {
