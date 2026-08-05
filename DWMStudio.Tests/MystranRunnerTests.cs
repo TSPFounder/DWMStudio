@@ -243,6 +243,69 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public void BareFilename_IsNotTreatedAsFound_UnlessItIsActuallyOnPath()
+        {
+            // The bug this replaces: a bare name was returned unchecked on the theory it might
+            // be on PATH, so "resolved" could mean "guessed". ToolAvailability then reported
+            // Found, the tile said so, and the truth only arrived as a Win32Exception out of
+            // Process.Start. A tool that claims Found and cannot start is worse than one that
+            // admits NotFound.
+            var descriptor = new ToolDescriptor
+            {
+                Id = ToolRegistry.Mystran,
+                DisplayName = "MYSTRAN",
+                Kind = ToolKind.BatchExecutable,
+                ExecutableCandidates = new[] { "definitely-not-a-real-solver-xyz.exe" }
+            };
+
+            Assert.Null(ProcessRunner.ResolveExecutable(descriptor));
+        }
+
+        [Fact]
+        public void SearchRoots_FindTheExecutableInASubfolder()
+        {
+            // Installers disagree about whether the binary sits at the root, under bin/, or in
+            // a version-stamped folder. None of the exact MYSTRAN paths matched on the machine
+            // that has it installed, which is what motivated searching rather than guessing
+            // harder.
+            var nested = Path.Combine(_dir, "bin", "v19");
+            Directory.CreateDirectory(nested);
+            var exe = Path.Combine(nested, "mystran.exe");
+            File.WriteAllText(exe, "");
+
+            var descriptor = new ToolDescriptor
+            {
+                Id = ToolRegistry.Mystran,
+                DisplayName = "MYSTRAN",
+                Kind = ToolKind.BatchExecutable,
+                ExecutableCandidates = new[] { @"C:
+ope\mystran.exe" },
+                ExecutableSearchRoots = new[] { _dir }
+            };
+
+            Assert.Equal(exe, ProcessRunner.ResolveExecutable(descriptor));
+        }
+
+        [Fact]
+        public void AFailedSpawn_IsReportedAsSuch_NotAsAnEmptySolve()
+        {
+            // "Exited but wrote no print file" would send someone looking at their deck for a
+            // problem that is in the toolchain.
+            var deck = WriteDeck();
+            var runner = new MystranRunner(FakeDescriptor(), new FakeProcessRunner
+            {
+                ExitCode = -1,
+                SpawnFailure = "Could not start 'mystran.exe': The system cannot find the file specified."
+            });
+
+            var result = runner.Run(deck);
+
+            Assert.False(result.Succeeded);
+            Assert.Contains("Could not start", result.Run.FailureMessage);
+            Assert.DoesNotContain("wrote no print file", result.Run.FailureMessage);
+        }
+
+        [Fact]
         public void Timeout_IsReportedAsSuchRatherThanAsASolverError()
         {
             var deck = WriteDeck();
@@ -307,6 +370,7 @@ namespace DWMStudio.Tests
             public string? F06Dir { get; set; }
             public string StandardOutput { get; set; } = string.Empty;
             public bool TimedOut { get; set; }
+            public string? SpawnFailure { get; set; }
             public Action? BeforeReturning { get; set; }
 
             public ProcessRequest? LastRequest { get; private set; }
@@ -323,6 +387,7 @@ namespace DWMStudio.Tests
                 return new ProcessOutcome
                 {
                     ExitCode = ExitCode,
+                    StandardError = SpawnFailure ?? string.Empty,
                     StandardOutput = StandardOutput,
                     TimedOut = TimedOut,
                     Duration = TimeSpan.FromSeconds(1)
