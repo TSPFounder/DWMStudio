@@ -1,10 +1,10 @@
 // FusionStageServiceTests.cs
-// Covers the Fusion CAD stage without Fusion, and without the add-in that does not yet exist.
+// Covers the Fusion CAD stage without Fusion, and without the add-in running.
 //
 // The transport is faked, which leaves the part worth testing: what this service REFUSES to
-// believe. Fusion is the one tool where DWM must supply the server as well as the client, so
-// every field name in the protocol is a guess -- but the judgements made about the numbers
-// that come back are not guesses, and those are what is pinned here.
+// believe. The routes are pinned from DWM-Fusion-AddIn v0.2.0's source rather than guessed --
+// an earlier draft assumed an "ok" envelope where the add-in actually sends "success", which
+// would have read every failure as a success.
 
 using System;
 using System.Collections.Generic;
@@ -195,32 +195,98 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void TheProtocolIsOverridable_SoTheRealAddInCostsOneObject()
+        public void TheRoutesMatchTheAddInsContractV1()
         {
-            // Every name in FusionProtocol is a guess: the Fusion Python for this project has
-            // never been read by the code that has to talk to it. This is the FemapApiNames
-            // pattern, adopted for the same reason and before the same mistake.
-            var custom = new FusionProtocol
-            {
-                BaseAddress = new Uri("http://127.0.0.1:9001/"),
-                MassPropertiesCommand = "dwm_mass_props",
-                PathFor = c => "api/" + c
-            };
+            // PINNED FROM THE ADD-IN'S SOURCE, not guessed. DWM-Fusion-AddIn v0.2.0 exposes
+            // /scripts/execute and /documents/active/export; it has NO mass-properties route,
+            // which is why that command rides on the script executor.
+            var p = new FusionProtocol();
 
-            Assert.Equal("api/dwm_mass_props", custom.PathFor(custom.MassPropertiesCommand));
-            Assert.Equal(9001, custom.BaseAddress.Port);
+            Assert.Equal("scripts/execute", p.Commands["massProperties"].Path);
+            Assert.Equal("scripts/execute", p.Commands["build"].Path);
+            Assert.Equal("documents/active/export", p.Commands["export"].Path);
+            Assert.Equal(18750, p.BaseAddress.Port);
         }
 
         [Fact]
-        public void ReadOk_TreatsAMissingFlagAsSuccess_ButAnExplicitFalseAsFailure()
+        public void ReadOk_ChecksSuccess_NotOk()
         {
-            // Tolerant about absence, strict about denial: an add-in that says nothing is
-            // assumed to have worked, one that says "ok": false is believed.
+            // THE FIELD IS "success". An earlier draft assumed "ok" -- a reasonable guess that
+            // would have read every failure as a success, because a missing flag is treated as
+            // "worked". Reading the add-in's source is what settled it.
             var p = new FusionProtocol();
 
+            Assert.False(p.ReadOk(Json(@"{ ""success"": false }")));
+            Assert.True(p.ReadOk(Json(@"{ ""success"": true }")));
+
+            // Tolerant about absence: a route that reports nothing is assumed to have worked.
             Assert.True(p.ReadOk(Json(@"{ ""components"": [] }")));
-            Assert.True(p.ReadOk(Json(@"{ ""ok"": true }")));
-            Assert.False(p.ReadOk(Json(@"{ ""ok"": false }")));
+
+            // And the old guess must NOT be honoured, or a real failure carrying "ok": false
+            // alongside "success": true would flip the verdict.
+            Assert.True(p.ReadOk(Json(@"{ ""ok"": false, ""success"": true }")));
+        }
+
+        [Fact]
+        public void ScriptOutput_IsUnwrappedFromTheEnvelope()
+        {
+            // /scripts/execute answers {"success": true, "output": "<what was printed>"}, so a
+            // script printing JSON has its payload inside a STRING one level down. Reading the
+            // envelope as the result hands back a body with no components and no clue why.
+            var p = new FusionProtocol();
+            var envelope = Json(@"{ ""success"": true, ""output"": ""{\""components\"": []}"" }");
+
+            var result = p.Commands["massProperties"].ReadResult(envelope);
+
+            Assert.NotNull(result);
+            Assert.True(result!.Value.TryGetProperty("components", out _));
+        }
+
+        [Fact]
+        public void ATracebackInOutput_UnwrapsToNull_RatherThanCrashing()
+        {
+            // A script that raised prints a traceback, not JSON. Null is honest -- the caller
+            // then reports the raw body instead of failing to parse it.
+            var p = new FusionProtocol();
+            var envelope = Json(@"{ ""success"": false, ""output"": ""Traceback (most recent call last):"" }");
+
+            Assert.Null(p.Commands["massProperties"].ReadResult(envelope));
+        }
+
+        [Fact]
+        public void TheMassPropertiesScript_ReportsBodyCount_BecauseTheServiceNeedsIt()
+        {
+            // The service distinguishes an empty assembly component from the Inactive
+            // (Read-Only) failure using bodyCount. If the script stopped printing it, that
+            // check would silently weaken into "refuse every zero".
+            Assert.Contains("bodyCount", FusionScripts.MassProperties);
+            Assert.Contains("getXYZMomentsOfInertia", FusionScripts.MassProperties);
+
+            // Centimetres to metres, once, explicitly.
+            Assert.Contains("/ 100.0", FusionScripts.MassProperties);
+        }
+
+        [Fact]
+        public void TheBuildScript_CallsBuildRotor_NeverRun()
+        {
+            // run() creates a document and ends in a modal ui.messageBox. Inside
+            // /scripts/execute that dialog holds Fusion's main thread -- the one thread the
+            // add-in needs to answer anything -- so the request times out and every later
+            // request queues behind it.
+            var script = FusionScripts.BuildRotor(null);
+
+            Assert.Contains("build_rotor", script);
+            Assert.DoesNotContain("wtb.run(", script);
+            Assert.DoesNotContain("messageBox", script);
+        }
+
+        [Fact]
+        public void ConfigOverrides_AreEmbeddedAsJson()
+        {
+            var script = FusionScripts.BuildRotor(new { n_stations = 20, build_structure = true });
+
+            Assert.Contains("\"n_stations\":20", script);
+            Assert.Contains("unknown", script);   // typo'd keys are reported, not ignored
         }
 
         // ------------------------------------------------------------------
