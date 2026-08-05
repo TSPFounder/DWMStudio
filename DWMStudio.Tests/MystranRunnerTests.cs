@@ -287,6 +287,63 @@ ope\mystran.exe" },
         }
 
         [Fact]
+        public void SearchPattern_MatchesAVersionStampedExecutable()
+        {
+            // THE REAL CASE. MYSTRAN 19 installs as mystran-19.0.0-windows-x86_64.exe, so a
+            // search for the exact name "mystran.exe" found nothing on a machine where it was
+            // plainly installed. Pinning the versioned name instead would only move the
+            // breakage to the next release, which is why the search takes a pattern.
+            var exe = Path.Combine(_dir, "mystran-19.0.0-windows-x86_64.exe");
+            File.WriteAllText(exe, "");
+
+            var descriptor = new ToolDescriptor
+            {
+                Id = ToolRegistry.Mystran,
+                DisplayName = "MYSTRAN",
+                Kind = ToolKind.BatchExecutable,
+                ExecutableCandidates = new[] { @"C:\nope\mystran.exe" },
+                ExecutableSearchRoots = new[] { _dir },
+                ExecutableSearchPatterns = new[] { "mystran*.exe" }
+            };
+
+            Assert.Equal(exe, ProcessRunner.ResolveExecutable(descriptor));
+        }
+
+        [Fact]
+        public void TwoVersionsSideBySide_ResolveDeterministically()
+        {
+            // EnumerateFiles guarantees no order, so an install with two builds in it would
+            // otherwise resolve to whichever the filesystem handed back first -- a different
+            // answer on different machines, and a different SOLVER, silently.
+            File.WriteAllText(Path.Combine(_dir, "mystran-19.0.0-windows-x86_64.exe"), "");
+            File.WriteAllText(Path.Combine(_dir, "mystran-20.1.0-windows-x86_64.exe"), "");
+
+            var descriptor = new ToolDescriptor
+            {
+                Id = ToolRegistry.Mystran,
+                DisplayName = "MYSTRAN",
+                Kind = ToolKind.BatchExecutable,
+                ExecutableSearchRoots = new[] { _dir },
+                ExecutableSearchPatterns = new[] { "mystran*.exe" }
+            };
+
+            var first = ProcessRunner.ResolveExecutable(descriptor);
+
+            Assert.Equal(first, ProcessRunner.ResolveExecutable(descriptor));
+            Assert.EndsWith("mystran-19.0.0-windows-x86_64.exe", first);
+        }
+
+        [Fact]
+        public void TheRegistrysMystranEntry_WouldFindTheRealInstalledBinary()
+        {
+            // Guards the shipped defaults, not just the mechanism: the pattern has to match the
+            // filename actually observed on disk on 2026-08-03.
+            var pattern = new ToolRegistry().Require(ToolRegistry.Mystran).ExecutableSearchPatterns;
+
+            Assert.Contains("mystran*.exe", pattern);
+        }
+
+        [Fact]
         public void AFailedSpawn_IsReportedAsSuch_NotAsAnEmptySolve()
         {
             // "Exited but wrote no print file" would send someone looking at their deck for a
