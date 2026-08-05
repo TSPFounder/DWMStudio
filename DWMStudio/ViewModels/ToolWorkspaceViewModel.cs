@@ -114,29 +114,99 @@ namespace DWMStudio.ViewModels
             Tree.Add(WorldTreeBuilder.BuildForWorkspace(Model, _registry, Runs));
         }
 
-        private bool CanCreate() => Model.CanCreate && !IsBusy;
+        /// <summary>
+        /// Whether the stage's artifact is on disk RIGHT NOW.
+        ///
+        /// Deliberately not <c>Model.ArtifactExists</c>, which was captured when the tile was
+        /// built. That was accurate enough for a static tile and became wrong the moment this
+        /// window could create the file itself: Create would write the deck and then stay
+        /// enabled, because the snapshot still said the file was absent.
+        /// </summary>
+        private bool ArtifactOnDisk =>
+            Model.ArtifactPath is { Length: > 0 } p && File.Exists(p);
+
+        private bool CanCreate() =>
+            !IsBusy && Model.ArtifactPath is { Length: > 0 } && !ArtifactOnDisk;
 
         /// <summary>
         /// Enabled when a SELECTED FILE EXISTS, or when the stage's own artifact does.
         ///
-        /// The selection widens this deliberately. Model.CanEdit is about the configured
-        /// artifact, so without the first clause a solve's .f06 could be selected, sit there
-        /// plainly present, and the button would stay greyed out -- a control refusing to do
-        /// the thing the row in front of it obviously means.
+        /// The selection widens this deliberately: without the first clause a solve's .f06
+        /// could be selected, sit there plainly present, and the button would stay greyed out
+        /// -- a control refusing to do the thing the row in front of it obviously means.
         /// </summary>
-        private bool CanEdit() => !IsBusy && (SelectedNode?.Exists == true || Model.CanEdit);
+        private bool CanEdit() =>
+            !IsBusy &&
+            (SelectedNode?.Exists == true
+             || (Model.Kind != ToolKind.FileOnly
+                 && Model.Availability != ToolAvailability.NotFound
+                 && ArtifactOnDisk));
 
         private bool CanRun() => Model.CanRun && !IsBusy;
 
         [RelayCommand(CanExecute = nameof(CanCreate))]
         private void Create()
         {
-            // Scaffolding from templates is not built yet, and creating an empty file would
-            // be worse than doing nothing: Edit would then open a blank document and Run
-            // would fail somewhere further downstream with a less obvious message.
-            StatusMessage =
-                $"Templates for {Model.ToolId} are not built yet. Create the artifact in " +
-                $"{Model.Title.Split('/')[^1].Trim()} and save it to:\n{Model.ArtifactPath}";
+            var target = Model.ArtifactPath;
+            if (string.IsNullOrWhiteSpace(target))
+            {
+                StatusMessage = "This stage has no artifact path configured, so there is nothing to create.";
+                return;
+            }
+
+            // CHECKED AGAIN HERE, not trusted from CanCreate. That gate is UI state evaluated
+            // whenever WPF felt like it; the file could have arrived since. Overwriting
+            // somebody's deck with a template would be the single most destructive thing this
+            // application could do, so it is refused on the evidence rather than on a flag.
+            if (File.Exists(target))
+            {
+                StatusMessage = $"{Path.GetFileName(target)} already exists. Use Edit, or delete it first.";
+                RefreshTree();
+                return;
+            }
+
+            var template = ArtifactTemplates.For(target);
+            if (template is null)
+            {
+                // NO TEMPLATE IS A DECISION, NOT A GAP, and the message says which. A .slx is a
+                // zip archive and a .f3d is a proprietary binary -- writing an invalid one and
+                // calling it a template would produce a file that exists, opens as corrupt, and
+                // sends someone hunting for the fault in their tool.
+                var ext = Path.GetExtension(target);
+                var owner = ArtifactTemplates.ToolsWithoutTemplates.TryGetValue(ext, out var o)
+                    ? o
+                    : Model.Title.Split('/')[^1].Trim();
+
+                StatusMessage =
+                    $"No template exists for {ext}, and that is deliberate: only {owner} can write " +
+                    $"a valid one, and an invalid file dressed up as a template would be worse " +
+                    $"than none.\n\nCreate it there and save it to:\n{target}";
+                return;
+            }
+
+            try
+            {
+                var folder = Path.GetDirectoryName(Path.GetFullPath(target));
+                if (!string.IsNullOrEmpty(folder)) Directory.CreateDirectory(folder);
+
+                File.WriteAllText(target, template.Render(Path.GetFileNameWithoutExtension(target)));
+
+                StatusMessage =
+                    $"Created {Path.GetFileName(target)}.\n{template.Description}";
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                StatusMessage = $"Could not create {target}: {ex.Message}";
+            }
+            finally
+            {
+                // The new node appears here, and the buttons re-evaluate around it: Create
+                // becomes unavailable because the file now exists, Edit becomes available
+                // because it does.
+                RefreshTree();
+                CreateCommand.NotifyCanExecuteChanged();
+                EditCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [RelayCommand(CanExecute = nameof(CanEdit))]
