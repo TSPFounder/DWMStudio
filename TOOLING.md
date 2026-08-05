@@ -374,8 +374,8 @@ as what DWM has or wants.
 | 4 | Outlook | Notifications |
 | 4 | Minitab | Fishbone (C.4.3), statistics |
 | 1 each | Eagle, LT Spice | Electrical analysis (H.3). Neither registered |
-| 1 each | Control System, Optimization, Mupad | Licensed under R2011a |
-| 1 each | **Simulink Controls Design**, **Simulink Design Optimization** | **Not in the licensed set** |
+| 1 each | Control System, Optimization, Mupad | Licensed (9.1, 6.0; MuPAD ships with Symbolic Math 5.6) |
+| 1 each | Simulink Control Design, Simulink Design Optimization | **Licensed** (3.3, 1.2.1) — an earlier entry here wrongly called these unlicensed |
 
 ### What this reconciliation turns up
 
@@ -404,10 +404,41 @@ the thinnest phase in the sheet — for what is, in DWM, the step the whole loop
 reach. Thin because a book about a security system treats demonstration as a closing
 formality, whereas for DWM it is the product.
 
-**Two MATLAB toolboxes are named but not licensed.** *Simulink Control Design* and *Simulink
-Design Optimization* are separate products; the R2011a full licence per the 2026-07-02
-decision covers Control System, Optimization, Aerospace, Symbolic Math, PDE and Simulink V&V —
-not those two. Cheap to catch now, expensive to discover in the middle of phase H.
+**~~Two MATLAB toolboxes are named but not licensed.~~ WRONG — retracted 2026-08-05.** Both
+*Simulink Control Design* (3.3) and *Simulink Design Optimization* (1.2.1) **are** licensed.
+The claim came from SCOPE.md's 2026-07-02 inventory, which named six toolboxes where the
+install actually carries eleven. **The licence covers every MATLAB-family tool the spreadsheet
+asks for**, with no gap anywhere — including `H.4 Design Space Optimization`, which
+*Simulink Design Optimization* exists to do.
+
+### The R2011a install, from `ver`, authoritative
+
+Version-stamped because this project pins tool versions per project, and because a
+version-less toolbox name is what produced the retraction above.
+
+| Product | Version |
+| --- | --- |
+| MATLAB | 7.12 |
+| Simulink | 7.7 |
+| Aerospace Blockset | 3.7 |
+| Aerospace Toolbox | 2.7 |
+| Control System Toolbox | 9.1 |
+| Fixed-Point Toolbox | 3.3 |
+| Optimization Toolbox | 6.0 |
+| Partial Differential Equation Toolbox | 1.0.18 |
+| Simulink Control Design | 3.3 |
+| Simulink Design Optimization | 1.2.1 |
+| Simulink Verification and Validation | 3.1 |
+| Symbolic Math Toolbox | 5.6 |
+
+Licence 639293. `Matlab.Application.7.12` is the ProgID that reaches it — the one the tool
+registry pins, and the one a generic `matlab.application` misses.
+
+**One limitation worth confirming before relying on it.** *Partial Differential Equation
+Toolbox 1.0.18* is the legacy R2011a `pdetool` line, which is believed **2-D only** — 3-D
+geometry arrived in far later releases. The spreadsheet references PDE Toolbox six times. If
+those uses are 2-D field problems it is fine; if any assume 3-D, that is a gap the licence
+list does not show. Structural FEA is unaffected — MYSTRAN and FEMAP cover it.
 
 **SharePoint's status needs an answer, and cannot be inferred.** At 72 mentions it is the
 second-most-named tool in the sheet and the entire CM, lists and traceability backbone of
