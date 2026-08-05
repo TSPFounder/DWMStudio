@@ -445,13 +445,37 @@ ope\mystran.exe" },
             return path;
         }
 
-        private static ToolDescriptor FakeDescriptor() => new()
+        /// <summary>
+        /// A descriptor pointing at a REAL FILE in this test's own temp folder.
+        ///
+        /// This used to be <c>ExecutableCandidates = { "mystran.exe" }</c>, with a comment
+        /// claiming a bare name was "accepted as on PATH". That was true of an OLDER
+        /// ResolveExecutable, which returned bare filenames WITHOUT CHECKING -- the same
+        /// defect that had a workspace tile reporting "Found on disk" about nothing, and
+        /// Process.Start throwing an unhandled Win32Exception when the button was pressed.
+        ///
+        /// Fixing that in production invalidated this fixture, and nothing noticed for a day
+        /// because these tests had never been executed. Ten of them failed the first time
+        /// anyone ran them, every one with "MYSTRAN was not found" from a resolution step that
+        /// never reached the behaviour being tested.
+        ///
+        /// The stub is a real file now, so resolution is genuinely exercised rather than
+        /// stepped over. It is never executed -- FakeProcessRunner intercepts the spawn -- so
+        /// its contents do not matter, only its existence.
+        /// </summary>
+        private ToolDescriptor FakeDescriptor()
         {
-            Id = ToolRegistry.Mystran,
-            DisplayName = "MYSTRAN",
-            Kind = ToolKind.BatchExecutable,
-            ExecutableCandidates = new[] { "mystran.exe" }   // bare name: accepted as "on PATH"
-        };
+            var stub = Path.Combine(_dir, "mystran-stub.exe");
+            if (!File.Exists(stub)) File.WriteAllText(stub, "not a real executable");
+
+            return new ToolDescriptor
+            {
+                Id = ToolRegistry.Mystran,
+                DisplayName = "MYSTRAN",
+                Kind = ToolKind.BatchExecutable,
+                ExecutableCandidates = new[] { stub }
+            };
+        }
 
         private MystranRunner MakeRunner(int exitCode, string? f06, string stdout = "")
             => new(FakeDescriptor(), new FakeProcessRunner

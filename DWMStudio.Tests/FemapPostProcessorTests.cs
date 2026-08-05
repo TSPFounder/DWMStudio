@@ -189,13 +189,35 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void TheShapeThatWorked_IsReported_SoItCanBecomeTheDefaultWithEvidence()
+        public void TheShapeThatWorked_IsReportedAsResolvedVia_NotAsAWarning()
         {
+            // IT WAS A WARNING, AND THAT WAS WRONG. Firing on every successful load meant
+            // every run came back SucceededWithWarnings, so a channel meant for exceptions
+            // triggered unconditionally and stopped carrying information -- the run-history
+            // bug inverted. There, warnings existed and could not be read; here they could be
+            // read and meant nothing. ResolvedVia answers "how did this actually get done",
+            // which is exactly what an accepted call shape is.
             var (deck, op2) = WriteRun();
 
             var result = new FemapPostProcessor(() => new FakeFemapSession()).Load(deck, op2);
 
-            Assert.Contains(result.Run.Warnings, w => w.Contains("FEMAP accepted:"));
+            Assert.Contains("feFileReadNastran(setId, filename)", result.Run.ResolvedVia);
+            Assert.Contains("feFileReadNastranResults(setId, filename)", result.Run.ResolvedVia);
+            Assert.DoesNotContain(result.Run.Warnings, w => w.Contains("FEMAP accepted"));
+        }
+
+        [Fact]
+        public void ACleanLoad_WarnsAboutNothing_SoTheChannelStillMeansSomething()
+        {
+            // The test the move makes possible. Attached to a running FEMAP, not clearing the
+            // model, every call accepted: there is nothing to warn about, and the status
+            // should be able to say so plainly rather than being permanently qualified.
+            var (deck, op2) = WriteRun();
+
+            var result = new FemapPostProcessor(() => new FakeFemapSession()).Load(deck, op2);
+
+            Assert.Empty(result.Run.Warnings);
+            Assert.Equal(ToolRunStatus.Succeeded, result.Run.Status);
         }
 
         [Fact]

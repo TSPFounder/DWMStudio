@@ -206,7 +206,7 @@ namespace DWMStudio.Tests
 
             var femap = Build(deck).Children.Single(c => c.ToolId == ToolRegistry.Femap);
 
-            Assert.Single(femap.Children.Where(c => c.Label == "wtTowerModal.dat"));
+            Assert.Single(femap.Children, c => c.Label == "wtTowerModal.dat");
             Assert.DoesNotContain(femap.Children,
                 c => c.Kind == WorldTreeNodeKind.Result && c.Label == "wtTowerModal.dat");
         }
