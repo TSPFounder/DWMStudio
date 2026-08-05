@@ -48,6 +48,53 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public async Task AnEmptyAssemblyComponent_IsNotMistakenForTheInactiveBug()
+        {
+            // A component holding only sub-components has NO BODIES and therefore no mass of
+            // its own. That is correct, not a fault -- and the rotor assembly's own root is
+            // exactly that shape, so without bodyCount the refusal above would reject a
+            // perfectly healthy model.
+            var session = new FakeFusionSession(Json(@"
+                { ""components"": [
+                    { ""name"": ""RotorAssembly"", ""mass"": 0.0, ""bodyCount"": 0 },
+                    { ""name"": ""Blade"", ""mass"": 6500.0, ""bodyCount"": 1 } ] }"));
+
+            var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
+
+            Assert.True(result.Succeeded);
+            Assert.Equal(2, result.Components.Count);
+        }
+
+        [Fact]
+        public async Task ZeroMassWithBodiesPresent_IsStillRefused()
+        {
+            // The distinction has to cut both ways: bodies AND zero mass is the Inactive
+            // (Read-Only) failure, and bodyCount must not become a way to wave it through.
+            var session = new FakeFusionSession(Json(@"
+                { ""components"": [
+                    { ""name"": ""Blade"", ""mass"": 0.0, ""bodyCount"": 3 } ] }"));
+
+            var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
+
+            Assert.False(result.Succeeded);
+            Assert.Contains("Blade", result.Run.FailureMessage);
+        }
+
+        [Fact]
+        public async Task ZeroMassWithNoBodyCountReported_IsRefused_BecauseTheCautiousReadingIsSafer()
+        {
+            // An older add-in that omits bodyCount must not turn the check off. Assuming
+            // "it probably had bodies" risks a false alarm; assuming it did not risks letting
+            // a real zero through into a Simulink model. Only one of those is recoverable.
+            var session = new FakeFusionSession(Json(@"
+                { ""components"": [ { ""name"": ""Blade"", ""mass"": 0.0 } ] }"));
+
+            var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
+
+            Assert.False(result.Succeeded);
+        }
+
+        [Fact]
         public async Task AMissingMassField_IsSkippedWithAWarning_NotDefaultedToZero()
         {
             // Absent mass and zero mass are different problems, and defaulting the first into
