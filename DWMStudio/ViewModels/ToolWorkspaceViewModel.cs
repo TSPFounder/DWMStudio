@@ -154,8 +154,23 @@ namespace DWMStudio.ViewModels
 
             var deck = Model.ArtifactPath;
 
+            // startNewModel: true, and this call site is the reason the library defaults it off.
+            //
+            // The library cannot know what is open in FEMAP, so it declines to clear. THIS
+            // BUTTON CAN: it says "load results", it will be pressed repeatedly while someone
+            // iterates on a deck, and a repeat load into a populated FEMAP does not replace --
+            // it collides. The 2026-08-05 second run produced "Overwriting existing Property
+            // 101..110" and twelve output sets where six belong.
+            //
+            // Clearing first makes the button IDEMPOTENT: press it any number of times and
+            // FEMAP shows this run, once. That is what someone pressing it expects, and it is
+            // what makes a re-press after an apparently-empty first attempt safe rather than
+            // the thing that doubles everything.
             var result = await Task.Run(() =>
-                new FemapPostProcessor(() => new FemapComSession(allowLaunch: true)).Load(deck));
+                new FemapPostProcessor(
+                        () => new FemapComSession(allowLaunch: true),
+                        startNewModel: true)
+                    .Load(deck));
 
             Runs.Add(result.Run);
 
@@ -163,8 +178,9 @@ namespace DWMStudio.ViewModels
             {
                 StatusMessage =
                     $"Loaded into FEMAP: model from {Path.GetFileName(result.DeckPath)}, results " +
-                    $"from {Path.GetFileName(result.ResultsPath)}. Switch to FEMAP's " +
-                    "PostProcessing tab for the deformed shapes.";
+                    $"from {Path.GetFileName(result.ResultsPath)}. FEMAP was cleared to an " +
+                    "empty model first, so this is one clean copy however many times you press " +
+                    "it. Switch to FEMAP's PostProcessing tab for the deformed shapes.";
             }
             else
             {

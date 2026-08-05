@@ -130,6 +130,39 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public void StartNewModel_ClearsFemapBeforeImporting_SoARepeatLoadIsIdempotent()
+        {
+            // Re-importing into a populated FEMAP does not replace, it collides. The real
+            // second run gave "Overwriting existing Property 101..110" and twelve output sets
+            // where six belong. Someone re-pressing the button after an apparently-empty first
+            // attempt is the ordinary case, not a mistake, so it has to be safe.
+            var (deck, op2) = WriteRun();
+            var session = new FakeFemapSession();
+
+            new FemapPostProcessor(() => session, startNewModel: true).Load(deck, op2);
+
+            var cleared = session.Calls.FindIndex(c => c.Method == "feFileNew");
+            var model = session.Calls.FindIndex(c => c.Method == "feFileReadNastran");
+
+            Assert.True(cleared >= 0, "FEMAP was never cleared");
+            Assert.True(model > cleared, "the model must be read AFTER the clear, not before");
+        }
+
+        [Fact]
+        public void ClearingIsOff_ByDefault_BecauseItWouldDiscardWhateverWasOpen()
+        {
+            // Asymmetric damage: a duplicated results tree is one File > New away from fixed;
+            // somebody's unsaved meshing is not. The library declines to clear, and the call
+            // site that knows its own semantics opts in.
+            var (deck, op2) = WriteRun();
+            var session = new FakeFemapSession();
+
+            new FemapPostProcessor(() => session).Load(deck, op2);
+
+            Assert.DoesNotContain(session.Calls, c => c.Method == "feFileNew");
+        }
+
+        [Fact]
         public void ARefusedCallShape_FallsThroughToTheNextOne()
         {
             // THE REAL FAILURE, from 2026-08-05: feFileReadNastran(filename) came back
