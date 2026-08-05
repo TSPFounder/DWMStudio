@@ -434,11 +434,19 @@ version-less toolbox name is what produced the retraction above.
 Licence 639293. `Matlab.Application.7.12` is the ProgID that reaches it — the one the tool
 registry pins, and the one a generic `matlab.application` misses.
 
-**One limitation worth confirming before relying on it.** *Partial Differential Equation
-Toolbox 1.0.18* is the legacy R2011a `pdetool` line, which is believed **2-D only** — 3-D
-geometry arrived in far later releases. The spreadsheet references PDE Toolbox six times. If
-those uses are 2-D field problems it is fine; if any assume 3-D, that is a gap the licence
-list does not show. Structural FEA is unaffected — MYSTRAN and FEMAP cover it.
+**One limitation, CONFIRMED 2026-08-05.** *Partial Differential Equation Toolbox 1.0.18* is
+the legacy R2011a `pdetool` line and is **2-D only.** 3-D geometry arrived in far later
+releases and is not available here at any price short of a new licence.
+
+The spreadsheet references PDE Toolbox **six times**. Any of those uses that assume a 3-D
+field problem cannot be met by the owned toolset — and this is the kind of limit that does not
+announce itself, because a 2-D solve of a 3-D problem produces plausible numbers rather than
+an error. It belongs in `ToolDescriptor.KnownLimitation` for exactly the reason that field
+exists: *every wrong assumption on this project so far has been about a tool's limits rather
+than its features.*
+
+Structural FEA is unaffected — MYSTRAN and FEMAP cover it, in 3-D, and are now driven end to
+end. So the practical exposure is thermal and other field problems, not the tower.
 
 **SharePoint's status needs an answer, and cannot be inferred.** At 72 mentions it is the
 second-most-named tool in the sheet and the entire CM, lists and traceability backbone of

@@ -248,6 +248,15 @@ namespace DWMStudio.Tests
             return ids;
         }
 
+        private double ScalarDouble(string sql)
+        {
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = sql;
+            return Convert.ToDouble(cmd.ExecuteScalar(), CultureInfo.InvariantCulture);
+        }
+
         private int SampleCount(string blockId)
         {
             using var conn = new SqliteConnection($"Data Source={_dbPath}");
@@ -280,6 +289,56 @@ namespace DWMStudio.Tests
             new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
 
             Assert.Equal(new[] { "block_rotor" }, BlockIds());
+        }
+
+        [Fact]
+        public void MeasuredTowerFrequency_TravelsWithThePackage_AndSoDoesTheModelsDisagreement()
+        {
+            // The only numbers in the package measured by a solver rather than copied from a
+            // model. BOTH are written deliberately: MYSTRAN says 0.2810991 Hz, the Simulink
+            // model assumes 0.320 Hz, and the 13.8% gap is the verification gate's finding.
+            // Publishing only the comfortable one would be the easier choice and the wrong one.
+            WriteFakeSimCsv();
+            foreach (var s in new[] { "pitch", "yaw", "tower", "power" }) WriteChannelCsv(s, 10, 0.1);
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            // Compared as numbers, not as strings. Value is REAL, and double.ToString() puts a
+            // comma in for the decimal separator under a good many cultures -- a test that
+            // passes in one locale and fails in another tells you about the agent, not the code.
+            Assert.Equal(0.2810991, ScalarDouble(
+                "SELECT Value FROM Parameters WHERE BlockId='block_tower' AND Name='f_tower_measured';"), 7);
+            Assert.Equal(0.320, ScalarDouble(
+                "SELECT Value FROM Parameters WHERE BlockId='block_tower' AND Name='f_tower_model';"), 7);
+
+            // Units are carried, which is the whole reason this belongs in Parameters rather
+            // than being smuggled into SimSamples -- that table has no Unit column and is keyed
+            // on Time, and a mode shape is not on a timeline.
+            Assert.Equal("Hz", ScalarString(
+                "SELECT Unit FROM Parameters WHERE BlockId='block_tower' AND Name='f_tower_measured';"));
+        }
+
+        [Fact]
+        public void NoTowerBlock_MeansNoTowerParameters_BecauseNothingWouldCatchAnOrphan()
+        {
+            // THE GUARD THIS TEST EXISTS FOR. A rotor-only export creates no block_tower --
+            // SeedTurbineChannel returns 0 without inserting when the sibling CSV is absent --
+            // and the mechanism schema has NO FOREIGN KEYS (fragility audit item 2). So an
+            // unguarded insert would not throw: it would write two parameter rows pointing at a
+            // block that does not exist, and `verify` would report green.
+            WriteFakeSimCsv();
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            Assert.Equal(new[] { "block_rotor" }, BlockIds());
+            Assert.Equal("0", ScalarString(
+                "SELECT COUNT(*) FROM Parameters WHERE BlockId='block_tower';"));
+
+            // Stated as the general property rather than the specific case, because the next
+            // orphan will be some other block: no Parameters row may name a missing block.
+            Assert.Equal("0", ScalarString(
+                "SELECT COUNT(*) FROM Parameters p WHERE NOT EXISTS " +
+                "(SELECT 1 FROM Blocks b WHERE b.BlockId = p.BlockId);"));
         }
 
         [Fact]
