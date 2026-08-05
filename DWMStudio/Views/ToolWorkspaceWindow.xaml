@@ -92,6 +92,19 @@
                             <TextBlock Text="{Binding FailureMessage}"
                                        Style="{StaticResource MutedLabelStyle}"
                                        TextWrapping="Wrap" />
+                            <!-- Warnings were collected and then never rendered, which made
+                                 SucceededWithWarnings a status with nothing behind it. The
+                                 whole reason a run is not a boolean is that "ran, passed,
+                                 three warnings" needs somewhere to say the three things. -->
+                            <ItemsControl ItemsSource="{Binding Warnings}" Margin="0 4 0 0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"
+                                                   Style="{StaticResource MutedLabelStyle}"
+                                                   TextWrapping="Wrap" Margin="0 2 0 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
