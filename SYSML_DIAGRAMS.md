@@ -95,6 +95,73 @@ applied to successively lower levels."* Phases E, F and G are one process at two
 
 ---
 
+## Starting point: 17.3.2 Analyze Stakeholder Needs (phase C)
+
+**Decided 2026-08-05.** DWM_Dev's UModel work starts here. Phase C is Figure 17.5's
+*Analyze Stakeholder Needs* activity almost action for action, which is the strongest
+confirmation available that the spreadsheet and the chapter describe one process:
+
+| Figure 17.5 action | Phase C criteria |
+| --- | --- |
+| characterize as-is system and enterprise | C.4.1, C.4.2 |
+| perform causal analysis | C.4.3 |
+| specify mission requirements | C.5.1, C.5.2 |
+| define enterprise use cases | C.9.1 |
+| define to-be domain bdd | C.8.1 |
+| capture measures of effectiveness | C.6.1 |
+| conduct mission requirements review | **no criterion** |
+
+### The actual starting set: six diagrams, not seventy-nine
+
+Every UModel artifact in phase C. `C.5.2` updates `C.2.2` rather than adding a diagram, so
+the count of distinct diagrams is six:
+
+| Order | Criteria | Diagram | Type |
+| --- | --- | --- | --- |
+| 1 | C.2.2 | Views & Viewpoints Diagram | `pkg` |
+| 2 | C.4.1 | As-Is Operational Domain Diagram | `bdd` |
+| 3 | C.5.1 | Mission Requirements Diagrams | `req` |
+| 4 | C.5.2 | *(updates the C.2.2 viewpoints)* | `pkg` |
+| 5 | C.8.1 | To-Be Operational Domain Block Definition Diagram | `bdd` |
+| 6 | C.6.1 | MoE Parameter Diagrams | `par` |
+| 7 | C.9.1 | Mission Use Case Diagrams | `uc` |
+
+**That is a tractable first increment** — six diagrams against a full-method total of 79, and
+it produces the one thing every later phase consumes: mission requirements with measures of
+effectiveness traced to them.
+
+### Do 17.3.1 first anyway
+
+**Set-up Model has no criteria in the spreadsheet, and it precedes this.** C.2.2 is a package
+diagram; it has to be created *somewhere*, and the somewhere is the model organisation from
+Figure 17.4 below. Deciding the package structure after the first six diagrams exist means
+moving them. This is the cheapest possible moment to settle it.
+
+### Four things to reconcile before starting
+
+1. **The spreadsheet serialises what Figure 17.5 runs in parallel.** The figure forks use
+   cases, the to-be domain BDD and the MoEs into three concurrent branches. The spreadsheet's
+   own Inputs column does not: **C.9.1 takes *To-Be Mission Models & Simulations* as input**,
+   which is C.8.2, which needs C.8.1. So use cases sit downstream of the to-be BDD rather
+   than beside it. Either is defensible — just know which one is being followed, because the
+   figure suggests three people can work at once and the spreadsheet says they cannot.
+2. **C.1–C.3 are an addition.** Stakeholder Analysis, Stakeholder Needs Statement, Mission
+   Needs Analysis and the Views & Viewpoints diagram all precede Figure 17.5's first action.
+   The chapter treats stakeholder analysis as context; the spreadsheet makes it explicit
+   work. Consistent with Viewpoints being a top-level package in Figure 17.4, so this looks
+   deliberate rather than accidental.
+3. **No "conduct mission requirements review" criterion exists.** Figure 17.5 ends with one.
+   C.3.2 approves the *Mission Needs Analysis*, which is a different and earlier gate. The
+   phase currently has no exit gate for the requirements it produces.
+4. **C.4.2 and C.8.2 require STK** (Systems Tool Kit) alongside Simulink, for the as-is and
+   to-be mission models. **DWM has no STK, and it is not in the tool registry.** This looks
+   like an artifact of the template's aerospace origin. For DWM the mission model is far more
+   likely to be Simulink alone — or the existing economy simulation — but that is a tailoring
+   decision, not something to discover mid-phase. Note that Simulink V&V *is* available: the
+   R2011a full licence includes it.
+
+---
+
 ## Model organisation — Figure 17.4, the ESS model structure
 
 The chapter's answer to *"how is the UModel project laid out?"*, which is the question the
@@ -152,12 +219,24 @@ packages… such as packages for value types and viewpoints."* Value Types and V
 siblings of the domain packages, not children — which is why the Views & Viewpoints diagrams
 appear at C.2.2 and are then pulled from a library at C.3.1 and C.4.3 rather than rebuilt.
 
-Two smaller conventions worth copying if this is ever built:
+`Node Physical Design` nests one package each for **hardware, software, data and operational
+procedures** — which is exactly the F.3/F.4/F.5/F.6 split, and G.5/G.6/G.7/G.8 one level down.
+
+Four conventions worth copying:
 
 - **Numeric name prefixes** (`1-Requirements`, `2-Structure`) exist purely to force browser
   ordering. The numbers are not part of the names in prose.
 - **`Process Guidance` holds the method itself** — Figure 17.2 and the 17.3.x activity
   diagrams live *in the model*. The process is modelled alongside the system it produces.
+- **A `Navigation` BDD of hyperlinks.** A block definition diagram whose contents are links to
+  the diagrams of interest, so the model can be navigated *without knowing the package
+  structure*. Cheap, and it is the difference between a model people use and one only its
+  author can find their way around. Worth creating early, not at the end.
+- **The diagram frame is a model element, and it decides where the diagram lives.** The frame
+  represents an element, and that element dictates the diagram's position in the browser
+  hierarchy. So a diagram is not filed by hand — it is filed by what it is drawn on. Related:
+  a model element from another package appears with its **fully qualified name**, which is
+  what keeps two same-named elements in different packages distinguishable.
 
 ---
 
