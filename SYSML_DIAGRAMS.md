@@ -317,6 +317,70 @@ Three consequences worth carrying into that work:
 
 ---
 
+## Shared products, and the enabling systems problem
+
+**Many developed items will be needed across many communities — manufacturing tooling and
+machines especially.** This qualifies the section above rather than contradicting it: the
+package *structure* is per-project, but a machine developed once and used by five communities
+cannot live only inside one project's tree.
+
+### These have a name in OOSEM, and the chapter already made room for them
+
+Tooling, machines, facilities and inspection systems are **enabling systems** — things that
+exist to build, install, support or verify the SoI rather than being part of it. Chapter 17
+says OOSEM supports *"the development of other enabling systems such as the installation
+system,"* and **Figure 17.4 names the packages**: `Security Domain to-be` holds `Installation`
+and `Operational`, and *"could contain packages for other parts of the system life cycle, such
+as **Manufacturing**, Support, and Disposal."*
+
+So a manufacturing machine is not an awkward special case. It is an SoI in a `Manufacturing`
+life-cycle package, developed by the same process, with the same diagram kinds.
+
+### The spreadsheet already develops them — in SolidWorks
+
+Phases I and J carry them at both component and system level, and the pairing is deliberate:
+
+| Component level | System level | Output |
+| --- | --- | --- |
+| I.2.1 | J.2.1 | Tooling Models & Drawings (SolidWorks & Visio) |
+| I.2.3 | J.2.3 | Manufacturing Machine Models & Drawings (SolidWorks & Visio) |
+| I.2.4 | J.2.4 | Inspection Systems Models & Drawings |
+| I.2.2 | J.2.2 | Facilities Drawings (Visio) |
+
+**`ToolRegistry` has no SolidWorks entry.** Fusion is the registered CAD tool. Yet a
+substantial `SolidworksLibrary` C# project already exists — `CAD_Part`, `CAD_Assembly`,
+`FeatureBuilder`, `DrawingBuilder`, and an `Automation/` bridge carrying
+`MatlabSimulinkSimscapeAdapter` and `ParameterMappingProfile`. Registering SolidWorks is a
+registry entry plus an accent colour, which is the whole point of the registry — but it
+should happen when manufacturing comes into scope, not be discovered then.
+
+### Reuse is decided in phase C, which is where we are starting
+
+Convenient rather than coincidental, and it raises the stakes on the starting phase:
+
+- Figure 17.5's **first action** — *characterize as-is system and enterprise* — carries the
+  comment ***"This includes early characterization of reusable components."***
+- `Security Domain as-is` exists in Figure 17.4 partly *"to identify the parts of the as-is
+  model that may be reused in the to-be model."*
+- Figure 17.4's reusable packages (`Value Types`, `Viewpoints`) sit **outside** the system
+  hierarchy precisely so they can be shared.
+
+The open question the chapter does *not* answer: it shares reusable elements **within one
+model**, because it has one. DWM needs them shared **across projects and communities**. That
+is a platform concern with no precedent in the reference — a shared library that projects
+reference rather than copy, or the same machine re-modelled per community and silently
+diverging.
+
+### Economy side, flagged not solved
+
+`manufactured_tools` already exists as a seeded resource (`category = 'manufactured'`), so
+tooling has an economic representation today. But **the ledger models transfers, and a machine
+is a durable capital good** — bought once, producing for years — which is a different shape
+from grain or timber consumed on receipt. Post-MVP, and noted here only so that "tooling is
+already a resource" is not mistaken for "tooling is already modelled."
+
+---
+
 ## Why a search for "Diagram" undercounts by a third
 
 Searching the Outputs column for the word *diagram* returns **52** entries. The other **27**
