@@ -209,19 +209,29 @@ def _design(reuse_document):
 # =============================================================================
 
 def _cmd_build(payload):
-    """Build the rotor by calling WindTurbineBlade's builders.
+    """Build the rotor by calling WindTurbineBlade.build_rotor.
 
-    ITS run() IS DELIBERATELY NOT CALLED. That function ends in ui.messageBox,
-    which is modal: no automated caller can dismiss it, so the request would hang
-    until a human clicked OK. It also calls documents.add() unconditionally.
+    ONE CALL, NO DUPLICATED ORCHESTRATION. This used to copy the script's precone
+    and blade-placement block, which was fifteen lines nobody would ever diff: the
+    twist convention could change in the script and silently not change here. That
+    block now lives in build_rotor and both callers share it.
 
-    The assembly step below (precone, blade occurrences) IS duplicated from that
-    run(), and that duplication is a known cost -- it will drift. The fix belongs
-    in the script: split run(context) into the UI wrapper and a
-    build_rotor(design, cfg, log) that both it and this can call. Until then, this
-    is the smaller evil, because the alternative is not being able to build at all.
+    Its run() is still deliberately NOT called. run() creates a document and ends
+    in a modal ui.messageBox -- the two things an automated caller must not
+    inherit, which is exactly why the split was worth asking for.
     """
     wtb = _import_blade_script()
+
+    if not hasattr(wtb, 'build_rotor'):
+        # FAILS LOUDLY RATHER THAN FALLING BACK. A fallback that reimplemented the
+        # assembly would put the duplication straight back, and would do it in the
+        # one situation where the two versions are already known to disagree.
+        raise RuntimeError(
+            'This WindTurbineBlade.py has no build_rotor(design, cfg, log).\n\n'
+            'The bridge needs the refactored script: run(context) split into the '
+            'interactive wrapper and build_rotor, so both call one implementation. '
+            'Update the script rather than reverting the bridge -- copying the '
+            'assembly step back in here is what the split removed.')
 
     cfg = dict(wtb.CONFIG)
     overrides = payload.get('config') or {}
@@ -229,8 +239,6 @@ def _cmd_build(payload):
     cfg.update(overrides)
 
     design = _design(payload.get('reuseDocument', True))
-    design.designType = adsk.fusion.DesignTypes.ParametricDesignType
-    root = design.rootComponent
 
     log = []
     if unknown:
@@ -239,33 +247,7 @@ def _cmd_build(payload):
         # changed something.
         log.append('Ignored unknown config key(s): %s' % ', '.join(sorted(unknown)))
 
-    wtb.add_user_parameters(design, cfg, log)
-    blade = wtb.build_blade(root, cfg, log)
-
-    # ---- assembly: precone, then the remaining blades ----
-    import math
-    yaxis = adsk.core.Vector3D.create(0, 1, 0)
-    xaxis = adsk.core.Vector3D.create(1, 0, 0)
-    origin = adsk.core.Point3D.create(0, 0, 0)
-
-    cone = adsk.core.Matrix3D.create()
-    cone.setToRotation(math.radians(cfg['precone_deg']), xaxis, origin)
-    root.occurrences.item(0).transform = cone
-
-    for k in range(1, cfg['n_blades']):
-        m = adsk.core.Matrix3D.create()
-        m.setToRotation(2.0 * math.pi * k / cfg['n_blades'], yaxis, origin)
-        m.transformBy(cone)
-        root.occurrences.addExistingComponent(blade, m)
-    log.append('%d blade occurrences placed, precone %.1f deg.'
-               % (cfg['n_blades'], cfg['precone_deg']))
-
-    if cfg.get('build_hub'):
-        wtb.build_hub(root, cfg, log)
-    if cfg.get('build_spinner'):
-        wtb.build_spinner(root, cfg, log)
-    if cfg.get('build_root_bolts'):
-        wtb.build_root_bolts(root, cfg, log)
+    wtb.build_rotor(design, cfg, log)
 
     return {
         'log': log,
