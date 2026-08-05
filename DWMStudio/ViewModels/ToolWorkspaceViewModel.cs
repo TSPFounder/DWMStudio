@@ -51,17 +51,81 @@ namespace DWMStudio.ViewModels
         // Tooltips carry the reason a button is disabled. A greyed-out control that will not
         // say why is the same defect as a button that silently does nothing.
         public string? CreateTooltip => Model.WhyNot(ToolAction.Create);
-        public string? EditTooltip => Model.WhyNot(ToolAction.Edit);
+        public string? EditTooltip =>
+            SelectedNode is { Exists: true, Path: not null } n
+                ? $"Open {System.IO.Path.GetFileName(n.Path)}"
+                : SelectedNode is { IsMissing: true } m
+                    ? $"{System.IO.Path.GetFileName(m.Path)} is not on disk."
+                    : Model.WhyNot(ToolAction.Edit);
         public string? RunTooltip => Model.WhyNot(ToolAction.Run);
+
+        /// <summary>
+        /// This stage's contents: the artifact it works on, the results beside it, and this
+        /// session's runs. One root, because TreeView binds to a sequence.
+        /// </summary>
+        public ObservableCollection<WorldTreeNode> Tree { get; } = new();
+
+        /// <summary>
+        /// The tree row the verbs act on. Set from the view, because TreeView.SelectedItem is
+        /// read-only in WPF and cannot be bound.
+        ///
+        /// Null is the ordinary state, not an error -- nothing selected means Edit falls back
+        /// to the stage's configured artifact, which is what it did before the tree existed.
+        /// </summary>
+        [ObservableProperty] private WorldTreeNode? _selectedNode;
+
+        /// <summary>
+        /// The file Edit will open: the selected row when it names one, otherwise the stage's
+        /// own artifact. Notes and Run rows name no file and therefore fall through.
+        /// </summary>
+        public string? EditTarget =>
+            SelectedNode?.Path is { Length: > 0 } p ? p : Model.ArtifactPath;
+
+        partial void OnSelectedNodeChanged(WorldTreeNode? value)
+        {
+            OnPropertyChanged(nameof(EditTarget));
+            OnPropertyChanged(nameof(EditTooltip));
+            EditCommand.NotifyCanExecuteChanged();
+        }
+
+        private readonly ToolRegistry _registry = new();
 
         public ToolWorkspaceViewModel(ToolWorkspaceModel model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             foreach (var run in model.Runs) Runs.Add(run);
+            RefreshTree();
+        }
+
+        /// <summary>
+        /// Re-read this stage's files from disk.
+        ///
+        /// CALLED AFTER EVERY RUN, which is the point of having it here rather than only on
+        /// the world view: a MYSTRAN solve writes .f06, .ERR and .op2 beside the deck, and the
+        /// window that just ran it is exactly where someone looks for them. A tree that still
+        /// showed the pre-run state would be the FEMAP Model Info problem rebuilt in our own
+        /// UI -- the work succeeded, the view kept the old picture, and the gap between them
+        /// read as failure.
+        /// </summary>
+        [RelayCommand]
+        public void RefreshTree()
+        {
+            Tree.Clear();
+            Tree.Add(WorldTreeBuilder.BuildForWorkspace(Model, _registry, Runs));
         }
 
         private bool CanCreate() => Model.CanCreate && !IsBusy;
-        private bool CanEdit() => Model.CanEdit && !IsBusy;
+
+        /// <summary>
+        /// Enabled when a SELECTED FILE EXISTS, or when the stage's own artifact does.
+        ///
+        /// The selection widens this deliberately. Model.CanEdit is about the configured
+        /// artifact, so without the first clause a solve's .f06 could be selected, sit there
+        /// plainly present, and the button would stay greyed out -- a control refusing to do
+        /// the thing the row in front of it obviously means.
+        /// </summary>
+        private bool CanEdit() => !IsBusy && (SelectedNode?.Exists == true || Model.CanEdit);
+
         private bool CanRun() => Model.CanRun && !IsBusy;
 
         [RelayCommand(CanExecute = nameof(CanCreate))]
@@ -81,15 +145,28 @@ namespace DWMStudio.ViewModels
             // EDIT MEANS LAUNCH THE OWNING APPLICATION. DWMStudio does not edit these formats
             // and should not try to -- the shell association is what knows which app owns a
             // .bdf, a .slx or an .f3d.
+            //
+            // OPENS WHATEVER IS SELECTED, falling back to the stage's artifact when nothing
+            // is. That is the point of the tree being here: a MYSTRAN run leaves a .f06 and an
+            // .ERR beside the deck, and reading those is the normal next step after a solve --
+            // being able to open only the deck would make the tree a display case.
+            var target = EditTarget;
+
+            if (string.IsNullOrWhiteSpace(target))
+            {
+                StatusMessage = "Nothing to open. Select a file in Contents, or configure this stage's artifact.";
+                return;
+            }
+
             try
             {
-                Process.Start(new ProcessStartInfo(Model.ArtifactPath!) { UseShellExecute = true });
-                StatusMessage = $"Opened {Path.GetFileName(Model.ArtifactPath)} in its associated application.";
+                Process.Start(new ProcessStartInfo(target) { UseShellExecute = true });
+                StatusMessage = $"Opened {Path.GetFileName(target)} in its associated application.";
             }
             catch (Exception ex)
             {
                 StatusMessage =
-                    $"Could not open {Model.ArtifactPath}: {ex.Message}\n" +
+                    $"Could not open {target}: {ex.Message}\n" +
                     "If Windows has no association for this extension, open it from the tool itself.";
             }
         }
@@ -130,6 +207,12 @@ namespace DWMStudio.ViewModels
             {
                 IsBusy = false;
                 RunCommand.NotifyCanExecuteChanged();
+
+                // IN THE FINALLY, NOT AFTER A SUCCESSFUL RUN. A failed solve still writes
+                // files -- MYSTRAN leaves a .f06 and an .ERR after a FATAL, and those are the
+                // two anyone needs to read to find out what went wrong. Refreshing only on
+                // success would hide the evidence exactly when it matters.
+                RefreshTree();
             }
         }
 

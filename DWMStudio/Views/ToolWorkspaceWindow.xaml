@@ -68,9 +68,85 @@
             </StackPanel>
         </StackPanel>
 
+        <Grid Grid.Row="3" Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ============================================================
+                 Contents: THIS stage's files, and the selection the verbs act on.
+
+                 Select a file and Edit opens that one, rather than only ever the stage's
+                 configured artifact. Re-read after every run — in the finally block, not on
+                 success, because a MYSTRAN FATAL still writes the .f06 and .ERR that explain
+                 it, and those are exactly what someone needs when a run fails.
+
+                 A snapshot with a button, not a live view: nothing behind it is a database,
+                 so nothing can push an update here.
+                 ============================================================ -->
+            <DockPanel Grid.Column="0">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <TextBlock Text="Contents"
+                               Style="{StaticResource MutedLabelStyle}"
+                               VerticalAlignment="Center" />
+                    <Button Content="Refresh"
+                            Command="{Binding RefreshTreeCommand}"
+                            Style="{StaticResource GhostButtonStyle}"
+                            Margin="12 0 0 0" />
+                </StackPanel>
+
+                <Border Margin="0 6 0 0"
+                        BorderBrush="{StaticResource DwmDividerBrush}"
+                        BorderThickness="1"
+                        Padding="6">
+                    <!-- SelectedItemChanged in code-behind rather than a binding, because
+                         TreeView.SelectedItem is read-only in WPF and cannot be bound. -->
+                    <TreeView x:Name="ContentsTree"
+                              ItemsSource="{Binding Tree}"
+                              SelectedItemChanged="ContentsTree_SelectedItemChanged"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem">
+                                <!-- Expanded: a missing deck that only appears after a click
+                                     is bad news hiding behind a collapse. -->
+                                <Setter Property="IsExpanded" Value="True" />
+                                <Setter Property="Foreground" Value="#E0E4EC" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal" Margin="0 2">
+                                    <TextBlock Text="{Binding Label}" FontSize="12">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="#E0E4EC" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                        <Setter Property="Foreground"
+                                                                Value="{StaticResource DwmErrorBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding Detail}"
+                                               Style="{StaticResource MutedLabelStyle}"
+                                               ToolTip="{Binding Path=Path}"
+                                               Margin="10 2 0 0" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Border>
+            </DockPanel>
+
         <!-- Run history. A stage used to be a boolean, which cannot express "ran, passed,
              three warnings" — and that is exactly what a turbine export produces. -->
-        <StackPanel Grid.Row="3" Margin="0 20 0 0">
+        <StackPanel Grid.Column="2">
             <TextBlock Text="Run history" Style="{StaticResource MutedLabelStyle}" />
             <ListBox ItemsSource="{Binding Runs}"
                      Background="Transparent" BorderBrush="{StaticResource DwmDividerBrush}"
@@ -110,6 +186,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
+        </Grid>
 
         <TextBlock Grid.Row="4" Text="{Binding StatusMessage}"
                    Style="{StaticResource MutedLabelStyle}"
