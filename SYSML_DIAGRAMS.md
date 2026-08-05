@@ -20,9 +20,54 @@
 2026-08-05. Every row below is a named entry in that sheet's **Outputs** column — nothing
 here is inferred, invented, or filled in from what OOSEM "usually" wants.
 
+**Method reference:** Friedenthal, Moore & Steiner, *A Practical Guide to SysML*, **Chapter
+17** — *Residential Security System Example Using the Object-Oriented Systems Engineering
+Method*. The spreadsheet is a tailoring of that chapter's process. Figures 17.1 (*Develop
+System*) and 17.2 (*Specify and Design System*) are what the phase letters follow.
+
 **79 modelling artifacts. 76 of them are UModel.** That is the number that would matter for
 scoping the UModel work if it were scheduled, and it is larger than a scan of the sheet
 suggests, for a reason worth stating first.
+
+---
+
+## How the spreadsheet's phases map to OOSEM
+
+Checked against the criteria, not assumed from the letters. Figure 17.2's seven activities
+account for phases C through H; Figure 17.1's outer *Develop System* process accounts for
+the rest.
+
+| Phase | Criteria | OOSEM activity | Fig |
+| --- | --- | --- | --- |
+| **A** | 76 | *Manage System Development* — WBS, IMP, IMS, SEMP, the plans | 17.1 |
+| **B** | 36 | *Manage System Development* — CM, cost, risk, suppliers | 17.1 |
+| **C** | 20 | **17.3.2 Analyze Stakeholder Needs** — as-is analysis, mission requirements, MoEs, use cases | 17.2 |
+| **D** | 21 | **17.3.3 Analyze System Requirements** — scenarios, black-box BDD, state machines | 17.2 |
+| **E** | 10 | **17.3.4 Define Logical Architecture** — SoI logical decomposition | 17.2 |
+| **F** | 38 | **17.3.5 Synthesize Candidate Physical Architectures** — partitioning criteria, node/SW/HW/data architecture | 17.2 |
+| **G** | 41 | **The recursion.** E+F applied at component level, plus trade studies (G.1, G.10, G.11) | 17.1 |
+| **H** | 20 | **17.3.6 Optimize and Evaluate Alternatives** — analysis contexts, parametrics, design-space optimisation | 17.2 |
+| **I** | 8 | *Develop Hardware / Software* — Concept of Manufacture, tooling, code | 17.1 |
+| **J** | 9 | *Integrate and Verify System* — integration | 17.1 |
+| **K** | 10 | *Integrate and Verify System* — inspection | 17.1 |
+| **M** | 3 | *Integrate and Verify System* — demonstration and validation | 17.1 |
+
+**This confirms the recursion is the method, not a naming coincidence.** The structural claim
+below — *phase G is E+F run again per component* — was inferred from diagram names before the
+reference was to hand. Chapter 17 states it directly: the development process *"can be applied
+recursively to multiple levels of a system's hierarchy… where the development process is
+applied to successively lower levels."* Phases E, F and G are one process at two depths.
+
+**Two activities from Figure 17.2 have no phase of their own.**
+
+- **17.3.7 Manage Requirements Traceability** is distributed rather than absent — C.7 (Mission
+  Requirements Traceability Matrix), D.10 (Change Impact Analysis), D.11 (linked to the
+  SharePoint requirements list). Reasonable; traceability is continuous in the figure too,
+  running alongside the other activities rather than after them.
+- **17.3.1 Set-up Model** appears to have **no criteria at all.** In the chapter this is where
+  modelling guidelines and model organisation are established — which is precisely the UModel
+  package-structure question left open at the end of this document. Worth checking whether it
+  was deliberately dropped or simply not reached yet.
 
 ---
 
@@ -246,7 +291,7 @@ after 79 diagrams exist.
 | 3 | **D.1.1** | One output bundles **two diagram types**: `Scenario Activity & Sequence Diagrams`. Counted here as one row, as the sheet has it. | Split into two criteria, or accept that this row is two diagrams. Everywhere else the sheet keeps activity and sequence separate (E.2.1/E.2.2, F.2.2/F.2.3). |
 | 4 | **D.3.1** | Produces **two diagrams under one criterion** — `System Parameter Diagram` *and* `System Requirements Diagram` — and the criterion's description mentions neither ("Constraints Added to Systems Requirements Specification and List"). | Give the requirements diagram its own criterion; it is a major artifact hidden inside a documentation task. |
 | 5 | **F.5.1 vs G.7.1** | F.5.1 produces **two** hardware BDDs (architecture *and* node). G.7.1 produces **one** — there is no component-level hardware-node BDD. | The only break in an otherwise exact E+F → G correspondence. Either it is deliberate (components have no internal hardware nodes) or G.7 is missing an entry. |
-| 6 | **The Recursive column** | Set on 6 of 79. Blank on all of F and G, which are the most obviously per-item entries in the sheet. | Fill it in, or the diagram count cannot be turned into an estimate. See "The count is a floor" above. |
+| 6 | **The Recursive column** | Set on 6 of 79. Blank on all of F and G, which are the most obviously per-item entries in the sheet. | **Not a spreadsheet defect — a decision that has not been made.** Chapter 17 gives the governing rule: *"The leaf level of the process is the level at which an element or component is procured or implemented,"* and *"the development team must determine what level of specification is appropriate for the particular application."* The multiplier is a property of the project's chosen leaf level, not of the diagram, which is why no cell in the sheet could carry it. Decide the leaf level and the column fills itself in. |
 
 ---
 
@@ -254,11 +299,15 @@ after 79 diagrams exist.
 
 Deliberately out of scope for this extraction, and each one is real work:
 
-- **Which diagrams DWM actually needs for the MVP.** This is the full OOSEM set for a
-  ground-up development. The MVP is a wind turbine in a LETS economy simulation, and most of
-  phases F and G describe a level of decomposition it will never reach. **Selecting a subset
-  is a separate decision and should be logged in SCOPE.md when it is made** — the value of
-  having the full list is knowing exactly what is being skipped.
+- **Which diagrams DWM actually needs.** This is the full OOSEM set for a ground-up
+  development. The MVP is a wind turbine in a LETS economy simulation, and most of phases F
+  and G describe a level of decomposition it will never reach. Settled for the MVP — see the
+  banner — but note that **cutting it down is OOSEM-conformant, not a deviation from it.**
+  Chapter 17 makes tailoring part of the management process, driven by *"the extent to which
+  the system is a new design…, the system size and complexity, the available time and
+  resources, and the level of experience of the development team."* The book itself ships a
+  tailored subset: the simplified method in its Chapter 3 §3.4 **omits the logical
+  architecture activity entirely** and takes only part of the rest.
 - **Diagram dependencies.** The sheet's Inputs column names them (C.4.3 consumes the Views &
   Viewpoints diagrams, C.3.1 pulls them from the library) and a real build order could be
   derived from it. Not done here.
