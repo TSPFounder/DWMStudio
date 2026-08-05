@@ -1,12 +1,28 @@
 # SYSML_DIAGRAMS.md — The UModel Diagram Inventory
 
+> ## OUT OF MVP SCOPE — confirmed 2026-08-05
+>
+> **None of the 79 artifacts below are MVP deliverables.** This ratifies what the Frozen
+> Scope Table already said: *"SysML/OOSEM authoring in UModel feeding the pipeline (XMI)"*
+> has been in its Out of Scope column since the scope was frozen, and it stays there.
+>
+> **This is a reference inventory, not a work list.** Its value is knowing exactly what is
+> being skipped — the alternative is discovering in six months that something was never
+> considered rather than deliberately deferred. Read it as a map of the OOSEM path DWM is
+> *not* taking for the MVP.
+>
+> **What is unaffected:** UModel stays a registered tool with a workspace tile, and the
+> pipeline keeps its SysML stage. The tooling is in scope; the diagram production is what is
+> deferred. If any subset is ever pulled forward, that is a new decision and gets its own
+> dated entry in SCOPE.md's Decisions Log.
+
 **Source:** `DWM_OOSEM_Criteria_and_Tasks.xlsx`, sheet `Criteria`, 499 rows, extracted
 2026-08-05. Every row below is a named entry in that sheet's **Outputs** column — nothing
 here is inferred, invented, or filled in from what OOSEM "usually" wants.
 
-**79 modelling artifacts. 76 of them are UModel.** That is the number that matters for
-scoping the UModel work, and it is larger than a scan of the sheet suggests, for a reason
-worth stating first.
+**79 modelling artifacts. 76 of them are UModel.** That is the number that would matter for
+scoping the UModel work if it were scheduled, and it is larger than a scan of the sheet
+suggests, for a reason worth stating first.
 
 ---
 
