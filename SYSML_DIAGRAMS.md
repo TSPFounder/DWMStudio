@@ -1,20 +1,36 @@
 # SYSML_DIAGRAMS.md — The UModel Diagram Inventory
 
-> ## OUT OF MVP SCOPE — confirmed 2026-08-05
+> ## THIS GUIDES WHAT DWM_Dev PRODUCES — out of MVP scope, not out of use
 >
-> **None of the 79 artifacts below are MVP deliverables.** This ratifies what the Frozen
-> Scope Table already said: *"SysML/OOSEM authoring in UModel feeding the pipeline (XMI)"*
-> has been in its Out of Scope column since the scope was frozen, and it stays there.
+> **Standing purpose, 2026-08-05: this document is the reference that determines which SysML
+> diagrams DWM_Dev needs to produce.** It is not an archive of a road not taken. When the
+> diagram set is selected, it gets selected from here, against the OOSEM structure recorded
+> below, rather than assembled from memory or from whichever diagram type came to mind first.
 >
-> **This is a reference inventory, not a work list.** Its value is knowing exactly what is
-> being skipped — the alternative is discovering in six months that something was never
-> considered rather than deliberately deferred. Read it as a map of the OOSEM path DWM is
-> *not* taking for the MVP.
+> **And it is out of MVP scope.** Both are true and they do not conflict. The Frozen Scope
+> Table has listed *"SysML/OOSEM authoring in UModel feeding the pipeline (XMI)"* in its Out
+> of Scope column since the scope was frozen, and it stays there — confirmed 2026-08-05. What
+> changed is standing, not schedule: **out of scope for the MVP, and the governing reference
+> when it is in scope.** Nothing here is an MVP deliverable, and nothing here is dead.
+>
+> **Consequence for how this is maintained.** A reference that decides future work has to
+> stay correct, so the six sheet inconsistencies listed near the end are worth fixing in the
+> source spreadsheet rather than merely noted here, and the model organisation from Figure
+> 17.4 is worth adopting before the first diagram exists rather than after.
 >
 > **What is unaffected:** UModel stays a registered tool with a workspace tile, and the
 > pipeline keeps its SysML stage. The tooling is in scope; the diagram production is what is
-> deferred. If any subset is ever pulled forward, that is a new decision and gets its own
-> dated entry in SCOPE.md's Decisions Log.
+> deferred. Pulling any subset forward is a new decision with its own dated entry in
+> SCOPE.md's Decisions Log.
+>
+> **One reading to confirm.** "What diagrams DWM_Dev needs to produce" is taken here to mean
+> **DWM_Dev is the System of Interest** — the diagrams describe the DWM software itself, which
+> matches the Fragility Audit's framing of DWM_Dev as a platform "intended to support the
+> design and development of virtually any engineering system." The alternative reading — that
+> the SoI is the wind turbine, or whichever system a user brings — produces a different model
+> organisation entirely, since the ESS structure puts the SoI at the centre of the package
+> tree. Worth settling before 17.3.1 *Set-up Model* is done, because everything nests inside
+> that choice.
 
 **Source:** `DWM_OOSEM_Criteria_and_Tasks.xlsx`, sheet `Criteria`, 499 rows, extracted
 2026-08-05. Every row below is a named entry in that sheet's **Outputs** column — nothing
