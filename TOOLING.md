@@ -32,7 +32,7 @@ The central claim of this design: **there are three shapes, and the old code mod
 | Shape | `ToolKind` | Tools | How you drive it |
 | --- | --- | --- | --- |
 | Attached application | `InteractiveCom` | MATLAB/Simulink, FEMAP, UModel | COM automation; attach to a running instance or launch one |
-| Attached application | `InteractiveHttp` | Fusion 360 | HTTP to an add-in on `127.0.0.1:18750` |
+| Attached application | `InteractiveHttp` | Fusion 360 | FusionLibrary's `FusionPythonHttpRunner` to an add-in on `127.0.0.1:18750` |
 | Batch process | `BatchExecutable` | MYSTRAN, DATCOM, UE commandlets | Write an input file, spawn a process, read the artifacts |
 | No automation | `FileOnly` | anything without an API | A human does the work; DWMStudio tracks the files |
 

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using CAD.Scripting;
 using DWM.Shared.Tooling;
 using DWM.Shared.Tooling.Cad;
 using Xunit;
@@ -292,62 +293,156 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void TheRoutesMatchTheAddInsContractV1()
+        public void TheAddInsPortIsPinned_AndEveryCommandIsNamed()
         {
-            // PINNED FROM THE ADD-IN'S SOURCE, not guessed. DWM-Fusion-AddIn v0.2.0 exposes
-            // /scripts/execute and /documents/active/export; it has NO mass-properties route,
-            // which is why that command rides on the script executor.
+            // The routes themselves are FusionLibrary's business now -- FusionPythonHttpRunner
+            // posts to /scripts/execute, and DWM stopped keeping a second copy of that. What
+            // stays here is the vocabulary and the port, both read from the add-in's source:
+            // DWM-Fusion-AddIn v0.2.0, PORT = 18750.
             var p = new FusionProtocol();
 
-            Assert.Equal("scripts/execute", p.Commands["massProperties"].Path);
-            Assert.Equal("scripts/execute", p.Commands["build"].Path);
-            Assert.Equal("documents/active/export", p.Commands["export"].Path);
             Assert.Equal(18750, p.BaseAddress.Port);
+            Assert.Equal(
+                new[] { "massProperties", "build", "export", "operations" },
+                p.CommandNames.ToArray());
         }
 
         [Fact]
-        public void ReadOk_ChecksSuccess_NotOk()
-        {
-            // THE FIELD IS "success". An earlier draft assumed "ok" -- a reasonable guess that
-            // would have read every failure as a success, because a missing flag is treated as
-            // "worked". Reading the add-in's source is what settled it.
-            var p = new FusionProtocol();
-
-            Assert.False(p.ReadOk(Json(@"{ ""success"": false }")));
-            Assert.True(p.ReadOk(Json(@"{ ""success"": true }")));
-
-            // Tolerant about absence: a route that reports nothing is assumed to have worked.
-            Assert.True(p.ReadOk(Json(@"{ ""components"": [] }")));
-
-            // And the old guess must NOT be honoured, or a real failure carrying "ok": false
-            // alongside "success": true would flip the verdict.
-            Assert.True(p.ReadOk(Json(@"{ ""ok"": false, ""success"": true }")));
-        }
-
-        [Fact]
-        public void ScriptOutput_IsUnwrappedFromTheEnvelope()
+        public async Task ScriptOutput_ArrivesAsJson_HavingBeenLiftedOutOfTheEnvelope()
         {
             // /scripts/execute answers {"success": true, "output": "<what was printed>"}, so a
-            // script printing JSON has its payload inside a STRING one level down. Reading the
-            // envelope as the result hands back a body with no components and no clue why.
-            var p = new FusionProtocol();
-            var envelope = Json(@"{ ""success"": true, ""output"": ""{\""components\"": []}"" }");
+            // script printing JSON has its payload inside a STRING one level down. The runner
+            // unwraps the envelope; this session parses what was printed. Reading the envelope
+            // as the result would hand back a body with no components and no clue why.
+            using var session = new FusionRunnerSession(
+                runner: new FakeRunner(new ScriptResult
+                {
+                    Success = true,
+                    Output = @"{""components"": [{""name"": ""Blade"", ""mass"": 6500.0}]}"
+                }),
+                ping: _ => Task.FromResult(true));
 
-            var result = p.Commands["massProperties"].ReadResult(envelope);
+            var reply = await session.InvokeAsync("massProperties");
 
-            Assert.NotNull(result);
-            Assert.True(result!.Value.TryGetProperty("components", out _));
+            Assert.True(reply.Ok);
+            Assert.NotNull(reply.Json);
+            Assert.True(reply.Json!.Value.TryGetProperty("components", out _));
         }
 
         [Fact]
-        public void ATracebackInOutput_UnwrapsToNull_RatherThanCrashing()
+        public async Task ATraceback_IsCarriedAsRawBody_WithNoJsonAndNoCrash()
         {
-            // A script that raised prints a traceback, not JSON. Null is honest -- the caller
-            // then reports the raw body instead of failing to parse it.
-            var p = new FusionProtocol();
-            var envelope = Json(@"{ ""success"": false, ""output"": ""Traceback (most recent call last):"" }");
+            // A script that raised prints a traceback, not JSON. Null Json is honest -- the
+            // caller then reports the raw body instead of failing to parse it. And the verdict
+            // comes from "success", which is the add-in's flag rather than the HTTP status.
+            using var session = new FusionRunnerSession(
+                runner: new FakeRunner(new ScriptResult
+                {
+                    Success = false,
+                    Error = "Traceback (most recent call last): RuntimeError: no active design"
+                }),
+                ping: _ => Task.FromResult(true));
 
-            Assert.Null(p.Commands["massProperties"].ReadResult(envelope));
+            var reply = await session.InvokeAsync("massProperties");
+
+            Assert.False(reply.Ok);
+            Assert.Null(reply.Json);
+            Assert.Contains("no active design", reply.Error);
+        }
+
+        [Fact]
+        public async Task TheScriptsDwmAlreadyOwns_GoThroughVerbatim()
+        {
+            // Not everything should become IR. The mass-properties reader is a complete module
+            // that prints one line of JSON; translating it into operations would be work with
+            // nothing at the end of it.
+            var runner = new FakeRunner(new ScriptResult { Success = true, Output = "{}" });
+            using var session = new FusionRunnerSession(runner: runner, ping: _ => Task.FromResult(true));
+
+            await session.InvokeAsync("massProperties");
+
+            Assert.Equal(FusionScripts.MassProperties, runner.Last!.EntrySource);
+            Assert.Equal(ScriptKind.Script, runner.Last.Kind);
+        }
+
+        [Fact]
+        public async Task AnOperationSequence_IsGeneratedIntoPython()
+        {
+            // THE POINT OF THE WIRING. A sketch and a revolve reach Fusion without anyone
+            // hand-writing a script for them, because CAD_Library describes the operations and
+            // FusionLibrary emits them.
+            var runner = new FakeRunner(new ScriptResult { Success = true, Output = "" });
+            using var session = new FusionRunnerSession(runner: runner, ping: _ => Task.FromResult(true));
+
+            var ops = new CadOperationSequence()
+                .Add(new CreateSketchOp { SketchId = "s1", Plane = "XZ" })
+                .Add(new SketchCircleOp { SketchId = "s1", RadiusCm = 5.0 })
+                .Add(new RevolveOp { SketchId = "s1", Axis = "Z", AngleDeg = 360.0 });
+
+            var reply = await session.InvokeAsync("operations", ops);
+
+            Assert.True(reply.Ok);
+            var python = runner.Last!.EntrySource;
+            Assert.Contains("root.xZConstructionPlane", python);
+            Assert.Contains("sketchCircles.addByCenterRadius", python);
+            Assert.Contains("revolveFeatures", python);
+        }
+
+        [Fact]
+        public async Task AnOperationsCallWithoutASequence_SaysSo_RatherThanSendingNothing()
+        {
+            var runner = new FakeRunner(new ScriptResult { Success = true, Output = "" });
+            using var session = new FusionRunnerSession(runner: runner, ping: _ => Task.FromResult(true));
+
+            var reply = await session.InvokeAsync("operations", "not a sequence");
+
+            Assert.False(reply.Ok);
+            Assert.Contains("CadOperationSequence", reply.Error);
+            Assert.Null(runner.Last);   // nothing was sent
+        }
+
+        [Fact]
+        public async Task AnUnknownCommand_NamesTheOnesThatExist()
+        {
+            using var session = new FusionRunnerSession(
+                runner: new FakeRunner(new ScriptResult { Success = true }),
+                ping: _ => Task.FromResult(true));
+
+            var reply = await session.InvokeAsync("sketchEverything");
+
+            Assert.False(reply.Ok);
+            Assert.Contains("massProperties", reply.Error);
+            Assert.Contains("operations", reply.Error);
+        }
+
+        [Fact]
+        public async Task ATimeout_IsDiagnosedAsAModalDialog_NotReportedAsACancellation()
+        {
+            // FusionPythonHttpRunner lets TaskCanceledException escape, and bare it says "the
+            // operation was canceled" -- true and useless. Observed 2026-08-05: the Scripts and
+            // Add-Ins dialog itself holds Fusion's main thread, so the window used to start the
+            // add-in blocks the add-in.
+            using var session = new FusionRunnerSession(
+                runner: new ThrowingRunner(new TaskCanceledException()),
+                ping: _ => Task.FromResult(true));
+
+            var reply = await session.InvokeAsync("massProperties");
+
+            Assert.False(reply.Ok);
+            Assert.Contains("MODAL DIALOG", reply.Error);
+        }
+
+        [Fact]
+        public async Task ARefusedConnection_RefusesToGuessWhichOfTheTwoCausesItIs()
+        {
+            using var session = new FusionRunnerSession(
+                runner: new ThrowingRunner(new System.Net.Http.HttpRequestException("refused")),
+                ping: _ => Task.FromResult(true));
+
+            var reply = await session.InvokeAsync("massProperties");
+
+            Assert.False(reply.Ok);
+            Assert.Contains("CANNOT distinguish", reply.Error);
         }
 
         [Fact]
@@ -406,6 +501,41 @@ namespace DWMStudio.Tests
         // ------------------------------------------------------------------
         private static JsonElement Json(string text) =>
             JsonDocument.Parse(text).RootElement.Clone();
+
+        /// <summary>Stands in for FusionPythonHttpRunner, and keeps what it was asked to run.</summary>
+        private sealed class FakeRunner : ICADScriptRunner
+        {
+            private readonly ScriptResult _result;
+
+            public FakeRunner(ScriptResult result) => _result = result;
+
+            public ScriptLanguage Language => ScriptLanguage.Python;
+            public GeneratedPackage? Last { get; private set; }
+
+            public Task<ScriptResult> ExecuteAsync(GeneratedPackage package, CancellationToken ct = default)
+            {
+                Last = package;
+                return Task.FromResult(_result);
+            }
+        }
+
+        /// <summary>
+        /// The runner failing the way the real one does: by throwing.
+        ///
+        /// FusionPythonHttpRunner does not catch HttpRequestException or
+        /// TaskCanceledException, which is exactly why the adapter has to.
+        /// </summary>
+        private sealed class ThrowingRunner : ICADScriptRunner
+        {
+            private readonly Exception _ex;
+
+            public ThrowingRunner(Exception ex) => _ex = ex;
+
+            public ScriptLanguage Language => ScriptLanguage.Python;
+
+            public Task<ScriptResult> ExecuteAsync(GeneratedPackage package, CancellationToken ct = default)
+                => throw _ex;
+        }
 
         private sealed class FakeFusionSession : IFusionSession
         {

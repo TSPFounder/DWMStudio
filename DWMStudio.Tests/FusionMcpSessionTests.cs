@@ -236,10 +236,11 @@ namespace DWMStudio.Tests
         public void TheFactory_BuildsABridgeSessionWithoutAnyMcpConfiguration()
         {
             // The bridge is the transport that needs nothing beyond an add-in, and asking for
-            // it must not drag MCP settings along.
+            // it must not drag MCP settings along. It is now FusionLibrary's HTTP client behind
+            // an adapter rather than a second client of DWM's own.
             using var session = FusionSessionFactory.For(FusionTransport.Bridge)();
 
-            Assert.IsType<FusionHttpSession>(session);
+            Assert.IsType<FusionRunnerSession>(session);
         }
 
         // ------------------------------------------------------------------
