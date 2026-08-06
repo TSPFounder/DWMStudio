@@ -95,6 +95,51 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
+        public async Task AnEmptyDesign_IsAWrongDocumentReport_NotASuccessfulReadOfNothing()
+        {
+            // FOUND BY A REAL READ, 2026-08-05, which this service would have passed. An empty
+            // Fusion design returns its root component alone: no bodies, therefore no mass,
+            // therefore the zero-mass guard correctly stays quiet -- a bodiless component IS
+            // legitimately massless.
+            //
+            // Every individual judgement was right and the answer was still useless. The exact
+            // reply was:
+            //   {"components":[{"name":"(Unsaved)","bodyCount":0,"mass":0.0, ...}]}
+            //
+            // A design where NOTHING has mass is not a light design, it is the wrong document.
+            var session = new FakeFusionSession(Json(@"
+                { ""components"": [
+                    { ""name"": ""(Unsaved)"", ""bodyCount"": 0, ""mass"": 0.0 } ] }"));
+
+            var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
+
+            Assert.False(result.Succeeded);
+            Assert.Contains("WRONG DOCUMENT", result.Run.FailureMessage);
+            Assert.Contains("(Unsaved)", result.Run.FailureMessage);
+
+            // The other half of the trap: an unsaved document does not survive a restart, and
+            // restarting is exactly what someone does while getting an add-in to appear.
+            Assert.Contains("restart", result.Run.FailureMessage);
+        }
+
+        [Fact]
+        public async Task OneMasslessAssemblyAmongBodiedParts_IsStillFine()
+        {
+            // The new check must not swallow the case it sits next to. A rotor assembly root
+            // with no bodies alongside a blade that has them is a healthy read, and refusing
+            // it would undo the bodyCount distinction entirely.
+            var session = new FakeFusionSession(Json(@"
+                { ""components"": [
+                    { ""name"": ""RotorAssembly"", ""bodyCount"": 0, ""mass"": 0.0 },
+                    { ""name"": ""Blade"", ""bodyCount"": 1, ""mass"": 6500.0 } ] }"));
+
+            var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
+
+            Assert.True(result.Succeeded);
+            Assert.Equal(2, result.Components.Count);
+        }
+
+        [Fact]
         public async Task AMissingMassField_IsSkippedWithAWarning_NotDefaultedToZero()
         {
             // Absent mass and zero mass are different problems, and defaulting the first into
