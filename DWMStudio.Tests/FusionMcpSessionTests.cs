@@ -61,9 +61,15 @@ namespace DWMStudio.Tests
             // which transport it is on, so the judgement that matters -- refusing a zero mass
             // that cannot be explained by an empty component -- is identical either way.
             // Without this, "supports both" would mean two code paths and one of them tested.
+            //
+            // THE NACELLE IS LOAD-BEARING, and it was not here originally. With the blade
+            // alone, every component in the document weighs nothing, and the wrong-document
+            // guard fires first -- a correct refusal, but a different one, so this test was
+            // asserting a message it no longer produced. Something with mass has to be
+            // present for the zero-mass path to be the one under test.
             var channel = new FakeChannel(Json(@"
                 { ""content"": [ { ""type"": ""text"",
-                                   ""text"": ""{\""components\"": [{\""name\"": \""Blade\"", \""mass\"": 0.0, \""bodyCount\"": 3}]}"" } ] }"));
+                                   ""text"": ""{\""components\"": [{\""name\"": \""Nacelle\"", \""mass\"": 12.5, \""bodyCount\"": 2}, {\""name\"": \""Blade\"", \""mass\"": 0.0, \""bodyCount\"": 3}]}"" } ] }"));
 
             var result = await new FusionStageService(() => new FusionMcpSession(channel))
                 .ReadMassPropertiesAsync();
