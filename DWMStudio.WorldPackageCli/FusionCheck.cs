@@ -55,6 +55,8 @@ internal static class FusionCheck
             "export" => await ExportAsync(rest),
             "params" => await ParamsAsync(rest),
             "setparam" => await SetParamAsync(rest),
+            "newdoc" => await NewDocAsync(rest),
+            "opendoc" => await OpenDocAsync(rest),
             _ => Usage()
         };
     }
@@ -337,6 +339,64 @@ internal static class FusionCheck
     }
 
     // ==================================================================
+    // newdoc / opendoc
+    // ==================================================================
+    // `fusion revolve` tells you to do File > New Design by hand first, because it builds into
+    // whatever is active. These are that step, done from here -- which also means they are the
+    // two commands that change what every other command targets.
+    private static async Task<int> NewDocAsync(string[] a)
+    {
+        var name = GetOption(a, "--name");
+        if (name is null)
+        {
+            Console.Error.WriteLine("Usage: fusion newdoc --name <document name>");
+            return 1;
+        }
+
+        return Report(await new FusionDocumentService(() => OpenSession(a)).CreateAsync(name));
+    }
+
+    private static async Task<int> OpenDocAsync(string[] a)
+    {
+        var path = GetOption(a, "--path");
+        if (path is null)
+        {
+            Console.Error.WriteLine("Usage: fusion opendoc --path <path on the Fusion machine>");
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("  Fusion resolves the path, not this command. A relative path is");
+            Console.Error.WriteLine("  relative to Fusion's working directory, not this shell's.");
+            return 1;
+        }
+
+        return Report(await new FusionDocumentService(() => OpenSession(a)).OpenAsync(path));
+    }
+
+    private static int Report(FusionDocumentResult result)
+    {
+        if (!result.Succeeded)
+        {
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("[fusion] FAILED");
+            Console.Error.WriteLine(result.Run.FailureMessage);
+            return 1;
+        }
+
+        Console.WriteLine($"[fusion] Document '{result.DocumentName}' (id '{result.DocumentId}')");
+        Console.WriteLine($"[fusion] {result.Parameters.Count} user parameter(s)" +
+                          (result.Parameters.Count == 0 ? " -- normal for a new design." : ":"));
+        foreach (var p in result.Parameters)
+            Console.WriteLine($"[fusion]   {p.Name} = {p.Expression}   internal {p.ValueInternal:G8}");
+
+        foreach (var w in result.Run.Warnings)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"[fusion] WARNING: {w}");
+        }
+
+        return 0;
+    }
+
+    // ==================================================================
     // params / setparam
     // ==================================================================
     // THE LEAST PROVEN THING IN THIS COMMAND, and it is here so that stops being true.
@@ -503,6 +563,12 @@ internal static class FusionCheck
         Console.Error.WriteLine("  fusion export    --out <path> [--format step|f3d|stl|obj]");
         Console.Error.WriteLine("  fusion params    [--transport bridge|mcp]");
         Console.Error.WriteLine("  fusion setparam  --name <parameter> --expression \"120 mm\"");
+        Console.Error.WriteLine("  fusion newdoc    --name <document name>");
+        Console.Error.WriteLine("  fusion opendoc   --path <path on the Fusion machine>");
+        Console.Error.WriteLine();
+        Console.Error.WriteLine("  'newdoc' and 'opendoc' CHANGE WHICH DOCUMENT every other");
+        Console.Error.WriteLine("  command targets, and each spends one of Fusion's ten active");
+        Console.Error.WriteLine("  document slots. Past ten, mass properties silently read 0.");
         Console.Error.WriteLine();
         Console.Error.WriteLine("  'revolve' builds a hollow tube and checks the returned mass, centre");
         Console.Error.WriteLine("  and inertia against the closed form. '--dry-run' prints the generated");

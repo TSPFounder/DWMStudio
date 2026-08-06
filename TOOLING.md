@@ -477,6 +477,38 @@ been driven repeatedly. A 404 or 405 is diagnosed as *the add-in does not implem
 and points at the proven fallback: a `SetParameterOp` through `operations`. `fusion params`
 settles it in one run.
 
+### Documents, wired 2026-08-06
+
+`CreateDocumentAsync` and `OpenDocumentAsync` on `IFusionSession`, `FusionDocumentService`
+above them, `fusion newdoc` / `fusion opendoc` in the CLI.
+
+**This retires a claim that appears several times in this codebase**, including
+`FusionStageService`'s own summary: *"nothing outside Fusion can make it open a file"*. True of
+the script path, false of the add-in, which has had `POST /documents` and `POST /documents/open`
+all along. It was generalised from what `/scripts/execute` can do to the whole transport
+without reading the rest of the contract — the same shape as reading an exit code and calling
+it a verdict. Corrected where it was written, not quietly dropped.
+
+Two consequences outlive the call, and both are reported on every one:
+
+- **The active document moves.** Every other command reads whatever has focus, so a create
+  retargets `massProperties`, `revolve` and `export` silently. A caller that misses this reads
+  the wrong model and gets plausible numbers.
+- **A document slot is spent.** Fusion's free tier allows **ten** active documents; past that,
+  components drop to Inactive (Read-Only) where mass properties return **0 without an error** —
+  the exact failure `FusionStageService` exists to refuse, and the one `WindTurbineBlade.run()`
+  was already recorded as walking into by calling `documents.add()` every run.
+
+That second warning fires **unconditionally**, which the FEMAP episode says is usually a
+mistake. It stays because contract v1 has no route that lists open documents, so nothing can
+count them, and the alternative is silence about a limit whose symptom shows up three commands
+later as a zero.
+
+**A 404 names two candidate routes, not one.** `FusionApplication` creates the document with
+one route and hydrates it with `GET /documents/active/parameters`. If the second is missing,
+**the document already exists** and the call still threw — so "it failed" and "nothing happened"
+are different claims, and a blind retry spends another slot.
+
 ### What it costs to build
 
 CAD_Library, SystemsEngineeringLibrary and ApplicationLibrary reference each other in a cycle,
