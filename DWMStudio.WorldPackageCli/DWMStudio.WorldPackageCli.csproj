@@ -13,13 +13,16 @@
     <!--
       DECLARED, NOT INHERITED. DWM.Shared references both of these and a transitive
       ProjectReference is meant to flow to consumers, but FusionCheck.cs failed with CS0246
-      on 'CAD' and 'Fusion' while DWMStudio.Tests -- set up identically, one ProjectReference
-      to the same DWM.Shared -- compiled the same namespaces without complaint.
+      on 'CAD' and 'Fusion' while DWMStudio.Tests compiled the same namespaces without
+      complaint, from an identical single reference to the same DWM.Shared.
 
       Rather than work out which of the two is the anomaly, this names what it uses.
       FusionCheck builds a CadOperationSequence and calls FusionPythonScriptFactory
       directly, so the dependency is real and belongs here whether or not it also arrives
       by inheritance.
+
+      (No double hyphens in this comment. XML forbids them inside a comment, and MSBuild
+      rejects the whole project file with MSB4025 rather than warning.)
     -->
     <ProjectReference Include="..\..\CAD_Library\CAD_Library\CAD_Library.csproj" />
     <ProjectReference Include="..\..\FusionLibrary\FusionLibrary\FusionLibrary.csproj" />
