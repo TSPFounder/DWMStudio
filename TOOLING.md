@@ -1,10 +1,12 @@
 # TOOLING.md — External Tool Integration Design
 
-**Status:** steps 1–3 implemented and verified against the real tools. Step 5 partly built.
-Step 4 (Unreal) not started.
+**Status:** steps 1–3 and 6 implemented and verified against the real tools. Step 5 partly
+built. Step 4 (Unreal) not started.
 **Started:** 2026-08-03, when FEMAP and MYSTRAN were installed.
 **Chain closed:** 2026-08-05 — deck → MYSTRAN → `.op2` → FEMAP → six mode shapes on screen,
 driven from a DWMStudio button, on the machine that has the tools.
+**CAD chain closed:** 2026-08-06 — a `CadOperationSequence` from DWMStudio built a solid inside
+Fusion and its mass properties came back matching closed-form physics to six figures.
 
 ---
 
@@ -322,6 +324,132 @@ places, because the cost of duplication is far below the cost of it being invisi
 Four booleans become per-tool `ToolStatus`, showing *not installed* / *found* / *running* /
 *connected* — with the resolved ProgID or executable path in the tooltip, so "which MATLAB?"
 is answerable at a glance.
+
+---
+
+## Step 6 — the CAD library layer *(implemented, 2026-08-06)*
+
+DWM.Shared no longer speaks to Fusion directly. Two repositories that already existed do that
+job, and the client written for it here has been deleted.
+
+| Repository | What it holds |
+| --- | --- |
+| `CAD_Library` | `CAD.Scripting` — a tool-agnostic operation IR (`CadOperationSequence`), plus `ICADScriptGenerator` / `ICADScriptRunner` / `ICADScriptFactory` and a CAD data model with SQL schemas |
+| `FusionLibrary` | `FusionPythonGenerator` (IR → Fusion Python, as a live script *or* an installable add-in) and `FusionPythonHttpRunner` (the add-in's HTTP client) |
+| `DWM.Shared` | `FusionRunnerSession`, which adapts those behind the existing `IFusionSession` |
+
+### The duplicate, which is the reason this section exists
+
+`FusionPythonHttpRunner` posts `{source}` to `/scripts/execute` on `127.0.0.1:18750` and reads
+`{success, output, error}`. That is byte-for-byte what `FusionHttpSession` did, written
+earlier, against the same add-in. Two clients for one contract is one too many — the day
+contract v1 becomes v2, one of them goes stale.
+
+**Second duplicate on this one tool.** A whole `DwmBridge` add-in was written for a port that
+already had `DWM-Fusion-AddIn` v0.2.0 listening on it. Same cause both times: building before
+looking.
+
+### What the adapter is for, given that
+
+Not transport. `FusionPythonHttpRunner` lets `HttpRequestException` and `TaskCanceledException`
+escape, and bare they say "connection refused" and "the operation was canceled" — true and
+useless. The adapter keeps the diagnosis: a refused connection **cannot** distinguish a closed
+Fusion from an unloaded add-in, and a timeout is almost always a modal dialog holding the main
+thread. It also maps DWM's command names onto Python, which is what makes sketches and
+revolves reachable at all.
+
+### The command that generalises
+
+`operations` takes a `CadOperationSequence` and runs it through the generator:
+
+```csharp
+var ops = new CadOperationSequence()
+    .Add(new CreateSketchOp   { SketchId = "s1", Plane = "XZ" })
+    .Add(new SketchPolylineOp { SketchId = "s1", Closed = true, PointsCm = wallSection })
+    .Add(new RevolveOp        { SketchId = "s1", Axis = "Z", AngleDeg = 360 });
+
+await session.InvokeAsync("operations", ops);
+```
+
+A new feature is a new operation type in CAD_Library and an emitter case in FusionLibrary — not
+a new hand-written script. `massProperties` and `build` still go through verbatim: translating
+a working module into IR would be work with nothing at the end of it.
+
+### Three defects found in FusionLibrary while wiring it
+
+1. **The generated script's `except` called `ui.messageBox`.** A modal dialog on Fusion's main
+   thread, inside the very route whose reply depends on that thread. A failing script would
+   time out the caller and queue everything behind the dialog — which reads as a dead add-in.
+   This is the exact trap that forced `build_rotor` out of `run()`, in code written months
+   earlier.
+2. **Neither wrapper defined `design` or `root`.** Only `CreateDocumentOp`/`OpenDocumentOp`
+   emitted them, so any sequence against an already-open document hit `NameError` — which is
+   every sequence DWM sends, since nothing outside Fusion can make it open a file.
+3. **`profiles.item(0)` was hardcoded.** Two closed regions means two profiles, and picking one
+   silently builds the feature on the wrong half of the sketch.
+
+Capability added alongside: `RevolveOp`, `SketchCircleOp`, `SketchPolylineOp`, and an explicit
+`ProfileIndex`. A revolve over a rectangle-only sketch vocabulary makes cylinders and nothing
+else.
+
+### The `fusion` CLI command, and why it is not a test
+
+`DWMStudio.WorldPackageCli -- fusion ping | revolve | massprops | export`. Same role
+`turbine --matlab-dir` plays for MATLAB COM: **the Fusion API cannot be unit tested** — it needs
+Windows, an installed Fusion, an Autodesk sign-in and an add-in loaded into a running process —
+so every automated test of that path runs against a fake, and the parts most likely to be wrong
+are the ones with no coverage.
+
+`revolve` builds a hollow tube rather than a box because a tube has closed-form mass properties,
+so the reply can be **checked** rather than merely received. `--dry-run` prints the generated
+Python and sends nothing, which is the only mode that works without Fusion.
+
+### It found a real bug on first contact
+
+`EmitOperations` writes at one indent level — correct under a `def`, wrong inside the `try` that
+`WrapAsScript` wraps it in. **Every `ScriptKind.Script` the generator had ever produced was
+invalid Python**, and that is the only kind `/scripts/execute` can run:
+
+```
+SyntaxError: expected 'except' or 'finally' block
+```
+
+Nothing caught it because every test of that generator asserts on **substrings** — "contains
+`revolveFeatures`", "does not contain `messageBox`". Both are perfectly true of source that will
+not parse. A green suite said nothing about whether Python would accept the output. There is now
+a structural test that walks from `try:` to `except:` and fails on any line indented less than
+the block requires.
+
+### What the tube settled
+
+| Quantity | Fusion | Closed form |
+| --- | --- | --- |
+| volume | — | 0.0069115 m³ |
+| mass | 54.255305 kg | ρ = 7850.0 kg/m³ exactly |
+| `Izz` about the revolve axis | 0.661915 | `m(ri² + ro²)/2` = 0.661915 |
+| `Ixx` | 4.85223 | 1.46128 about the CoM, **+ m·d² = 3.39096** → 4.85223 |
+
+Two things come out of that last row.
+
+**The kg·cm² → kg·m² conversion is now measured, not inferred.** It was left raw under
+`inertiaUnits: 'UNVERIFIED'` on the principle that applying a factor that might be wrong is
+worse than labelling it, then converted ×1e-4 on radius-of-gyration evidence from the rotor —
+convincing, but inference about a body whose true inertia nobody knew. The tube has a closed
+form and matches it to six figures.
+
+**Fusion reports inertia about the DOCUMENT ORIGIN, not the centre of mass.** This is the
+project's signature failure in a new place: both readings are plausible numbers in the right
+units, and a mechanism model fed the origin value runs and produces confident nonsense —
+exactly like the 0 kg an Inactive component returns. Simscape wants the centre-of-mass value,
+so the parallel-axis term must be subtracted downstream. `FusionMassProperties.Inertia` says so
+and does **not** correct silently, which would swap one unstated convention for another.
+
+### What it costs to build
+
+CAD_Library, SystemsEngineeringLibrary and ApplicationLibrary reference each other in a cycle,
+so `ProjectReference` cannot express it and none can be built from a clean checkout without the
+others' output already present. `CAD_Library/CAD_Library/lib/` holds those three assemblies.
+**They are not regenerable.** See RUNBOOK §10.
 
 ---
 
