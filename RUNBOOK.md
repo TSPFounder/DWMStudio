@@ -170,7 +170,107 @@ neither of its two trades uses a null `ResourceId` — so the null-vs-populated
 alongside two resource-attached ones. The gate proves the INTEGRATED FLOW works; it isn't a
 substitute for exporter-specific edge-case coverage.
 
-## 9. Housekeeping
+## 9. Building DWMStudio against the CAD Libraries (2026-08-06)
+
+DWM.Shared references `CAD_Library` and `FusionLibrary`. Both must be checked out **beside**
+the other repos, which is the layout `FusionLibrary.csproj` already assumed:
+
+```
+Repos\CAD_Library\
+Repos\FusionLibrary\
+Repos\DWM.Shared\
+Repos\DWMStudio\
+```
+
+A checkout elsewhere fails at restore naming the path it wanted, which is the right way for
+this to break.
+
+### DO NOT DELETE `CAD_Library\CAD_Library\lib\`
+
+Three assemblies live there — `ApplicationLibrary.dll`, `MathematicsLibrary.dll`,
+`SystemsEngineeringLibrary.dll` — and **they cannot be rebuilt from a clean checkout.**
+
+`CAD_Library` → SystemsEngineeringLibrary, ApplicationLibrary, MathematicsLibrary
+`SystemsEngineeringLibrary` → **CAD_Library**, ApplicationLibrary, MathematicsLibrary
+`ApplicationLibrary` → SystemsEngineeringLibrary
+
+That is a cycle. MSBuild cannot express it with `ProjectReference`, which is why these are
+assembly references and not a mistake. Building SystemsEngineeringLibrary from source fails
+with 91 errors, all of them CAD_Library types.
+
+They used to live in `bin\Debug\net10.0`, so **the ordinary clean-rebuild reflex destroyed
+them** on 2026-08-06 and cost an evening. `lib\` is not a build output; nothing cleans it. It
+is committed for the same reason.
+
+### The clean rebuild, when the C# side acts haunted
+
+```bash
+cd /c/DreamWorldMaker/Repos
+find CAD_Library FusionLibrary DWM.Shared DWMStudio -type d \( -name bin -o -name obj \) -prune -exec rm -rf {} +
+cd DWMStudio && dotnet build --no-incremental
+```
+
+Safe **only** because `lib\` sits outside `bin\`. Before 2026-08-06 this command was
+destructive.
+
+### Failure modes earned on 2026-08-06
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `MSB4025: An XML comment cannot contain '--'` | A double hyphen inside a `<!-- -->` in a `.csproj` or `.xaml`. Legal in C#, illegal in XML, and it takes the **whole project file** down | Use a comma or an em dash. `ProjectFilesAreWellFormedTests` now catches it in the suite |
+| A type added minutes ago reports `CS0246`, while its neighbours resolve | Two assemblies claiming one identity — a stale DLL winning over the project just built. Was caused by `CAD_Library.csproj` referencing its own output | Fixed; if it recurs, look for a `<Reference>` whose `HintPath` points into any `bin\Debug` |
+| `CS0104: 'Expression' is ambiguous` / `CS0266: double? to double` in CAD_Library | A **newer** MathematicsLibrary. `Expression` arrived 2026-04-02, `Vector.X_Value` became nullable 2026-04-14; CAD_Library's source predates both | Keep the pre-April build in `lib\` (66048 bytes). Migrating CAD_Library forward is real work, done deliberately |
+| `CS0117: does not contain a definition for X` on a member you just wrote | The member is `internal`, and DWM.Shared declares no `InternalsVisibleTo` | Make it `public`. The error reads as missing, not as out of reach |
+| Tests reference types that exist in the source | A sibling repo is behind. `git pull` in **DWM.Shared**, not only DWMStudio | Check `git log --oneline -1` in each repo before diagnosing anything else |
+
+That last row is the expensive one. Several hours on 2026-08-06 went into diagnosing errors
+against a `DWM.Shared` that was four commits behind, and two `git am` calls that had silently
+failed because the patch files were not where the command looked. **Confirm the tree before
+diagnosing the build.**
+
+### Patches for the sibling repos
+
+`CAD_Library` and `FusionLibrary` are outside the agent session's authorized repository set,
+so changes to them arrive as patches in `DWMStudio/tools/patches/` rather than as commits.
+`git am` prints nothing on success — always follow it with `git log --oneline -1`.
+
+---
+
+## 10. Driving Fusion (the `fusion` command)
+
+```bash
+cd /c/DreamWorldMaker/Repos/DWMStudio
+dotnet run --project DWMStudio.WorldPackageCli -- fusion revolve --dry-run   # no Fusion needed
+dotnet run --project DWMStudio.WorldPackageCli -- fusion ping
+dotnet run --project DWMStudio.WorldPackageCli -- fusion revolve
+dotnet run --project DWMStudio.WorldPackageCli -- fusion massprops
+dotnet run --project DWMStudio.WorldPackageCli -- fusion export --out C:\Temp\x.step --format step
+```
+
+**Preconditions:** Fusion open, the intended document **active**, and no dialog showing.
+Nothing outside Fusion can make it open a file — the add-in works on whatever has focus.
+
+**Load the add-in first:** Utilities → Scripts and Add-Ins → **Add-Ins** tab →
+`DWM_FusionAddIn` → Run, then **close that dialog**. It is modal and blocks the add-in it just
+started. Tick *Run on Startup* to avoid repeating this.
+
+| Symptom | Meaning |
+| --- | --- |
+| Refuses immediately | Port not bound. Fusion closed, or the add-in not loaded. `netstat -ano \| grep 18750` settles it |
+| Hangs | Port bound, main thread blocked. A dialog is open somewhere |
+| `[fusion] OK.` | The add-in answered through the main thread, so Fusion is genuinely responsive |
+
+`revolve` builds a hollow tube into the **active** document — use File → New Design first, or
+it lands in whatever you had open. It then reads the mass properties back and checks them
+against closed form. Expect ρ ≈ 7850, a centre of mass at ±0.25 m on one axis, and an axial
+`I/m` ratio of 1.0.
+
+**Inertia is reported about the document origin, not the centre of mass.** Subtract the
+parallel-axis term before handing it to Simscape. See TOOLING.md step 6.
+
+---
+
+## 11. Housekeeping
 
 - Log build-system incidents in AGENT_LOG.md; scope-affecting decisions in SCOPE.md's log.
 - `UE_Library5_7` was an obsolete repo (deleted). If any tool "finds" a 5.7 project, it is

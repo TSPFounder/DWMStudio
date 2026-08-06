@@ -18,9 +18,19 @@ namespace DWMStudio.ViewModels
 
         [ObservableProperty] private string _statusMessage = string.Empty;
 
-        public DashboardViewModel()
+        public DashboardViewModel() { }
+
+        /// <summary>
+        /// The two hardcoded sample worlds that used to be added in the constructor, kept as
+        /// SEED DATA FOR A GENUINELY EMPTY LIBRARY ONLY.
+        ///
+        /// The distinction matters: adding them unconditionally would resurrect them every
+        /// launch, so deleting a sample world would appear to work and then undo itself, and
+        /// a user with a real library would find two strangers in it. MainViewModel calls this
+        /// only when the store reports no file at all.
+        /// </summary>
+        public void SeedSampleWorlds()
         {
-            // Sample data so the dashboard renders before persistence is wired up
             Worlds.Add(new WorldProject
             {
                 Name        = "Tracer Pendulum",

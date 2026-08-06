@@ -49,8 +49,22 @@
             <!-- Step 3 -->
             <StackPanel Visibility="{Binding CurrentStep,
                 Converter={StaticResource StepVisibilityConverter}, ConverterParameter=3}">
-                <TextBlock Text="Ready to create your world."
-                           Foreground="{StaticResource DwmSuccessBrush}" FontSize="13" />
+
+                <!-- Shown only when a name exists. This used to say "Ready to create your
+                     world" unconditionally, which was a lie in precisely the one case where
+                     the button did nothing. -->
+                <StackPanel Visibility="{Binding IsNameMissing,
+                    Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <TextBlock Text="Ready to create your world."
+                               Foreground="{StaticResource DwmSuccessBrush}" FontSize="13" />
+                    <TextBlock Text="{Binding WorldName, StringFormat='Name: {0}'}"
+                               Style="{StaticResource MutedLabelStyle}" Margin="0 6 0 0" />
+                </StackPanel>
+
+                <TextBlock Visibility="{Binding IsNameMissing,
+                               Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Text="A world name is required. Go back to step 1 and enter one — Create World stays disabled until you do."
+                           TextWrapping="Wrap" FontSize="13" />
             </StackPanel>
 
         </StackPanel>

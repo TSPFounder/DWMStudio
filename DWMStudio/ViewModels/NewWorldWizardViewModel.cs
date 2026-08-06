@@ -11,12 +11,27 @@ namespace DWMStudio.ViewModels
 {
     public sealed partial class NewWorldWizardViewModel : ObservableObject
     {
-        [ObservableProperty] private int    _currentStep      = 1;
-        [ObservableProperty] private string _worldName        = string.Empty;
+        [ObservableProperty] private int _currentStep = 1;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CreateWorldCommand))]
+        [NotifyPropertyChangedFor(nameof(IsNameMissing))]
+        private string _worldName = string.Empty;
+
         [ObservableProperty] private string _worldDescription = string.Empty;
-        [ObservableProperty] private bool   _isCreating;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CreateWorldCommand))]
+        private bool _isCreating;
 
         public int TotalSteps => 3;
+
+        /// <summary>
+        /// Drives the step-3 warning. Step 3 used to say "Ready to create your world"
+        /// unconditionally, including when there was no name -- so the one case where the
+        /// button does nothing was also the case where the UI insisted everything was fine.
+        /// </summary>
+        public bool IsNameMissing => string.IsNullOrWhiteSpace(WorldName);
 
         public bool CanGoBack => CurrentStep > 1;
         public bool CanGoNext => CurrentStep < TotalSteps;
@@ -33,10 +48,21 @@ namespace DWMStudio.ViewModels
         [RelayCommand]
         private void Back() { if (CanGoBack) CurrentStep--; }
 
-        [RelayCommand]
+        /// <summary>
+        /// Gates the Create World button. This used to be an early `return` inside the command
+        /// body, which meant a blank name produced NO EFFECT WHATSOEVER -- no message, no close,
+        /// no error -- and the button looked perfectly clickable. "Nothing happens when I click
+        /// it" was the accurate bug report. A disabled button says the same thing honestly.
+        /// </summary>
+        private bool CanCreateWorld() => !IsNameMissing && !IsCreating;
+
+        [RelayCommand(CanExecute = nameof(CanCreateWorld))]
         private async Task CreateWorldAsync()
         {
-            if (string.IsNullOrWhiteSpace(WorldName)) return;
+            // Belt and braces: CanExecute already blocks this, but a command can still be
+            // invoked directly in code, and a silent return here would be as opaque as before.
+            if (IsNameMissing) return;
+
             IsCreating = true;
 
             var world = new WorldProject
