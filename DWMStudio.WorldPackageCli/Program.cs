@@ -23,10 +23,21 @@
 //   dotnet run --project DWMStudio.WorldPackageCli -- verify --db <path>
 //   dotnet run --project DWMStudio.WorldPackageCli -- turbine --csv <path to *_rotor.csv> --out <path>
 //   dotnet run --project DWMStudio.WorldPackageCli -- turbine --matlab-dir <dir> --out <path> [--scenario ramp]
+//
+// 2026-08-06: adds `fusion`, for the same reason `turbine --matlab-dir` is here. The Fusion
+// API cannot be unit tested -- it needs Windows, an installed Fusion, an Autodesk sign-in and
+// an add-in loaded into a running process -- so every automated test of that path runs against
+// a fake. This command is the only thing that drives the real one. See FusionCheck.cs.
+//
+//   dotnet run --project DWMStudio.WorldPackageCli -- fusion ping
+//   dotnet run --project DWMStudio.WorldPackageCli -- fusion revolve [--dry-run]
+//   dotnet run --project DWMStudio.WorldPackageCli -- fusion massprops
+//   dotnet run --project DWMStudio.WorldPackageCli -- fusion export --out <path> [--format step]
 
 using System.Runtime.Versioning;
 using DWM.Shared;
 using DWM.Shared.Matlab;
+using DWMStudio.WorldPackageCli;
 using Microsoft.Data.Sqlite;
 
 if (args.Length == 0)
@@ -43,6 +54,7 @@ return command switch
     "export" => Export(rest),
     "verify" => Verify(rest),
     "turbine" => Turbine(rest),
+    "fusion" => await FusionCheck.RunAsync(rest),
     _ => UnknownCommand(command)
 };
 
@@ -370,6 +382,7 @@ static void PrintUsage()
     Console.Error.WriteLine("  verify  --db <path>");
     Console.Error.WriteLine("  turbine --csv <path to *_rotor.csv> --out <path>");
     Console.Error.WriteLine("  turbine --matlab-dir <dir> --out <path> [--scenario ramp] [--rate 30]");
+    Console.Error.WriteLine("  fusion  ping | revolve | massprops | export");
     Console.Error.WriteLine();
-    Console.Error.WriteLine("  'turbine' with no arguments prints its own fuller usage.");
+    Console.Error.WriteLine("  'turbine' and 'fusion' with no arguments print their own fuller usage.");
 }
