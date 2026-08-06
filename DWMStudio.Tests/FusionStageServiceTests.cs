@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,21 +49,28 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public async Task AnEmptyAssemblyComponent_IsNotMistakenForTheInactiveBug()
+        public async Task AnEmptyComponent_IsNotMistakenForTheInactiveBug()
         {
-            // A component holding only sub-components has NO BODIES and therefore no mass of
-            // its own. That is correct, not a fault -- and the rotor assembly's own root is
-            // exactly that shape, so without bodyCount the refusal above would reject a
-            // perfectly healthy model.
+            // A GENUINELY EMPTY COMPONENT is exempt -- and note what that does NOT mean, since
+            // the first version of this comment got it wrong. It said a component holding only
+            // sub-components "has no bodies and therefore no mass of its own". The 2026-08-06
+            // read disproves that: Fusion aggregates children into the parent, so the rotor
+            // root came back with bodyCount 0 AND three thousand tonnes.
+            //
+            // Which makes the exemption narrower than it looked. No bodies AND zero mass means
+            // nothing beneath it has mass either -- a component someone created and has not
+            // filled yet. That is legitimate, and refusing it would reject a healthy model
+            // mid-build.
             var session = new FakeFusionSession(Json(@"
                 { ""components"": [
-                    { ""name"": ""RotorAssembly"", ""mass"": 0.0, ""bodyCount"": 0 },
-                    { ""name"": ""Blade"", ""mass"": 6500.0, ""bodyCount"": 1 } ] }"));
+                    { ""name"": ""Rotor"",     ""mass"": 6500.0, ""bodyCount"": 0 },
+                    { ""name"": ""Hub_TBD"",   ""mass"": 0.0,    ""bodyCount"": 0 },
+                    { ""name"": ""Blade"",     ""mass"": 6500.0, ""bodyCount"": 1 } ] }"));
 
             var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
 
             Assert.True(result.Succeeded);
-            Assert.Equal(2, result.Components.Count);
+            Assert.Equal(3, result.Components.Count);
         }
 
         [Fact]
@@ -123,20 +131,64 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public async Task OneMasslessAssemblyAmongBodiedParts_IsStillFine()
+        public async Task TheRealRotorReply_IsAccepted_AndTheDoubleCountIsCalledOut()
         {
-            // The new check must not swallow the case it sits next to. A rotor assembly root
-            // with no bodies alongside a blade that has them is a healthy read, and refusing
-            // it would undo the bodyCount distinction entirely.
+            // THE ACTUAL NUMBERS, read out of Fusion on 2026-08-06 after build_rotor ran.
+            // Three things in this one reply, all of which had been guessed wrongly before it:
+            //
+            //   1. The root has NO BODIES and still weighs 3,275,458.72 kg. Fusion aggregates.
+            //   2. That is exactly 3 x the blade, so the list overlaps itself -- summing all
+            //      four gives 4.37 million kg for a rotor that weighs 3.27 million.
+            //   3. It must still pass. Nothing here is wrong with the model.
             var session = new FakeFusionSession(Json(@"
                 { ""components"": [
-                    { ""name"": ""RotorAssembly"", ""bodyCount"": 0, ""mass"": 0.0 },
-                    { ""name"": ""Blade"", ""bodyCount"": 1, ""mass"": 6500.0 } ] }"));
+                    { ""name"": ""Rotor"",   ""bodyCount"": 0, ""mass"": 3275458.7247 },
+                    { ""name"": ""Blade_1"", ""bodyCount"": 1, ""mass"": 1091819.5749 },
+                    { ""name"": ""Blade_2"", ""bodyCount"": 1, ""mass"": 1091819.5749 },
+                    { ""name"": ""Blade_3"", ""bodyCount"": 1, ""mass"": 1091819.5749 } ] }"));
 
             var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
 
             Assert.True(result.Succeeded);
-            Assert.Equal(2, result.Components.Count);
+            Assert.Equal(4, result.Components.Count);
+
+            // The warning names the aggregating component, because "do not sum this" is
+            // useless without saying which entry contains the others.
+            var warning = result.Run.Warnings.Single(w => w.Contains("double-count"));
+            Assert.Contains("Rotor", warning);
+            Assert.DoesNotContain("Blade_1", warning);
+        }
+
+        [Fact]
+        public void TheAggregateRoot_IsTheBodilessCandidate_WhenTheSumIsAmbiguous()
+        {
+            // With a root and ONE child the identity "equals everything else combined" is true
+            // of both of them, and naming the child would tell the caller to discard the only
+            // component that has any bodies. The parent is the one holding nothing itself.
+            var components = new[]
+            {
+                new FusionMassProperties { ComponentName = "Blade",  MassKg = 6500.0, BodyCount = 1 },
+                new FusionMassProperties { ComponentName = "Rotor",  MassKg = 6500.0, BodyCount = 0 },
+            };
+
+            Assert.Equal("Rotor", FusionStageService.FindAggregateRoot(components)?.ComponentName);
+        }
+
+        [Fact]
+        public async Task UnrelatedComponents_AreNotAccusedOfDoubleCounting()
+        {
+            // The warning has to stay quiet on a flat list of real parts, or it becomes noise
+            // that gets ignored on the one read where it matters.
+            var session = new FakeFusionSession(Json(@"
+                { ""components"": [
+                    { ""name"": ""Tower"",   ""bodyCount"": 1, ""mass"": 210500.0 },
+                    { ""name"": ""Nacelle"", ""bodyCount"": 1, ""mass"": 82000.0 },
+                    { ""name"": ""Hub"",     ""bodyCount"": 1, ""mass"": 15600.0 } ] }"));
+
+            var result = await new FusionStageService(() => session).ReadMassPropertiesAsync();
+
+            Assert.True(result.Succeeded);
+            Assert.DoesNotContain(result.Run.Warnings, w => w.Contains("double-count"));
         }
 
         [Fact]
@@ -309,6 +361,23 @@ namespace DWMStudio.Tests
 
             // Centimetres to metres, once, explicitly.
             Assert.Contains("/ 100.0", FusionScripts.MassProperties);
+        }
+
+        [Fact]
+        public void InertiaIsConvertedToKgM2_NowThatTheUnitIsEvidencedRatherThanGuessed()
+        {
+            // This was deliberately NOT converted at first, and the reason was written down:
+            // "applying a factor that might be wrong is worse than labelling it". The
+            // 2026-08-06 read supplies the missing evidence by radius of gyration --
+            // sqrt(I/m) = 1973, which is 19.73 m in centimetres and 1973 m in metres, against
+            // a blade spanning 1.5 to 60 m with its centre of mass at 15.98 m. Only one of
+            // those can be a rotor.
+            //
+            // So the label goes too. Leaving UNVERIFIED on a number that has now been checked
+            // trains the next reader to ignore the warning where it is still true.
+            Assert.Contains("1e-4", FusionScripts.MassProperties);
+            Assert.Contains("kg*m^2", FusionScripts.MassProperties);
+            Assert.DoesNotContain("UNVERIFIED", FusionScripts.MassProperties);
         }
 
         [Fact]
