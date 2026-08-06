@@ -444,6 +444,39 @@ exactly like the 0 kg an Inactive component returns. Simscape wants the centre-o
 so the parallel-axis term must be subtracted downstream. `FusionMassProperties.Inertia` says so
 and does **not** correct silently, which would swap one unstated convention for another.
 
+### Parameters, wired 2026-08-06
+
+`IFusionSession` gained `GetParametersAsync`, returning `ICADParameterCollection?`.
+`FusionParameterService` is its `FusionStageService` — typed readings, a `ToolRun`, and the
+refusals worth having.
+
+**This is the "drive a design" half.** Everything else in step 6 generates geometry;
+parameters change geometry that already exists, which is what a design loop actually needs.
+
+Two things it refuses, both for the same reason:
+
+- **A name that does not exist.** `FusionParameterCollection.AddAsync` delegates to `SetAsync`,
+  so the add-in's route is create-if-missing. A typo would *add* a parameter that drives
+  nothing, leave the intended one untouched, and report success.
+- **An echoed old value.** The reply is compared against what was asked for. A PATCH that
+  returns the unchanged parameter with HTTP 200 is the same shape as MATLAB's `Execute`
+  returning error text as a string. A mismatch is a **warning**, not a refusal — Fusion
+  legitimately rewrites `"60"` as `"60 m"`.
+
+**Null, not an empty collection, when a transport has no parameter surface.** MCP is that case.
+An empty list would be indistinguishable from a document that genuinely has no parameters.
+
+**`ICADParameter.Value` is in Fusion's internal units** — centimetres and radians. A parameter
+displayed as `120 mm` reads back as `12`. DWM names it `ValueInternal` and does **not** convert,
+because nothing has measured the conversion the way the tube measured inertia. `fusion params`
+prints the warning next to the numbers.
+
+**The routes are unverified.** `GET`/`PATCH` on `/documents/active/parameters` were read from
+FusionLibrary's client, not exercised against the add-in — unlike `/scripts/execute`, which has
+been driven repeatedly. A 404 or 405 is diagnosed as *the add-in does not implement this route*
+and points at the proven fallback: a `SetParameterOp` through `operations`. `fusion params`
+settles it in one run.
+
 ### What it costs to build
 
 CAD_Library, SystemsEngineeringLibrary and ApplicationLibrary reference each other in a cycle,

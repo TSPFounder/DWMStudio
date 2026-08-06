@@ -53,6 +53,8 @@ internal static class FusionCheck
             "massprops" => await MassPropsAsync(rest),
             "revolve" => await RevolveAsync(rest),
             "export" => await ExportAsync(rest),
+            "params" => await ParamsAsync(rest),
+            "setparam" => await SetParamAsync(rest),
             _ => Usage()
         };
     }
@@ -335,6 +337,102 @@ internal static class FusionCheck
     }
 
     // ==================================================================
+    // params / setparam
+    // ==================================================================
+    // THE LEAST PROVEN THING IN THIS COMMAND, and it is here so that stops being true.
+    // /scripts/execute has been driven against Fusion many times; GET and PATCH on
+    // /documents/active/parameters have been driven zero times. They were read from
+    // FusionLibrary's client, which is a claim about the add-in rather than a measurement of
+    // it. Running `fusion params` once settles it either way.
+    private static async Task<int> ParamsAsync(string[] a)
+    {
+        var result = await new FusionParameterService(() => OpenSession(a)).ReadAsync();
+
+        if (!result.Succeeded)
+        {
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("[fusion] PARAMETER READ FAILED");
+            Console.Error.WriteLine(result.Run.FailureMessage);
+            return 1;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine($"[fusion] {result.Parameters.Count} user parameter(s):");
+        foreach (var p in result.Parameters)
+        {
+            Console.WriteLine($"[fusion]   {p.Name} = {p.Expression}");
+            Console.WriteLine($"[fusion]       internal {p.ValueInternal:G8}  unit '{p.Unit}'" +
+                              (string.IsNullOrWhiteSpace(p.Comment) ? "" : $"  -- {p.Comment}"));
+        }
+
+        if (result.Parameters.Count > 0)
+        {
+            // THE UNIT TRAP, STATED WHERE THE NUMBERS ARE. Value is centimetres and radians,
+            // Expression is what a human typed. A parameter shown as 120 mm reads back as 12.
+            // Nothing converts it, because nothing has measured the conversion the way the
+            // tube measured inertia -- and a factor applied on belief is what this project
+            // spent an evening undoing.
+            Console.WriteLine();
+            Console.WriteLine("[fusion] 'internal' is FUSION'S OWN UNIT: centimetres for length,");
+            Console.WriteLine("[fusion] radians for angle. A parameter displayed as 120 mm reads 12.");
+            Console.WriteLine("[fusion] Nothing here converts it. Compare a known parameter against");
+            Console.WriteLine("[fusion] what Fusion shows before feeding any of this downstream.");
+        }
+
+        foreach (var w in result.Run.Warnings)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"[fusion] WARNING: {w}");
+        }
+
+        return 0;
+    }
+
+    private static async Task<int> SetParamAsync(string[] a)
+    {
+        var name = GetOption(a, "--name");
+        var expression = GetOption(a, "--expression");
+
+        if (name is null || expression is null)
+        {
+            Console.Error.WriteLine("Usage: fusion setparam --name <parameter> --expression \"120 mm\"");
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("  Names are case-sensitive. Run 'fusion params' first to see them.");
+            Console.Error.WriteLine("  A name that does not exist is REFUSED rather than created: the");
+            Console.Error.WriteLine("  add-in's set route creates when missing, so a typo would add a");
+            Console.Error.WriteLine("  parameter that drives nothing and leave the intended one alone.");
+            return 1;
+        }
+
+        var result = await new FusionParameterService(() => OpenSession(a))
+            .SetAsync(name, expression);
+
+        if (!result.Succeeded)
+        {
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("[fusion] SET FAILED");
+            Console.Error.WriteLine(result.Run.FailureMessage);
+            return 1;
+        }
+
+        var updated = result.Parameters[0];
+        Console.WriteLine($"[fusion] {updated.Name} = {updated.Expression}");
+        Console.WriteLine($"[fusion]     internal {updated.ValueInternal:G8}  unit '{updated.Unit}'");
+
+        foreach (var w in result.Run.Warnings)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"[fusion] WARNING: {w}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("[fusion] Fusion regenerates on a parameter change. `fusion massprops`");
+        Console.WriteLine("[fusion] afterwards shows whether the geometry actually moved -- a set");
+        Console.WriteLine("[fusion] that took and a set that was accepted and ignored read the same.");
+        return 0;
+    }
+
+    // ==================================================================
     // Shared
     // ==================================================================
     private static int Report(FusionStageResult result)
@@ -403,6 +501,8 @@ internal static class FusionCheck
         Console.Error.WriteLine("  fusion massprops [--transport bridge|mcp]");
         Console.Error.WriteLine("  fusion revolve   [--axis Z] [--angle 360] [--dry-run]");
         Console.Error.WriteLine("  fusion export    --out <path> [--format step|f3d|stl|obj]");
+        Console.Error.WriteLine("  fusion params    [--transport bridge|mcp]");
+        Console.Error.WriteLine("  fusion setparam  --name <parameter> --expression \"120 mm\"");
         Console.Error.WriteLine();
         Console.Error.WriteLine("  'revolve' builds a hollow tube and checks the returned mass, centre");
         Console.Error.WriteLine("  and inertia against the closed form. '--dry-run' prints the generated");
