@@ -25,6 +25,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DWM.Shared\DWM.Shared.csproj" />
+
+    <!--
+      These two already arrive transitively through DWM.Shared -- FusionStageServiceTests
+      compiles against CAD.Scripting today without them. They are declared anyway, because
+      DWMStudio.WorldPackageCli did NOT get them the same way and failed with CS0246 on an
+      identical setup. A test project that implements ICADScriptRunner should not be relying
+      on inheritance that has already proved inconsistent once.
+    -->
+    <ProjectReference Include="..\..\CAD_Library\CAD_Library\CAD_Library.csproj" />
+    <ProjectReference Include="..\..\FusionLibrary\FusionLibrary\FusionLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
