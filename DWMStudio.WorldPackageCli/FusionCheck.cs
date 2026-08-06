@@ -224,15 +224,47 @@ internal static class FusionCheck
         Console.WriteLine("[check]                   A value near one of those is right. A value off");
         Console.WriteLine("[check]                   by 1e6 is a centimetre/metre error, not a material.");
 
+        var offset = 0.0;
         if (body.CentreOfMass.Length == 3)
         {
             // Which coordinate carries the height depends on the revolve axis; the height is
-            // whichever one is not ~zero, and it must be h/2.
-            var expected = h / 2.0;
+            // whichever one is furthest from zero, and its MAGNITUDE must be h/2.
+            //
+            // THE SIGN IS NOT A FAULT. A sketch on the XZ plane has its local Y along global
+            // -Z, so the tube is built below the origin and the centre reads -0.25 m. Fusion's
+            // convention, not an error, and asserting on the signed value would fail a
+            // perfectly good build.
+            offset = body.CentreOfMass.OrderByDescending(Math.Abs).First();
+
             Console.WriteLine($"[check]   centre        = [{string.Join(", ", body.CentreOfMass.Select(v => v.ToString("G6")))}] m");
-            Console.WriteLine($"[check]                   one axis must read {expected:G6} m and the others ~0.");
-            Console.WriteLine("[check]                   A centre at the origin means the profile was");
+            Console.WriteLine($"[check]                   one axis must read +/-{h / 2.0:G6} m and the others ~0.");
+            Console.WriteLine("[check]                   The sign follows the sketch plane's own axes.");
+            Console.WriteLine("[check]                   A centre at the ORIGIN would mean the profile was");
             Console.WriteLine("[check]                   revolved about the wrong axis -- which builds fine.");
+        }
+
+        if (body.Inertia.Length >= 3 && body.MassKg > 0 && Math.Abs(offset) > 1e-9)
+        {
+            // THE REFERENCE POINT, WHICH IS THE EASIEST THING HERE TO GET WRONG QUIETLY.
+            // Fusion reports inertia about the DOCUMENT ORIGIN, not the centre of mass, and
+            // both are plausible numbers in the right units. The transverse moment is what
+            // separates them: about the centre of mass it is (3(ri^2 + ro^2) + h^2)/12, and
+            // about the origin that plus d^2 where d is the offset above.
+            //
+            // Simscape wants the centre-of-mass value. Whoever feeds it has to subtract the
+            // parallel-axis term, and can only know that if this says so.
+            var aboutCom = (3.0 * (ri * ri + ro * ro) + h * h) / 12.0;
+            var aboutOrigin = aboutCom + offset * offset;
+            var measured = body.Inertia.Take(3).Select(i => i / body.MassKg).Max();
+
+            Console.WriteLine();
+            Console.WriteLine($"[check]   I/m (transverse) = {measured:G6} m^2");
+            Console.WriteLine($"[check]                   about the centre of mass: {aboutCom:G6}");
+            Console.WriteLine($"[check]                   about the origin:         {aboutOrigin:G6}");
+            Console.WriteLine($"[check]                   ratio to origin form:     {measured / aboutOrigin:G6}");
+            Console.WriteLine("[check]                   ~1.0 confirms Fusion measures about the ORIGIN.");
+            Console.WriteLine("[check]                   Simscape wants the centre-of-mass value, so the");
+            Console.WriteLine("[check]                   parallel-axis term must be subtracted downstream.");
         }
 
         if (body.Inertia.Length >= 3 && body.MassKg > 0)
