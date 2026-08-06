@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using CAD.Scripting;
 using DWM.Shared.Tooling;
 using DWM.Shared.Tooling.Cad;
+using Fusion.Application;   // FusionPythonScriptFactory, for the generated-script checks
 using Xunit;
 
 namespace DWMStudio.Tests
@@ -456,6 +457,47 @@ namespace DWMStudio.Tests
 
             // Centimetres to metres, once, explicitly.
             Assert.Contains("/ 100.0", FusionScripts.MassProperties);
+        }
+
+        [Fact]
+        public void TheGeneratedScript_IndentsEveryOperationInsideTheTryBlock()
+        {
+            // THE TEST THAT SHOULD HAVE EXISTED FIRST, added 2026-08-06 after Fusion rejected
+            // the first generated script ever sent to it:
+            //
+            //     SyntaxError: expected 'except' or 'finally' block
+            //
+            // The emitter writes operations at one indent level, which is right under a def
+            // and wrong inside a try. Every ScriptKind.Script the generator had ever produced
+            // dedented straight out of the block, and ScriptKind.Script is the only kind
+            // /scripts/execute can run.
+            //
+            // NOTHING CAUGHT IT BECAUSE EVERY OTHER ASSERTION IS A SUBSTRING. "Contains
+            // revolveFeatures" and "does not contain messageBox" are both perfectly true of
+            // source that will not parse. This checks the one property that matters before any
+            // other: that the block structure holds.
+            var script = new FusionPythonScriptFactory().CreateScript(
+                new CadOperationSequence()
+                    .Add(new CreateSketchOp { SketchId = "s", Plane = "XY" })
+                    .Add(new SketchCircleOp { SketchId = "s", RadiusCm = 1.0 }),
+                new ScriptMetadata { Name = "IndentCheck" }).EntrySource;
+
+            var lines = script.Replace("\r\n", "\n").Split('\n');
+            var tryAt = Array.FindIndex(lines, l => l.TrimEnd() == "    try:");
+            Assert.True(tryAt >= 0, "The generated script has no `try:` inside run(context).");
+
+            var exceptAt = Array.FindIndex(lines, tryAt, l => l.TrimEnd() == "    except:");
+            Assert.True(exceptAt > tryAt, "The generated script has no `except:` after its `try:`.");
+
+            var dedented = lines[(tryAt + 1)..exceptAt]
+                .Where(l => l.Trim().Length > 0)
+                .Where(l => l.Length - l.TrimStart(' ').Length < 8)
+                .ToList();
+
+            Assert.True(dedented.Count == 0,
+                "These lines sit inside `try:` but are indented less than its body requires, " +
+                "so Python reads the block as ending early:\n  " +
+                string.Join("\n  ", dedented));
         }
 
         [Fact]
