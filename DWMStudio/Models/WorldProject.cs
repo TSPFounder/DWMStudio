@@ -27,6 +27,17 @@ namespace DWMStudio.Models
         public string FusionDocumentPath { get; set;  } = string.Empty;
         public string SimulinkModelPath  { get; set;  } = string.Empty;
 
+        /// <summary>
+        /// The Nastran deck the FEA stages work on. BOTH of them name it -- FEMAP writes it,
+        /// MYSTRAN reads it, FEMAP reads the results back -- so one file is the handoff
+        /// between a mesher that cannot solve and a solver that cannot mesh.
+        ///
+        /// Usually ABSOLUTE, because a deck lives with the FEA work rather than under
+        /// whichever folder happens to be the project root. Blank falls back to a path
+        /// relative to that root.
+        /// </summary>
+        public string FeaDeckPath { get; set;  } = string.Empty;
+
         public int RequirementCount { get; set; }
         public int ActorCount       { get; set; }
         public int UseCaseCount     { get; set; }

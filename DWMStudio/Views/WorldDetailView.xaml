@@ -50,87 +50,110 @@
                                Converter={StaticResource BoolToOpacityConverter}}" />
             </Grid>
 
-            <!-- Stage panels -->
-            <UniformGrid Columns="2">
+            <!-- Stage panels.
+                 ONE TEMPLATE, DRIVEN BY DATA. These used to be four hand-written Borders
+                 with a hardcoded command each; adding FEMAP and MYSTRAN that way would have
+                 meant two more of both. The tiles now come from the project's pipeline plus
+                 the tool registry, so a new tool is a registry row and appears here with no
+                 XAML change at all. -->
+            <ItemsControl ItemsSource="{Binding Tiles}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 12 12">
+                            <StackPanel Margin="16">
+                                <TextBlock Text="{Binding Title}"
+                                           FontWeight="SemiBold" FontSize="14"
+                                           Foreground="{Binding AccentColor}" />
+                                <TextBlock Text="{Binding Subtitle}"
+                                           Style="{StaticResource MutedLabelStyle}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="0 6 0 0" />
+                                <Button Content="Open workspace"
+                                        Command="{Binding DataContext.OpenWorkspaceCommand,
+                                            RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource GhostButtonStyle}"
+                                        HorizontalAlignment="Left"
+                                        Margin="0 12 0 0" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-                <!-- SysML -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 12 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="SysML / Architecture"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmSysmlBrush}" />
-                        <TextBlock Margin="0 6 0 0" Style="{StaticResource MutedLabelStyle}">
-                            <Run Text="{Binding World.RequirementCount, Mode=OneWay}" />
-                            <Run Text="requirements, " />
-                            <Run Text="{Binding World.ActorCount, Mode=OneWay}" />
-                            <Run Text="actors, " />
-                            <Run Text="{Binding World.UseCaseCount, Mode=OneWay}" />
-                            <Run Text="use cases" />
-                        </TextBlock>
-                        <Button Content="Open in UModel"
-                                Command="{Binding OpenInUModelCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
+            <!-- ============================================================
+                 Contents tree.
 
-                <!-- CAD -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 0 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="CAD / Fusion 360"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmCadBrush}" />
-                        <TextBlock Text="{Binding World.FusionDocumentPath,
-                                       FallbackValue='No Fusion document linked'}"
-                                   Style="{StaticResource MutedLabelStyle}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Margin="0 6 0 0" />
-                        <Button Content="Open in Fusion"
-                                Command="{Binding OpenInFusionCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
+                 A SNAPSHOT, AND IT SAYS SO. Nothing behind this view is a database: the world
+                 is JSON under %APPDATA%, the artifacts are files wherever the engineering work
+                 happens, and the run history is in memory. Nothing can push an update here
+                 when a solver writes an .op2, so there is a Refresh button and a caption that
+                 admits what it is, rather than a control that looks live and silently is not.
+                 ============================================================ -->
+            <TextBlock Text="Contents"
+                       Style="{StaticResource SectionHeaderStyle}"
+                       FontSize="16"
+                       Margin="0 28 0 0" />
 
-                <!-- MATLAB -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 12 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="MATLAB / Simulink"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmSimBrush}" />
-                        <TextBlock Text="{Binding World.SimulinkModelPath,
-                                       FallbackValue='Model not built yet'}"
-                                   Style="{StaticResource MutedLabelStyle}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Margin="0 6 0 0" />
-                        <Button Content="Build Simulink Model"
-                                Command="{Binding BuildSimulinkModelCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
+            <TextBlock Style="{StaticResource MutedLabelStyle}"
+                       TextWrapping="Wrap"
+                       Margin="0 4 0 8"
+                       Text="Read from disk when this view opened; files written since then appear on Refresh. Missing files are listed in red rather than hidden, because an absent deck and an unlisted deck are different problems." />
 
-                <!-- UE -->
-                <Border Style="{StaticResource WorldCardStyle}" Cursor="Arrow" Margin="0 0 0 12">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="Unreal Engine"
-                                   FontWeight="SemiBold" FontSize="14"
-                                   Foreground="{StaticResource DwmRuntimeBrush}" />
-                        <TextBlock Text="Co-simulation and runtime"
-                                   Style="{StaticResource MutedLabelStyle}"
-                                   Margin="0 6 0 0" />
-                        <Button Content="Launch in Unreal"
-                                Command="{Binding OpenInUnrealCommand}"
-                                Style="{StaticResource GhostButtonStyle}"
-                                HorizontalAlignment="Left"
-                                Margin="0 12 0 0" />
-                    </StackPanel>
-                </Border>
+            <Button Content="Refresh"
+                    Command="{Binding RefreshTreeCommand}"
+                    Style="{StaticResource GhostButtonStyle}"
+                    HorizontalAlignment="Left"
+                    Margin="0 0 0 10" />
 
-            </UniformGrid>
+            <Border Background="{StaticResource DwmCardBrush}"
+                    BorderBrush="{StaticResource DwmDividerBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="8">
+                <TreeView ItemsSource="{Binding Tree}"
+                          MaxHeight="380"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem">
+                            <!-- Expanded by default: a missing file that only reveals itself
+                                 after someone clicks is bad news hiding behind a collapse. -->
+                            <Setter Property="IsExpanded" Value="True" />
+                            <Setter Property="Foreground" Value="#E0E4EC" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Margin="0 2">
+                                <TextBlock Text="{Binding Label}" FontSize="12">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#E0E4EC" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                    <Setter Property="Foreground"
+                                                            Value="{StaticResource DwmErrorBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Detail}"
+                                           Style="{StaticResource MutedLabelStyle}"
+                                           ToolTip="{Binding Path=Path}"
+                                           Margin="10 2 0 0" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </Border>
 
             <!-- Status line -->
             <TextBlock Text="{Binding StatusMessage}"

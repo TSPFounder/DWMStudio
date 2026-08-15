@@ -210,12 +210,38 @@ Design rules, so this stays MVP-sized:
   draft had one and it is withdrawn — see the note under Act 3 in the
   storyline doc for what was removed and why nothing load-bearing went with
   it.
-- **The bus stops at the FOOT of the mountain road.** It cannot make the
-  climb, so the last stretch into Mountain is walked. This mirrors the walk
-  that opens the game, gives Act 3 a real arrival, and hands the plot its
-  logistics argument for free: if a bus cannot get up there, neither can
-  freight, which is part of why repairing the large turbine costs what it
-  costs.
+
+  **MOUNTAIN'S ARRIVAL — recorded 2026-08-02.** Mountain is a very large
+  terrain and its only road runs about a MILE from the village. Three
+  things follow, in order of how much they matter:
+
+  1. **SPAWN ROTATION IS THE ONLY REQUIREMENT, and it is free.** If the
+     return spawn faces the village with the road behind the player, none
+     of the rest of this is ever seen. Face them out toward the road. One
+     rotation field, and it decides whether any of the below pays off.
+  2. **THE ROAD READS; A BUS DOES NOT.** A road is a long linear feature
+     that stays legible at distance. A bus is a point object, and at a mile
+     — about 160,000 UE units — an 1,100-unit vehicle subtends roughly
+     0.39°, which is about 8 × 2 PIXELS at 1080p on a default 90° FOV.
+     Nobody will read that as a bus; they will read it as a yellow speck if
+     they notice it at all. Two defaults will erase even that: CULL
+     DISTANCE (set Desired Max Draw Distance to 0 or it vanishes long
+     before a mile) and EXPONENTIAL HEIGHT FOG. Park a bus there if it
+     pleases you, as a grace note for players who look — but do not spend
+     effort making it legible, and do not rely on it to close the ride.
+  3. **THE RIDE ALREADY CLOSES AT THE BOARDING END.** The player is told to
+     take the loop, walks into a bus in the City, and the screen fades.
+     That is the readable act. Arriving without a bus in view is how riding
+     anything works when you are not looking at it.
+
+  **THE MILE IS WORTH MORE THAN THE BUS, and it recovers something the
+  withdrawn walk cost.** A village a mile from the only road is a stronger
+  logistics argument than the grade ever was: everything reaching Mountain
+  crosses a mile of open ground. That is why repairing the large turbine
+  costs what it does — and the player does not have to WALK it to feel it,
+  only to SEE it once, from the village, facing the right way. Act 3's cost
+  argument gets visual support at zero traversal cost, which is strictly
+  better than what the walk was going to buy.
 - **Co-locate stop, support office and trade terminal.** Same three things
   in the same relationship in every community. This is the strongest form of
   "repetition teaches a rule," and it gives the Suburb and City trade
@@ -335,9 +361,41 @@ every required community.]**
 **Ambient (optional — triggered on repeat visits, not part of the core
 quest flow; references the newly-added Mountain assets):**
 
-> "Freshcan crew finished the new houses last week — good timing, since
-> the storm put three families out of their own. Village's a little more
-> crowded now, but nobody's sleeping in a barn."
+> "Labour hall crew came up from the Suburb and finished the new houses
+> last week — DeShawn's people, Hillside's lumber. Realty office had three
+> families and nowhere to put them. Village's a little more crowded now,
+> but nobody's sleeping in a barn."
+
+**RENAMED 2026-08-02 — "Freshcan crew" was a VENDOR NAME that leaked into
+spoken dialogue.** Freshcan is the developer of the Village Houses
+Environment pack used for Mountain's settlement (SCOPE.md 2026-07-14); it
+belongs in asset notes and must never appear in a character's mouth. A
+sweep of every spoken line found no other leaks. `Simulink` appears twice
+and is DELIBERATE — Hillside sells a Simulink model as
+`engineering_services` and Nathan is the modeller, so it is diegetic.
+
+Rather than invent a replacement company, the crew is now the SUBURB'S
+LABOUR HALL — which already exists, is already DeShawn's, and already
+produces `skilled_labor`. That turns a bug into a small gain: the line now
+names three communities and shows the HOUSING SUPPLY CHAIN from the
+receiving end (Suburb labour, Hillside lumber, Mountain houses), adding
+Hank to the cross-community reference chain this document tracks.
+
+**"The storm" was also removed, and that is a SEPARATE fix worth knowing
+about.** The premise was reframed on 2026-07-18 from storm damage to an
+old, never-run turbine, but this line still referenced *"the storm"* with a
+definite article — a specific known event that no longer exists anywhere in
+the story. The realty office having three families and nowhere to put them
+does the same narrative job (it explains why houses were built) using an
+institution that IS in the story. Revert if a storm is wanted back.
+
+**[Summer grazing — added 2026-08-02. Doubles as the in-fiction reason
+the open upland is not empty; see the sheep note under Hillside for the
+level-dressing point.]**
+
+> "Sheep'll be up on the top ground till the weather turns — Hillside's
+> flock, summered up here. Nothing else that ground is good for, and it's
+> good for that."
 
 > "Solar panels are holding the mountain over while the turbine's down.
 > Control station keeps it steady, and the bank stores what we don't use
@@ -440,13 +498,70 @@ Three reasons it belongs here rather than anywhere else:
    Hillside presses it → board and beam come back reads as *of course*
    rather than as a new idea.
 
-**Why it matters beyond flavour: the blade molds are MDF**, which is a wood
-composite board. Right now that stock is bought, which makes it a DOLLAR
-cost draining the Vault — the same shape of problem as the bus fleet's
-fuel. A community pressing board from salvage turns the manufacturing arc's
-very first physical dependency into a Stone trade, satisfied inside the
-network instead of outside it. That is a much better opening beat for that
-arc than "and then they ordered sheet goods."
+**WHAT IT IS FOR — CORRECTED 2026-08-02: HOUSES AND STRUCTURES.** An earlier
+draft of this section led with the wind-turbine blade molds. That was the
+wrong emphasis and it is now demoted. **The primary product is structural
+beam and board for BUILDINGS** — housing first, other structures after.
+Turbine tooling is a beneficiary of the capability, not the reason for it.
+
+That correction matters because of what it connects to.
+
+**It makes the mill a supplier to the REALTY COMPANY.** That company's whole
+function is placing community members in housing, and housing has to be
+built out of something. So the third cross-community institution turns out
+to feed the first, and all three now interlock around the same thing: the
+bus fleet MOVES people between communities, the realty company HOUSES them
+when they get there, and the mill makes the material the housing is made
+of. None of the three works inside one community alone, which is the theme
+carried structurally rather than said.
+
+**The world already shows this, which is why it needs no setup.** Hank's
+existing Mountain ambient line has new houses going up right now — *"Labour
+hall crew came up from the Suburb... DeShawn's people, Hillside's lumber"* —
+and "new housing" is already in the placed-props list at the top of this
+document. Those houses are made of something. Naming Hillside's mill as the
+source explains set dressing the player can already see, in the same way the
+wood salvage chain reads as obvious next to the metal one.
+
+**Post-MVP this is also the bigger economic story**, not the smaller one.
+Mold stock is a one-off for a blade programme. Housing lumber is continuous
+demand from all five communities, which makes it a far more plausible
+tradeable resource if one is ever added.
+
+**THE MOLD APPLICATION IS STILL REAL AND WORTH KEEPING — it is the SECOND
+product, not a throwaway hint (expanded 2026-08-02).** Houses are what the
+mill is FOR. Mold stock is the other thing the same press makes, and it is
+worth its own beats for reasons that are not just cost:
+
+- **Flat board is where the bio-adhesive actually WINS COMPLETELY.** Mold
+  stock is dry, indoors, non-structural tooling — the easy chemistry case,
+  which is exactly what structural beam is not. So the mill's SECONDARY
+  product is where they reach full independence FIRST, while the primary
+  one is still importing hardener. That inversion is worth playing: the
+  thing they built the industry for is the thing they cannot finish.
+- **MDF is genuinely the standard material for this**, not a substitute for
+  something better. It is used for plugs, patterns and low-run molds
+  because it is homogeneous, has no grain to tear out, machines to a clean
+  surface and holds dimension. Recycled-fibre board with a bio-binder is
+  FIT FOR PURPOSE here in a way it is not in a roof beam — a mold carries
+  no sustained load and threatens nobody if it fails.
+- **Thick sections are LAMINATED, not solid.** A blade mold is machined
+  from boards bonded into a billet, not from one slab — which lines up with
+  the segmented-mold approach already in the manufacturing plan, and means
+  the glue-up matters as much as the board.
+- **THE REAL UNLOCK IS ITERATION, NOT COST.** Molds wear, get damaged, and
+  are superseded whenever the blade design changes. A community that must
+  buy mold stock can build *a* blade. A community that presses its own can
+  afford to make the mold again — and remaking the mold is the whole
+  difference between having a blade design and being able to IMPROVE one.
+  That is a better argument than any saving on sheet goods, and it is the
+  one to put in a character's mouth if only one survives.
+
+**Two honest limits, if this is ever detailed further.** MDF is hygroscopic
+and moves with moisture, so a mold wants sealing and does not love a damp
+shed. And the resin makes it abrasive — it eats cutting tools faster than
+solid wood does, which matters for a community that has to make or sharpen
+its own.
 
 **The metaphor is worth leaning on because it is literally true.** In sawn
 timber a knot is a concentrated weak point and the board is only as good as
@@ -459,11 +574,57 @@ states it as a fact about wood rather than as a moral.
 
 **Three frictions, kept rather than smoothed:**
 
-- **Adhesive is the import they cannot make.** Resin would be a dollar
-  purchase, mirroring the bus fuel exactly. Good friction — and it has an
-  out that is already in the docs: soy, starch and lignin bio-adhesives are
-  real, and the Valley is already growing feedstock for the biofuel thread.
-  Same fields, two products. PLANT IT, DO NOT RESOLVE IT.
+- **Adhesive — DECIDED 2026-08-02: BIO-ADHESIVE, from two sources, and it is
+  PARTLY solved rather than fully.** This was previously "plant it, do not
+  resolve it"; it is now the route the communities take. The chemistry is
+  real and mostly old, which is why it can be leaned on:
+
+  **Tannin from BARK is the elegant one, because a working mill already
+  makes it.** Logs get debarked; bark is the tannin source. Wattle,
+  quebracho and pine-bark tannin adhesives have been in commercial panel
+  production in South Africa, Brazil and Australia for decades. The
+  feedstock is already falling on Hillside's own floor as waste, so this
+  needs no new agriculture at all — and it turns a waste stream nobody had
+  a use for into an input.
+
+  **Soy protein from the VALLEY is the other**, and it is the
+  commercially-proven modern route: soy flour adhesives dominated US
+  plywood in the 1930s–40s before phenol-formaldehyde displaced them, and
+  came back at industrial scale in the mid-2000s. This is the source that
+  needs the Valley, so it pairs with the biofuel thread — same fields, two
+  products.
+
+  **KEEP THE RESIDUAL IMPORT. Do not write this as a clean win.** The real
+  systems need a small HARDENER fraction the communities cannot make — the
+  commercial soy route uses a petrochemical crosslinker for water
+  resistance, and tannin systems traditionally need a hardener too. Soy
+  alone is moisture-sensitive. So the honest position, and the better one
+  dramatically, is: the BULK of the adhesive is local, a small bought
+  fraction remains. Same shape as the biofuel thread, which also does not
+  fully close.
+
+  **THE GRADIENT — REVISED 2026-08-02, and it now cuts the OTHER WAY.** An
+  earlier draft called this a lucky alignment, on the reading that the mill
+  existed mainly to make blade molds. Once the primary product is HOUSING,
+  that reverses, and the honest version is better.
+
+  Bio-adhesives are strongest in DRY, INTERIOR, NON-STRUCTURAL service.
+  Structural beam carrying load in a building is the HARDEST case there is —
+  wet service, life safety, and the one place you cannot quietly accept a
+  weaker bond. So the mill's MAIN product is precisely the product that
+  keeps needing the bought hardener longest.
+
+  That is a real constraint, not a lucky break, and it should be written as
+  one: they can go fully local on interior board, panelling, sheathing and
+  tooling stock long before they can go local on the beams holding a roof
+  up. The bought fraction shrinks but does not disappear, and it is the
+  houses that keep it alive.
+
+  This is a BETTER position dramatically than the version it replaces. A
+  community that has solved everything except the one thing that matters
+  most is a more interesting place than one that got lucky — and "we can
+  make everything but the part that holds the roof up" is a sentence with
+  weight in a story about people being housed.
 - **Salvaged wood is full of metal.** Nails and screws must come out before
   anything is chipped — magnetic separation plus a lot of hand sorting.
   That is a labour cost, and the Suburb produces `skilled_labor`, so it is
@@ -473,6 +634,333 @@ states it as a fact about wood rather than as a moral.
   large platen is genuinely harder than anything in the Gingery chain.
   Worth knowing before anyone treats this as easy; also a decent thing for
   that arc to be ABOUT.
+
+**SHEEP AND WOOL — decided 2026-08-02. A SHARED FLOCK, MOVED SEASONALLY
+BETWEEN THREE COMMUNITIES.** Wool has been in the economy since the seed
+data and no character has ever mentioned it, which is a gap worth closing:
+Hillside PRODUCES `wool`, the Valley NEEDS it, and the Suburb turns it into
+`textiles`, so it already crosses three communities on the ledger while
+being invisible on screen.
+
+The flock moves the way real upland flocks do — **transhumance**, which is
+ancient, practised everywhere from the Alps to the Pyrenees to the Scottish
+hills, and which happens to require exactly the thing this story is about:
+
+| Season | Where | Why there |
+| --- | --- | --- |
+| Summer | **Mountain** | rough upland grazing that supports nothing else |
+| Home | **Hillside** | the permanent flock, the lambing, the clip |
+| Winter | **Valley** | stubble after harvest — and the manure |
+
+**THE VALLEY'S REASON IS THE GOOD ONE, and it is real history: the GOLDEN
+HOOF.** Before artificial fertiliser, sheep were folded on arable land
+overnight specifically to manure it — grazing rough ground by day, penned on
+the crop fields by night. It was central to English mixed farming for
+centuries. So the Valley does not tolerate the flock, it WANTS it: the sheep
+are how it keeps its soil fertile without buying anything. That also sits
+naturally beside Maria's existing composting and digester lines — same
+principle, different animal.
+
+**NO SCHEMA CHANGE, and the reason is worth stating so nobody "fixes" it.**
+Grazing is not the same as owning the clip. The flock stays HILLSIDE'S — it
+keeps the wool, stays the producer, and the seeded rows are untouched
+(`hillside` Produces `wool`, `valley` Needs `wool`). Mountain lends summer
+grass, the Valley trades winter stubble for manure. Every row in the seeder
+stays exactly as it is.
+
+**THE PRACTICAL WIN: SHEEP POPULATE THE EMPTY MOUNTAIN TERRAIN.** Mountain
+is a very large landscape with roughly a mile of open ground between the
+village and the only road. Scattered grazing sheep turn that from *unfinished
+level* into *pasture* — which is what a mile of empty upland between a
+village and a road would actually be. They are cheap, common assets, and
+static or lightly-animated dressing is already inside SCOPE's allowance (the
+same clause that covers Hank's movement). This is the highest
+value-per-effort item in this whole note.
+
+**Other things a flock gives them**, if any are ever wanted: tallow for
+candles, soap and lubricant; skins; some milk; and **LANOLIN**, the wool
+grease — a genuine rust preventative and salve, which quietly links the
+flock to the City's machine shop. Maria's existing line already mentions
+"some meat," so that end is covered.
+
+**FRICTION TO KEEP:** transhumance needs agreement on grazing rights, on
+timing, and on who walks the flock. It is renegotiated every year rather
+than settled once. That is a recurring cooperation cost — the same note the
+bus schedule sounds, and worth keeping for the same reason: unity that costs
+nothing reads as preaching.
+
+---
+
+**OTHER BIO BUILDING MATERIALS (recorded 2026-08-02).** Composite lumber is
+not the only thing these communities can make from what they grow and mill.
+The useful test for anything proposed here is: **does it reuse equipment or
+a waste stream they already have?** That test sorts the candidates cleanly,
+and it is also what keeps this from sprawling into a materials catalogue.
+
+**THATCH — Valley straw, Suburb labour. The strongest of these.** Life is
+25–40+ years for water reed and 15–25 for wheat straw, and the insulation is
+genuinely excellent (around 0.07 W/mK, so a 300 mm roof lands near modern
+insulated-roof performance) with no manufactured product in it at all — no
+fasteners, no plant, no imports.
+
+*The constraint is the good part and must not be smoothed away.*
+Combine-harvested straw is crushed and short and useless for thatching. You
+need long unbroken stems, which means a reaper-binder, gentle threshing, and
+usually a long-stemmed variety grown on purpose. **So thatching straw is not
+collected waste — it is a decision to farm differently**, which is a far
+better beat than "we had straw lying about" and makes the Valley choose
+something. It is also apprenticed, skill-heavy work, which suits an economy
+where labour is the tradeable thing: Valley grows it, the Suburb's
+`skilled_labor` lays it, Hillside frames the roof beneath it.
+
+*Honest downside, worth KEEPING rather than solving:* fire. It is why thatch
+was banned in cities after 1666. For a village a mile from the nearest road
+with no fire service, that is a live tension.
+
+**THATCH FIRE PROTECTION — decided 2026-08-02: LIME TORCHING plus a
+GRAVITY-FED WATER TOWER.** Both were chosen over a pumped roof-deluge
+system, and there is one principle underneath both that is worth stating
+before either:
+
+> **EVERY FIRE MEASURE FOR THATCH FIGHTS THE THING THAT MAKES THATCH LAST.**
+> Thatch survives because it SHEDS water and dries between rains — that is
+> the whole mechanism, and it is why hosing a burning thatch roof barely
+> works (crews strip it with eaves knives instead). Fire protection wants
+> water and mass; longevity wants dryness. Neither measure below escapes
+> that, and neither should be written as if it does.
+
+**LIME TORCHING** — lime mortar applied to the UNDERSIDE of the thatch,
+between the rafters. Traditional, genuinely historical, and it addresses the
+ignition path that actually dominates: fire reaching the thatch from the
+building below, rather than sparks landing on top. It also stiffens the
+roof and cuts draughts.
+
+*It fits these communities almost too neatly:* it is the SAME LIME as the
+limewash and the white pigment, off the SAME KILN. One kiln serves fire
+protection, paint and mortar — shared infrastructure that pays three ways.
+
+*Honest caveat, and it is the principle above in miniature:* torching adds
+weight, and done badly it holds damp against the thatch and shortens its
+life. Modern conservators are divided on it for exactly that reason.
+
+**THE WATER TOWER — gravity-fed, no pump, no power.** A header tank sited
+above the rooflines gives pressure that cannot fail when the electricity
+does, which matters for a place with intermittent power and no fire service.
+
+*The design constraint is specific and checkable:* **roughly 10 m of head
+per bar of pressure**, so a tank must stand about ten metres above the roofs
+it serves. On Mountain the terrain gives that for free. In the Valley it
+means an actual TOWER — a real structure, ten-plus metres tall, and a
+distinctive silhouette.
+
+*That visibility is a feature.* A water tower is a landmark, it is plainly
+nobody's private property, and it is the fourth shared institution after the
+bus loop, the realty company and the mill — this one for safety and water
+rather than transport, housing or materials.
+
+*It also gives `water` a presence it has never had.* The Valley PRODUCES
+`water` in the seed data and no character has ever mentioned it — the same
+gap the flock closed for `wool`. The tower is what makes that resource
+visible, and fire is only one of its uses.
+
+*Two practical points not to skip:* a header tank in a cold climate can
+FREEZE, which is a real failure mode for a fire system, so it wants burying,
+insulating, keeping in circulation, or a drain-down design. And building it
+splits the usual way — City casts the tank and fittings, the Suburb's labour
+hall raises it, Hillside frames.
+
+**RECOMMENDED THIRD LEG, not yet chosen: A CHIMNEY STANDARD.** Most thatch
+fires trace to chimneys, so a build rule — height above the ridge (UK
+guidance is around 1.8 m for thatch), lined and insulated — is the single
+highest-value measure of the three and costs nothing but discipline. Flagged
+rather than assumed, since only torching and the tower were decided.
+
+**WHY THIS IS GOOD FOR THE STORY.** Thatch is the cheapest roof they can
+make and the one demanding the most COLLECTIVE DISCIPLINE: a chimney rule
+everybody follows, a tower nobody owns alone, spacing that constrains where
+you build. You cannot have the free roof without the shared rule — the unity
+theme with an actual penalty for getting it wrong, unlike the bus schedule.
+
+*And the tension to KEEP rather than solve:* wetting rots thatch, so the
+tower's system cannot be tested often — which means nobody knows for certain
+it works until the night it is needed. That is uncomfortable rather than
+solvable, and it should stay that way.
+
+**WOOD-FIBRE SHEATHING as the building wrap — the one that costs least.**
+Real product line (Gutex, Steico, Pavatex): wood-fibre panels, often
+wax-impregnated, vapour-open, used as external sheathing and weather
+barrier. It comes off **the same press as the composite lumber**, from the
+same salvage and mill fines — a new product with no new machine. Vapour-open
+also happens to be the correct building science for a timber structure,
+which is where plastic housewrap gets people into trouble.
+
+**WOOL INSULATION — nearly free, given what Hillside already produces.**
+Sheep's wool insulation is commercial and real (Thermafleece, Havelock), at
+roughly 0.038–0.040 W/mK, essentially matching mineral wool, and it handles
+moisture better than most. Hillside already produces `wool`. No press
+needed — scouring and batting.
+
+**ROOFING — mill shingles, and a consistency check.** Wood shingles are the
+obvious mill product and need no justification. But **composite roof tiles
+hit the wall already established for structural beam**: roofing is exterior
+wet service, the hard case for bio-adhesive. Do not let the press quietly
+solve everything. Salvaged-plastic shingles are a real product and would
+fall to the Suburb instead.
+
+**PIPES — the honest place bio LOSES, and worth keeping that way.** Bio-PE
+and bio-PVC are chemically identical to the fossil versions but come from
+bioethanol via a real chemical plant, far beyond five communities; PLA is
+too weak and heat-sensitive for pressure. The genuine bio answer is **wood
+stave pipe**, which is historically real — bored logs and later banded
+staves carried water mains across North America into the 20th century, some
+still in service — and fine for low-pressure water and irrigation, which
+Hillside can make from logs. For pressure and potable, **salvage and the
+City's foundry win instead**: reclaimed plastic pipe from the Suburb, cast
+fittings from Mike. **A world where bio solves everything is less believable
+than one where it solves most things and metal covers the rest.**
+
+**PAINT AND THE PALETTE — decided 2026-08-02. The colours they can MAKE are
+earths, black and white. Any other colour is available FROM OUTSIDE VENDORS
+at a DOLLAR cost.** This is the most useful decision in this whole thread,
+because it is the only one that puts the economy on screen.
+
+**WHAT THEY CAN MAKE.** Exterior paint needs MINERAL pigment — plant and
+insect colours are dyes, and sunlight destroys them in a season, so they are
+fine on cloth indoors and useless on a wall. That single fact sets the whole
+palette. The iron-oxide family does most of the work, and the range comes
+from KILN TEMPERATURE rather than from different materials, which the City's
+foundry can already deliver:
+
+| Fired to | Colour | Pigment |
+| --- | --- | --- |
+| unroasted | yellow | yellow ochre (goethite) |
+| gentle | orange | burnt sienna |
+| hotter | red | red ochre / hematite — Falu red |
+| hotter still | purple-brown | violet iron oxide |
+
+Plus **black** from lampblack or charcoal, free from the same foundry, and
+about as lightfast as pigment gets; **white** from burnt limestone, where
+lime is a BINDER as well as a colour (limewash is breathable and mildly
+antifungal, being strongly alkaline); and every grey, cream, buff and stone
+colour between them by mixing. Binders: linseed oil once flax is in, lime,
+**casein from the flock's milk**, the Falu rye-flour emulsion for rough sawn
+timber, and **tallow** from the same flock for water resistance.
+
+**WHERE IT STOPS, and this should STAY stopped.** BLUE is genuinely out of
+reach — natural mineral blues are azurite (copper, scarce, not really
+nontoxic), lapis (precious) or vivianite (rare); woad and indigo are dyes
+and will not last outdoors. Vivid GREEN and PURPLE are worse: the historical
+versions were verdigris, Scheele's green and Paris green, which is to say
+copper and arsenic — the pigments that actually killed people. Nontoxic
+greens stop at pale green earth or dull olives mixed from ochre and black.
+None of this is invented scarcity: blue was expensive everywhere for
+centuries, which is exactly why it got reserved for things that mattered.
+
+**THE MECHANIC — ANY COLOUR, FROM OUTSIDE, FOR DOLLARS.** Vendors beyond the
+five communities will sell any colour wanted. It is **not** a Stone trade,
+because nobody inside the network made it: it is a **DOLLAR** cost out of
+the community's vault, the same finite pool the Suburb's permits come from.
+
+Three things follow, and the first is why this is worth doing at all:
+
+1. **IT MAKES THE LEDGER VISIBLE FROM THE STREET.** Every other economic
+   decision in this project lives in a HUD number or a document. This one
+   is a wall. A row of ochre and red with one blue door says *somebody spent
+   dollars*, and the player reads it without a line of dialogue, a tooltip
+   or a tutorial. **Blue especially**, since it is precisely the colour they
+   cannot make — the hardest colour to produce locally is the clearest
+   possible marker that money left the system.
+2. **NO SCHEMA CHANGE IS NEEDED, now or later.**
+   `CommunityDollarVaultLedger` already carries `CommunityId`, a signed
+   `DeltaAmount` and a free-text `Reason`. A paint purchase is one row in a
+   table that already exists and is already tested. If this is ever made
+   mechanical rather than narrative, the ledger is waiting for it.
+3. **It is a WANT, not a NEED — which is the contrast worth having.** The
+   Suburb's Dollar Vault beat is permits and insurance: unavoidable. Paint
+   is optional. Both drain the same finite pool, and having one of each
+   makes the point better than two necessities would.
+
+**TONE — DO NOT MAKE BOUGHT COLOUR A VILLAIN.** The standing rule against
+characters saying "we are stronger together" applies here too: no lectures
+about consumption. A child's room, somebody's front door, a sign that needed
+to be seen. People want things and that is human. The line to aim for is
+neutral, or wistful at most — the community can SEE what was spent, and that
+is enough without anybody moralising about it.
+
+*One wrinkle worth keeping straight:* bright colour on SALVAGED material is
+not a purchase. A reclaimed plank with old paint on it came out of the
+Suburb's yard, not out of the vault. Old bright colour reads as
+before-times; NEW bright colour reads as dollars.
+
+**⚠ IMPLICATION TO HANDLE CAREFULLY: this makes the OUTSIDE concrete.** Up
+to now the Dollar Vault has implied an outside economy without ever showing
+one. "Outside vendors" gives it people who sell things. **Keep them
+offstage and unnamed** — no vendor characters, no named towns, no map beyond
+the five communities. A concrete outside invites questions the MVP cannot
+answer and does not need to.
+
+---
+
+**FLAX — ADDED POST-MVP, decided 2026-08-02.** It was previously ruled out
+as "needs something they do not have". It is now in, and it turns out to be
+the best-connected crop available to them — linoleum is the least of it.
+
+**FIRST, THE CONSTRAINT, because it is a real choice and not a formality.**
+Flax is grown as one of TWO different crops from two different breeding
+lines: **fibre flax** (tall, unbranched, sown dense) for linen, and
+**linseed** (shorter, branched, more seed) for oil. Growing for both
+compromises both. So the communities have to pick a ratio, the same shape of
+decision as thatching straw versus grain.
+
+**LINSEED OIL MATTERS MORE THAN LINOLEUM, and one use matters most of all:
+WOOD FINISH AND PRESERVATIVE.** Boiled linseed oil is the traditional
+finish for timber. That is not a coincidence worth passing over — they are
+building houses out of composite lumber whose bio-adhesive is
+MOISTURE-SENSITIVE, which is that programme's weakest point. Linseed oil is
+exactly what you protect it with. **Flax shores up the composite lumber's
+single biggest vulnerability**, which is a real engineering link rather than
+a flavour one.
+
+**PAINT — and this one is VISIBLE IN ENGINE, which none of the rest are.**
+Falu red, the Swedish barn paint, is iron-oxide pigment plus linseed oil,
+rye flour and water, and has been made that way since the 1600s. The
+communities have all three inputs: **iron oxide from the City's foundry**
+(mill scale and slag), **linseed oil** from the Valley, **flour** from the
+grain. So they can make a durable exterior paint entirely from local
+materials — which means their buildings would share a distinctive colour
+*because they make the paint*. That is worldbuilding the player can SEE
+without a line of dialogue, and it is the strongest argument on this list.
+
+**Everything else flax gives them**, all of which lands on something already
+established:
+
+| Output | Goes to | Note |
+| --- | --- | --- |
+| Linen fibre | Suburb `textiles` | complements wool — linen for warm, wool for cold |
+| Flax shive (woody waste) | Hillside's press | shive particleboard is a real product |
+| Linseed meal (after pressing) | the flock | traditional livestock feed |
+| Oilcloth / waxed canvas | building wrap, tarpaulins | linseed-oiled fabric, traditional |
+| Putty | glazing | linseed oil plus whiting |
+| Rust preventative | Mike's machine shop | same role as the flock's lanolin |
+| Linoleum | flooring | linseed oil, rosin, wood flour, limestone, jute |
+
+**RETTING IS THE FRICTION, and it fits the Valley precisely.** Flax fibre
+has to be RETTED — the stem rotted to free the fibre — traditionally in
+water or on dew-wet grass. The Valley has the water. It also stinks, and
+water retting fouls what it is done in, which sits perfectly beside Maria's
+existing line about the digester: *"Ours just smells worse than most."*
+
+**⚠ AN OPEN QUESTION THIS CREATES — LAND COMPETITION.** The Valley is now
+carrying FOUR post-MVP crops on top of its actual traded output: biofuel
+feedstock, soy for the bio-adhesive, thatching straw, and now flax. Each was
+justified on its own and they are individually sound; **collectively they
+compete for the same acres**, and thatching straw and flax both reduce grain
+yield rather than using waste. Nobody has decided what the Valley gives up,
+or whether some of this belongs on Hillside's slopes instead. Worth settling
+before any of it is treated as canon.
+
+ALL OF THIS IS NARRATIVE ONLY for the MVP: no schema change, no new
+resources, nothing to implement.
 
 **Sophia Sandoval — Approach:**
 > "So that's the turbine that came with your land. Ambitious purchase —
@@ -523,14 +1011,46 @@ note under this community's heading. Narrative only, no schema change.]**
 > building — and we press it back into board and beam. Takes more sorting
 > than milling does. The nails are the worst of it."
 
+> "Most of it goes back into houses. Realty office finds people somewhere
+> to live and then somebody has to actually build the somewhere — that's
+> been us for a while now. Half the new places in three towns came off
+> that saw."
+
 > "Funny thing about a pressed beam — it's stronger than the tree it came
 > out of, and steadier with it. A sawn board is only ever as good as its
 > worst knot. Break the wood up and bond it back together and the flaws
 > are all still in there. They've just stopped being in the same place."
 
-> "The board we press flat is what your blade molds will want, when it
-> comes to that. Right now that gets bought in with dollars. It doesn't
-> have to."
+> "Flat board's the easy one — panelling, sheathing, anything that lives
+> indoors and doesn't hold weight. Beams are the hard part, and beams are
+> what a house actually needs."
+
+> "Same flat board would do for your blade molds too, if that ever comes
+> to anything. Gets bought in with dollars today. It doesn't have to."
+
+> "And that's the part worth having, to my mind. Anybody can build one
+> blade if they buy the board for the mold. It's making the mold AGAIN
+> that matters — you never get the first one right, and if you can't
+> afford to redo it you're stuck with whatever you managed first try.
+> That's not designing anything. That's just guessing once."
+
+**[Bio-adhesive — added 2026-08-02. Two sources and a residual import; see
+the frictions note under this community's heading. The bark line is the one
+to keep if these get cut for length: it turns a waste stream into an input
+without anybody explaining that that is what it does.]**
+
+> "Glue's the part nobody thinks about. It's the one thing in that press we
+> buy in — and we buy it in barrels."
+
+> "Bark, though. We strip tons of it off the logs and it's done nothing for
+> us but pile up. Turns out you can cook a binder out of it. Maria reckons
+> she can grow the other half of what we'd need. Between the two we'd be
+> most of the way there."
+
+> "Most of the way, mind. There's a hardener in it we haven't a hope of
+> making, and there's no talking a beam into holding without it. But the
+> flat board for your molds is an easier ask than a beam — dry, indoors,
+> nothing hanging off it. That's the part we could stop buying first."
 
 > "Got solar on the roof now, battery bank right beside it. Doesn't run
 > much, but it keeps the lights on through a cloudy week while these two
@@ -637,6 +1157,33 @@ added Valley assets):**
 > got their own way of not wasting things. Ours just smells worse than
 > most."
 
+**[Sheep and the golden hoof — added 2026-08-02. The Valley WANTS the
+flock; it is not doing Hillside a favour. See the sheep note under
+Hillside.]**
+
+**[The water tower — added 2026-08-02. Gives the Valley's seeded `water`
+resource a voice for the first time, and carries the fire tension. See
+the thatch fire-protection note under Hillside.]**
+
+> "Tower's the tallest thing we've built and it holds nothing but
+> water. Sits high enough to push a line up onto a roof without a pump
+> — no motor to seize, nothing to switch on. Just weight and gravity,
+> which is the only thing round here that never stopped working."
+
+> "We don't run it often, mind. Wet thatch rots, and a roof we soak
+> for practice is a roof we're replacing early. So we keep it full,
+> keep it from freezing, and we don't truly know it works."
+
+> "Which is a thing I try not to dwell on of an evening."
+
+> "Hillside's sheep come down to us after harvest. Eat the stubble off,
+> and we fold them on the fields at night — that's the whole point of it.
+> Ground's better in spring for having had them on it, and nobody bought
+> a sack of anything to make that happen."
+
+> "Their flock, mind. Their wool. We just get the winter of them, and the
+> good it does the soil. Suits everybody, which is rarer than it sounds."
+
 **[Biofuel set-up — added 2026-08-02. Pairs with DeShawn's line; between
 them the post-MVP conversion project is fully planted from both ends.
 Narrative only.]**
@@ -645,6 +1192,20 @@ Narrative only.]**
 > — we could grow and press what those buses burn, if somebody sorted out
 > the engines. That's not our end of it. But it's the first thing anybody's
 > asked us for that we'd be growing instead of just handing over."
+
+**[Thatching straw — added 2026-08-02. The point of this line is that it is
+a FARMING DECISION, not a waste stream: long-stemmed straw has to be grown
+and harvested deliberately. See the bio-materials note under Hillside.]**
+
+> "There's talk of us growing thatching straw. Not the wheat we grow now —
+> the combine chews the stalk to bits and you need it long and whole, so
+> it's a different seed, cut with a binder, threshed gentle. Slower. Less
+> grain off the same ground, too."
+
+> "But a thatched roof keeps a house warmer than anything anybody round
+> here can buy, and it costs nobody a dollar. Suburb's got the hands that
+> know how to lay it. So it's not whether — it's what we give up growing
+> to do it."
 
 ---
 
@@ -788,6 +1349,22 @@ this needs no map directions:]**
 
 > "Feedstock's mostly Suburb scrap these days. DeShawn's crews strip it,
 > we melt it. Cheaper than buying billet and it keeps two towns working."
+
+**[Pigment and bought colour — added 2026-08-02. Waste stream to input
+again, plus the dollar mechanic. The last line is the one that matters and
+it must stay NON-JUDGMENTAL: see the paint note under Hillside.]**
+
+> "Scale off the furnace floor, rust off anything not worth saving — grind
+> it fine enough and there's your red. Roast it hotter and it goes purple.
+> Half the paint in five towns started as something we swept up."
+
+> "Anything that isn't a red or an ochre or a black came from outside, and
+> it came out of somebody's vault. That's not me telling anyone not to."
+
+> "You can just see it from the road, is all. Blue especially. There's no
+> making blue — not here, not from anything we've got. So when you see a
+> blue door you know exactly what it cost, and near enough what it meant to
+> somebody."
 
 ### Kai Sutherland — Software Services
 

@@ -409,18 +409,65 @@ chain — which is the theme again, in the mechanics.
   metal loop the dialogue already establishes (Suburb strips → City melts →
   castings return), and the industry term for the product is *engineered
   wood*, so the community selling engineering services making engineered
-  lumber needs no line to explain it. **The payoff is the blade molds:**
-  they are MDF, which is a wood composite board, currently bought with
-  dollars — pressing it here turns the arc's first physical dependency into
-  a Stone trade. Adhesive stays the one import they cannot make, which is
-  where Valley's bio-adhesive potential comes in
-- **City** — heavy machines and the CNC lathe (Mike's factory; the plan's
+  lumber needs no line to explain it. **WHAT IT IS FOR, corrected
+  2026-08-02: HOUSES AND STRUCTURES** — not turbine tooling, which an
+  earlier draft wrongly led with. That makes the mill a supplier to the
+  REALTY COMPANY, whose function is placing people in housing, so the three
+  cross-community institutions interlock: the bus fleet MOVES people, the
+  realty company HOUSES them, the mill makes what the housing is built
+  from. The world already shows it — Hank's existing ambient line has new
+  houses going up at Mountain, and "new housing" is in the placed-props
+  list — so naming Hillside as the source explains set dressing the player
+  can already see. Blade molds stay a real secondary use and a forward
+  hint (MDF is a wood composite board, currently bought with dollars), just
+  not the headline. **Adhesive is BIO-ADHESIVE as of 2026-08-02**, from two
+  sources: TANNIN cooked out of the mill's own bark waste — a stream that
+  previously did nothing but pile up — and SOY protein grown in the Valley.
+  Both are real and long-commercial. A small HARDENER fraction is still
+  bought, deliberately: the residual import is kept rather than smoothed,
+  same as the biofuel thread. **The gradient cuts AGAINST them, revised
+  2026-08-02:** bio-adhesives are strongest in dry, interior,
+  non-structural service, so interior board, panelling and tooling stock go
+  local first — while STRUCTURAL BEAM, the mill's main product now that
+  housing is the purpose, is the hardest case there is and keeps needing
+  the bought hardener longest. That is a real constraint rather than the
+  lucky break an earlier draft called it, and it is better for the story:
+  they can make everything except the part that holds the roof up
+- **City** — heavy machines and the CNC lathe, **plus PIGMENT** (added
+  2026-08-02): mill scale and rust off the furnace floor, ground and roasted
+  to yellow, orange, red and purple-brown by kiln temperature, with lampblack
+  from the same charcoal. That supplies the whole community palette, which is
+  warm earths, black, white and the greys between — no blues and no vivid
+  greens, because the nontoxic ones do not exist and the vivid historical
+  ones were copper and arsenic. **ANY OTHER COLOUR IS BOUGHT FROM OUTSIDE
+  VENDORS FOR DOLLARS, not Stone** — which makes paint the ONE economic
+  decision in this project visible from the street rather than in a HUD
+  number. A blue door means somebody spent from the vault, and blue is
+  precisely what they cannot make. (Mike's factory; the plan's
   own narration already has City "selling tools/tech")
+- **Shared, not one community's** (added 2026-08-02): **the WATER TOWERS
+  and LIME KILNS** behind thatch fire protection. Torching — lime mortar on
+  the underside of the thatch — uses the SAME lime as the limewash and the
+  white pigment, so one kiln serves fire safety, paint and mortar. The
+  towers are gravity-fed and need no pump or power, at roughly 10 m of head
+  per bar, so Mountain gets its pressure from terrain while the Valley needs
+  a real ten-metre structure — a landmark that is plainly nobody's private
+  property, and the fourth shared institution after the bus loop, the realty
+  company and the mill. Built the usual way: City casts, Suburb raises,
+  Hillside frames
 - **Suburb** — scrap recovery and foundry feedstock. Their EXISTING ambient
   line already establishes this: *"half that control station's housing used
   to be something else entirely. We don't waste much out here."* No retrofit
-  needed
-- **Mountain** — assembly and the turbine site
+  needed. **Plus the building trades** (added 2026-08-02): the labour hall
+  crew builds the houses, and THATCHING is apprenticed skilled work, so the
+  Suburb supplies the hands for both
+- **Mountain** — assembly and the turbine site, **plus SUMMER GRAZING**
+  (added 2026-08-02). Hillside's flock is summered on the top ground, which
+  is the in-fiction answer to what a mile of open upland between the village
+  and the road is FOR — and the practical answer to dressing a very large,
+  very empty terrain. Scattered sheep read that ground as pasture rather
+  than as unfinished level, at the cost of a cheap common asset well inside
+  SCOPE's "static or simply-animated dressing" allowance
 - **Valley** — **RESOLVED 2026-08-02: grown feedstock.** No longer only a
   food supplier here. The bus fleet's biofuel conversion runs on what the
   Valley grows and presses — Maria's existing digester ambient line is the
@@ -428,10 +475,33 @@ chain — which is the theme again, in the mechanics.
   anybody's asked us for that we'd be growing instead of just handing
   over."* That is a genuine manufacturing-arc role rather than a courtesy
   one, because it is an input nobody else in the network can produce.
-  It extends naturally if wanted: bio-based adhesives (soy, starch and
-  lignin routes are all real) come off the same fields, which matters if
-  the composite-lumber idea is taken up, since resin is otherwise the one
-  input that has to be bought with dollars.
+  **It now extends, decided 2026-08-02:** the Valley also grows the SOY
+  that supplies half the mill's bio-adhesive. That gives the Valley two
+  distinct outputs into the manufacturing arc rather than one — fuel for
+  the fleet and binder for the press — off the same fields, and makes it a
+  supplier to Hillside as well as to the buses. Neither is a courtesy role;
+  both are inputs nobody else in the network can produce.
+  **A third, added 2026-08-02: THATCHING STRAW** — and unlike the other two
+  it is not a byproduct. Long-stemmed straw for thatch cannot be
+  combine-harvested; it needs a different variety, a reaper-binder and
+  gentle threshing, at a lower grain yield per acre. So it is a DECISION TO
+  FARM DIFFERENTLY rather than a waste stream put to use, which makes it the
+  Valley's one genuine trade-off in the arc: less grain, in exchange for
+  roofing nobody has to buy.
+  **A fourth, added 2026-08-02: FLAX** — post-MVP, and the best-connected
+  crop available. Linseed oil is the point rather than linoleum: it is the
+  traditional timber finish, so it protects the composite lumber at exactly
+  its weakest point (a moisture-sensitive bio-adhesive). It also gives a
+  LOCALLY-MADE EXTERIOR PAINT — Falu red is iron oxide, linseed oil, flour
+  and water, and City's foundry supplies the iron oxide — which is the only
+  item in this arc the player can SEE, since the buildings would share a
+  colour because the communities make the paint. Fibre flax also feeds the
+  Suburb's textiles, the shive feeds Hillside's press and the pressed meal
+  feeds the flock.
+  **⚠ OPEN — LAND COMPETITION.** The Valley now carries FOUR post-MVP crops
+  besides its traded grain, and thatching straw and flax both cut grain
+  yield rather than using waste. What the Valley gives up, and whether some
+  of this belongs on Hillside's slopes, is undecided
 
 ## Open decisions for you
 

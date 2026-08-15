@@ -1,0 +1,72 @@
+From 3aab7f24dbe4849ec5670858688f1b8e9d780322 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 6 Aug 2026 16:40:46 +0000
+Subject: [PATCH] Indent the script wrapper's body, which never parsed
+
+EmitOperations writes at one indent level. That is correct directly under a
+def, which is where WrapAsAddIn puts it, and wrong inside a try, which is
+where WrapAsScript puts it. Every script this generator has ever produced for
+ScriptKind.Script dedents out of the try block:
+
+    SyntaxError: expected 'except' or 'finally' block
+
+ScriptKind.Script is the only kind /scripts/execute can run, so the live
+execution path has never worked. Found on 2026-08-06 by the first generated
+script actually sent to Fusion.
+
+WHY NO TEST CAUGHT IT. Every test of this generator asserts on substrings of
+the output -- "contains revolveFeatures", "does not contain messageBox".
+Those assertions are all true of source that will not parse. A generator's
+output has one property worth checking before any other, which is that the
+target language accepts it, and nothing checked that.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ .../Generation/FusionPythonGenerator.cs       | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/FusionLibrary/Generation/FusionPythonGenerator.cs b/FusionLibrary/Generation/FusionPythonGenerator.cs
+index 68c00f0..7286db4 100644
+--- a/FusionLibrary/Generation/FusionPythonGenerator.cs
++++ b/FusionLibrary/Generation/FusionPythonGenerator.cs
+@@ -269,7 +269,7 @@ def run(context):
+         sketches = {{}}
+         outputs = []
+ 
+-{body}
++{Indent(body, "    ")}
+     except:
+         # NO ui.messageBox HERE, DELIBERATELY. A script run through the add-in's
+         # POST /scripts/execute is executing ON FUSION'S MAIN THREAD, and a modal dialog
+@@ -328,6 +328,28 @@ def stop(context):
+         // Helpers
+         // -----------------------------------------------------------------
+ 
++        /// <summary>
++        /// Push every line of an emitted body across by one level.
++        ///
++        /// EmitOperations writes at ONE indent, which is correct directly under a def and
++        /// wrong inside a try. WrapAsAddIn puts the body under `def _dwm_main():` and was
++        /// fine; WrapAsScript puts it inside `try:` in `run(context)`, two levels deep, and
++        /// produced Python that dedents straight out of the block:
++        ///
++        ///     SyntaxError: expected 'except' or 'finally' block
++        ///
++        /// Found 2026-08-06 by the first generated script ever sent to Fusion. Every test of
++        /// this generator asserts on SUBSTRINGS of the output, so none of them could see it --
++        /// "contains revolveFeatures" is true of source that will not parse.
++        /// </summary>
++        private static string Indent(string body, string prefix)
++        {
++            var sb = new StringBuilder();
++            foreach (var line in body.Replace("\r\n", "\n").Split('\n'))
++                sb.AppendLine(line.Length == 0 ? line : prefix + line);
++            return sb.ToString();
++        }
++
+         /// <summary>Python string literal with escaping.</summary>
+         private static string Py(string s) =>
+             "'" + s.Replace("\\", "\\\\").Replace("'", "\\'") + "'";
+-- 
+2.43.0
+

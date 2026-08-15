@@ -1,0 +1,211 @@
+From ef0e899c12cdfed05cfc9d832da5866b6a0eda5d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 6 Aug 2026 14:46:35 +0000
+Subject: [PATCH] Emit revolve and the new sketch ops, and fix two traps in the
+ wrapper
+
+The generated script's except block called ui.messageBox. A script run
+through the add-in's POST /scripts/execute is executing ON FUSION'S MAIN
+THREAD, and a modal dialog holds that thread -- the one thread the add-in
+needs to answer anything. A failing script would therefore time out the
+caller and queue every later request behind the dialog, which reads as a
+dead add-in rather than a failed script. It now prints the traceback, which
+the add-in returns in the reply body. The add-in wrapper keeps its message
+box: that one is user-initiated and not on the HTTP path.
+
+Neither wrapper defined design or root. Only CreateDocumentOp and
+OpenDocumentOp emitted them, so any sequence operating on an already open
+document hit NameError on the first sketch or on an STL export. That is
+every sequence DWM sends, because nothing outside Fusion can make it open a
+file -- the add-in works on whatever is active. Both wrappers now seed them
+from the active product.
+
+Polylines are emitted as a chain through endSketchPoint rather than as
+independent segments with matching coordinates, which Fusion does not
+necessarily merge; a run that does not close yields no profile, and the
+failure then surfaces on whatever feature comes next. _dwm_profile names the
+sketch and the profile count instead of letting item(0) return None.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ .../Generation/FusionPythonGenerator.cs       | 118 ++++++++++++++++--
+ 1 file changed, 110 insertions(+), 8 deletions(-)
+
+diff --git a/FusionLibrary/Generation/FusionPythonGenerator.cs b/FusionLibrary/Generation/FusionPythonGenerator.cs
+index 9521f7f..68c00f0 100644
+--- a/FusionLibrary/Generation/FusionPythonGenerator.cs
++++ b/FusionLibrary/Generation/FusionPythonGenerator.cs
+@@ -122,9 +122,18 @@ namespace Fusion.Scripting
+                         sb.AppendLine("        adsk.core.Point3D.create(_hw, _hh, 0))");
+                         break;
+ 
+-                    case ExtrudeOp o:
++                    case SketchCircleOp o:
+                         sb.AppendLine($"    _sk = sketches[{Py(o.SketchId)}]");
+-                        sb.AppendLine("    _prof = _sk.profiles.item(0)");
++                        sb.AppendLine("    _sk.sketchCurves.sketchCircles.addByCenterRadius(");
++                        sb.AppendLine($"        adsk.core.Point3D.create({F(o.CentreXCm)}, {F(o.CentreYCm)}, 0), {F(o.RadiusCm)})");
++                        break;
++
++                    case SketchPolylineOp o:
++                        EmitPolyline(sb, o);
++                        break;
++
++                    case ExtrudeOp o:
++                        sb.AppendLine($"    _prof = _dwm_profile(sketches[{Py(o.SketchId)}], {o.ProfileIndex}, {Py(o.SketchId)})");
+                         sb.AppendLine("    _ext_in = root.features.extrudeFeatures.createInput(");
+                         sb.AppendLine("        _prof, adsk.fusion.FeatureOperations.NewBodyFeatureOperation)");
+                         sb.AppendLine($"    _dist = adsk.core.ValueInput.createByReal({F(o.DistanceCm)})");
+@@ -134,6 +143,18 @@ namespace Fusion.Scripting
+                         sb.AppendLine("    root.features.extrudeFeatures.add(_ext_in)");
+                         break;
+ 
++                    case RevolveOp o:
++                        sb.AppendLine($"    _prof = _dwm_profile(sketches[{Py(o.SketchId)}], {o.ProfileIndex}, {Py(o.SketchId)})");
++                        sb.AppendLine($"    _axis = {AxisRef(o.Axis)}");
++                        sb.AppendLine("    _rev_in = root.features.revolveFeatures.createInput(");
++                        sb.AppendLine("        _prof, _axis, adsk.fusion.FeatureOperations.NewBodyFeatureOperation)");
++                        // RADIANS. Fusion's internal angular unit, the same way the internal
++                        // length unit is the centimetre -- createByReal does no conversion.
++                        sb.AppendLine($"    _ang = adsk.core.ValueInput.createByReal(math.radians({F(o.AngleDeg)}))");
++                        sb.AppendLine($"    _rev_in.setAngleExtent({(o.Symmetric ? "True" : "False")}, _ang)");
++                        sb.AppendLine("    root.features.revolveFeatures.add(_rev_in)");
++                        break;
++
+                     case ExportOp o:
+                         sb.AppendLine("    design = adsk.fusion.Design.cast(app.activeProduct)");
+                         sb.AppendLine("    _em = design.exportManager");
+@@ -167,37 +188,110 @@ namespace Fusion.Scripting
+             return sb.ToString();
+         }
+ 
++        /// <summary>
++        /// Emits a polyline as a CHAIN, not as independent segments.
++        ///
++        /// addByTwoPoints called with fresh Point3Ds each time produces lines whose
++        /// endpoints merely share coordinates. Fusion does not necessarily merge them into
++        /// one loop, and a run that does not close yields NO PROFILE -- so the extrude or
++        /// revolve that follows fails several operations later, pointing at the wrong thing.
++        /// Passing the previous line's endSketchPoint makes the connection explicit.
++        /// </summary>
++        private static void EmitPolyline(StringBuilder sb, SketchPolylineOp o)
++        {
++            var minimum = o.Closed ? 3 : 2;
++            if (o.PointsCm.Count < minimum)
++                throw new ArgumentException(
++                    $"SketchPolylineOp on '{o.SketchId}' has {o.PointsCm.Count} point(s); " +
++                    $"{(o.Closed ? "a closed profile" : "an open run")} needs at least {minimum}. " +
++                    "Caught here rather than in Fusion, where it surfaces as a missing profile " +
++                    "on whatever feature comes next.");
++
++            foreach (var p in o.PointsCm)
++                if (p is null || p.Length != 2)
++                    throw new ArgumentException(
++                        $"SketchPolylineOp on '{o.SketchId}' has a point with " +
++                        $"{p?.Length ?? 0} coordinate(s). Points are {{x, y}} in the sketch plane.");
++
++            sb.AppendLine($"    _sk = sketches[{Py(o.SketchId)}]");
++            sb.AppendLine("    _lines = _sk.sketchCurves.sketchLines");
++            sb.AppendLine("    _pts = [");
++            foreach (var p in o.PointsCm)
++                sb.AppendLine($"        adsk.core.Point3D.create({F(p[0])}, {F(p[1])}, 0),");
++            sb.AppendLine("    ]");
++            sb.AppendLine("    _first = _lines.addByTwoPoints(_pts[0], _pts[1])");
++            sb.AppendLine("    _prev = _first");
++            sb.AppendLine("    for _i in range(2, len(_pts)):");
++            sb.AppendLine("        _prev = _lines.addByTwoPoints(_prev.endSketchPoint, _pts[_i])");
++            if (o.Closed)
++                sb.AppendLine("    _lines.addByTwoPoints(_prev.endSketchPoint, _first.startSketchPoint)");
++        }
++
+         // -----------------------------------------------------------------
+         // Templates
+         // -----------------------------------------------------------------
+ 
++        /// <summary>
++        /// Module-level helpers shared by both wrappers.
++        ///
++        /// _dwm_profile EXISTS SO A MISSING PROFILE IS NOT A SHRUG. sk.profiles.item(0) on an
++        /// empty collection returns None, and the createInput that follows raises somewhere
++        /// that says nothing about which sketch failed to close.
++        /// </summary>
++        private const string Preamble = @"
++def _dwm_profile(sk, idx, sketch_id):
++    n = sk.profiles.count
++    if n == 0:
++        raise RuntimeError(
++            ""Sketch '"" + sketch_id + ""' has no closed profile. A profile needs a closed ""
++            ""loop -- check that the polyline closes and that no segment is duplicated."")
++    if idx < 0 or idx >= n:
++        raise RuntimeError(
++            ""Sketch '"" + sketch_id + ""' has "" + str(n) + "" profile(s); index "" + str(idx) +
++            "" does not exist. A sketch has one profile per closed region."")
++    return sk.profiles.item(idx)
++";
++
++        // BOTH WRAPPERS SEED design AND root FROM THE ACTIVE PRODUCT. Only CreateDocumentOp
++        // and OpenDocumentOp used to define them, so any sequence that operated on an already
++        // open document -- which is every sequence DWM sends, since nothing outside Fusion can
++        // make it open a file -- hit NameError on the first sketch or export.
+         private static string WrapAsScript(string body, ScriptMetadata meta) => $@"# {meta.Name} — {meta.Description}
+ # Generated by DWM FusionLibrary (Python track) v{meta.Version}
+-import adsk.core, adsk.fusion, traceback
++import math, adsk.core, adsk.fusion, traceback
++{Preamble}
+ 
+ def run(context):
+-    ui = None
+     try:
+         app = adsk.core.Application.get()
+-        ui = app.userInterface
++        design = adsk.fusion.Design.cast(app.activeProduct)
++        root = design.rootComponent if design else None
+         sketches = {{}}
+         outputs = []
+ 
+ {body}
+     except:
+-        if ui:
+-            ui.messageBox('DWM script failed:\n{{}}'.format(traceback.format_exc()))
++        # NO ui.messageBox HERE, DELIBERATELY. A script run through the add-in's
++        # POST /scripts/execute is executing ON FUSION'S MAIN THREAD, and a modal dialog
++        # holds that thread -- the one thread the add-in needs to answer anything. The
++        # caller's request times out and every later request queues behind the dialog,
++        # which reads as a dead add-in rather than a failed script. Printing puts the
++        # traceback in the reply body, where the caller is already looking.
++        print('DWM script failed:\n{{}}'.format(traceback.format_exc()))
+         raise
+ ";
+ 
+         private static string WrapAsAddIn(string body, ScriptMetadata meta) => $@"# {meta.Name} — {meta.Description}
+ # Generated by DWM FusionLibrary (Python track) v{meta.Version}
+-import adsk.core, adsk.fusion, traceback
++import math, adsk.core, adsk.fusion, traceback
++{Preamble}
+ 
+ _app = None
+ 
+ def _dwm_main():
+     app = adsk.core.Application.get()
++    design = adsk.fusion.Design.cast(app.activeProduct)
++    root = design.rootComponent if design else None
+     sketches = {{}}
+     outputs = []
+ 
+@@ -249,5 +343,13 @@ def stop(context):
+             "YZ" => "root.yZConstructionPlane",
+             _ => throw new ArgumentException($"Unknown plane '{plane}'. Use XY, XZ, or YZ.")
+         };
++
++        private static string AxisRef(string axis) => axis.ToUpperInvariant() switch
++        {
++            "X" => "root.xConstructionAxis",
++            "Y" => "root.yConstructionAxis",
++            "Z" => "root.zConstructionAxis",
++            _ => throw new ArgumentException($"Unknown revolve axis '{axis}'. Use X, Y, or Z.")
++        };
+     }
+ }
+-- 
+2.43.0
+

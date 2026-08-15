@@ -1,0 +1,195 @@
+<Window x:Class="DWMStudio.Views.ToolWorkspaceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Title}"
+        Width="820" Height="640"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource DwmShellBrush}">
+
+    <!-- ONE WINDOW FOR EVERY TOOL. Nothing here names UModel, Fusion, MATLAB, FEMAP or
+         MYSTRAN; it renders whatever ToolWorkspaceModel it was handed. That is what makes
+         adding a tool a registry row rather than another XAML file. -->
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{Binding Title}"
+                       FontSize="20" FontWeight="SemiBold"
+                       Foreground="{Binding AccentColor}" />
+            <TextBlock Text="{Binding Subtitle}"
+                       Style="{StaticResource MutedLabelStyle}"
+                       TextWrapping="Wrap" Margin="0 6 0 0" />
+            <TextBlock Text="{Binding AvailabilityLabel}"
+                       Style="{StaticResource MutedLabelStyle}"
+                       Margin="0 2 0 0" />
+        </StackPanel>
+
+        <!-- The tool's own limits. Recorded in the registry precisely so it can be shown
+             here: every wrong assumption on this project has been about what a tool cannot
+             do rather than what it can. -->
+        <Border Grid.Row="1"
+                Margin="0 16 0 0" Padding="12"
+                BorderBrush="{StaticResource DwmDividerBrush}" BorderThickness="1"
+                Visibility="{Binding HasLimitation,
+                    Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="{Binding KnownLimitation}"
+                       Style="{StaticResource MutedLabelStyle}"
+                       TextWrapping="Wrap" />
+        </Border>
+
+        <!-- Artifact + the three verbs -->
+        <StackPanel Grid.Row="2" Margin="0 16 0 0">
+            <TextBlock Text="Artifact" Style="{StaticResource MutedLabelStyle}" />
+            <TextBlock Text="{Binding ArtifactLabel}"
+                       Foreground="#C8D0DC" TextTrimming="CharacterEllipsis"
+                       Margin="0 4 0 12" />
+
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Create"
+                        Command="{Binding CreateCommand}"
+                        ToolTip="{Binding CreateTooltip}"
+                        Style="{StaticResource GhostButtonStyle}" Margin="0 0 8 0" />
+                <Button Content="Edit"
+                        Command="{Binding EditCommand}"
+                        ToolTip="{Binding EditTooltip}"
+                        Style="{StaticResource GhostButtonStyle}" Margin="0 0 8 0" />
+                <Button Content="{Binding RunLabel}"
+                        Command="{Binding RunCommand}"
+                        ToolTip="{Binding RunTooltip}"
+                        Style="{StaticResource PrimaryButtonStyle}" />
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="3" Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ============================================================
+                 Contents: THIS stage's files, and the selection the verbs act on.
+
+                 Select a file and Edit opens that one, rather than only ever the stage's
+                 configured artifact. Re-read after every run — in the finally block, not on
+                 success, because a MYSTRAN FATAL still writes the .f06 and .ERR that explain
+                 it, and those are exactly what someone needs when a run fails.
+
+                 A snapshot with a button, not a live view: nothing behind it is a database,
+                 so nothing can push an update here.
+                 ============================================================ -->
+            <DockPanel Grid.Column="0">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <TextBlock Text="Contents"
+                               Style="{StaticResource MutedLabelStyle}"
+                               VerticalAlignment="Center" />
+                    <Button Content="Refresh"
+                            Command="{Binding RefreshTreeCommand}"
+                            Style="{StaticResource GhostButtonStyle}"
+                            Margin="12 0 0 0" />
+                </StackPanel>
+
+                <Border Margin="0 6 0 0"
+                        BorderBrush="{StaticResource DwmDividerBrush}"
+                        BorderThickness="1"
+                        Padding="6">
+                    <!-- SelectedItemChanged in code-behind rather than a binding, because
+                         TreeView.SelectedItem is read-only in WPF and cannot be bound. -->
+                    <TreeView x:Name="ContentsTree"
+                              ItemsSource="{Binding Tree}"
+                              SelectedItemChanged="ContentsTree_SelectedItemChanged"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem">
+                                <!-- Expanded: a missing deck that only appears after a click
+                                     is bad news hiding behind a collapse. -->
+                                <Setter Property="IsExpanded" Value="True" />
+                                <Setter Property="Foreground" Value="#E0E4EC" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal" Margin="0 2">
+                                    <TextBlock Text="{Binding Label}" FontSize="12">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="#E0E4EC" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                        <Setter Property="Foreground"
+                                                                Value="{StaticResource DwmErrorBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding Detail}"
+                                               Style="{StaticResource MutedLabelStyle}"
+                                               ToolTip="{Binding Path=Path}"
+                                               Margin="10 2 0 0" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Border>
+            </DockPanel>
+
+        <!-- Run history. A stage used to be a boolean, which cannot express "ran, passed,
+             three warnings" — and that is exactly what a turbine export produces. -->
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="Run history" Style="{StaticResource MutedLabelStyle}" />
+            <ListBox ItemsSource="{Binding Runs}"
+                     Background="Transparent" BorderBrush="{StaticResource DwmDividerBrush}"
+                     Margin="0 6 0 0" MinHeight="140">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Status}" FontWeight="SemiBold"
+                                           Foreground="#C8D0DC" />
+                                <TextBlock Text="{Binding StartedUtc, StringFormat=' — {0:u}'}"
+                                           Style="{StaticResource MutedLabelStyle}" />
+                                <TextBlock Text="{Binding Duration, StringFormat=' ({0:g})'}"
+                                           Style="{StaticResource MutedLabelStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding ResolvedVia}"
+                                       Style="{StaticResource MutedLabelStyle}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding FailureMessage}"
+                                       Style="{StaticResource MutedLabelStyle}"
+                                       TextWrapping="Wrap" />
+                            <!-- Warnings were collected and then never rendered, which made
+                                 SucceededWithWarnings a status with nothing behind it. The
+                                 whole reason a run is not a boolean is that "ran, passed,
+                                 three warnings" needs somewhere to say the three things. -->
+                            <ItemsControl ItemsSource="{Binding Warnings}" Margin="0 4 0 0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"
+                                                   Style="{StaticResource MutedLabelStyle}"
+                                                   TextWrapping="Wrap" Margin="0 2 0 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        </Grid>
+
+        <TextBlock Grid.Row="4" Text="{Binding StatusMessage}"
+                   Style="{StaticResource MutedLabelStyle}"
+                   TextWrapping="Wrap" Margin="0 12 0 0" />
+    </Grid>
+</Window>

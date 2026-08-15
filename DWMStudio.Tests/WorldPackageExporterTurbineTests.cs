@@ -31,12 +31,13 @@ namespace DWMStudio.Tests
     public sealed class WorldPackageExporterTurbineTests : IDisposable
     {
         private readonly string _csvPath;
+        private readonly List<string> _extraPaths = new();
         private readonly string _dbPath;
 
         public WorldPackageExporterTurbineTests()
         {
             var runId = Guid.NewGuid().ToString("N");
-            _csvPath = Path.Combine(Path.GetTempPath(), $"dwm_turbine_test_samples_{runId}.csv");
+            _csvPath = Path.Combine(Path.GetTempPath(), $"dwm_turbine_test_samples_{runId}_rotor.csv");
             _dbPath = Path.Combine(Path.GetTempPath(), $"dwm_turbine_test_world_{runId}.db");
         }
 
@@ -44,6 +45,7 @@ namespace DWMStudio.Tests
         {
             SqliteConnection.ClearAllPools();
             if (File.Exists(_csvPath)) File.Delete(_csvPath);
+            foreach (var p in _extraPaths) if (File.Exists(p)) File.Delete(p);
             if (File.Exists(_dbPath)) File.Delete(_dbPath);
         }
 
@@ -211,6 +213,162 @@ namespace DWMStudio.Tests
                 description, StringComparison.OrdinalIgnoreCase);
             Assert.Contains("NOT Simscape Multibody", description, StringComparison.OrdinalIgnoreCase);
             Assert.Contains("Simulink", description, StringComparison.OrdinalIgnoreCase);
+        }
+
+        // ==================================================================
+        // MULTI-CHANNEL: the turbine has four moving parts plus a signal block.
+        // SimSamples is keyed on (BlockId, Time), so these are extra BLOCKS rather
+        // than extra columns -- the schema used as designed, with no migration.
+
+        /// <summary>Writes the sibling channel files wtExportSimSamples.m produces.</summary>
+        private void WriteChannelCsv(string suffix, int rows, double scale)
+        {
+            var at = _csvPath.LastIndexOf("_rotor", StringComparison.Ordinal);
+            var path = _csvPath.Substring(0, at) + "_" + suffix + _csvPath.Substring(at + 6);
+            var lines = new List<string> { "Time,Position,Velocity" };
+            for (int i = 0; i < rows; i++)
+            {
+                double time = i / 30.0;
+                lines.Add(string.Format(CultureInfo.InvariantCulture, "{0:R},{1:R},{2:R}",
+                    time, scale * i, scale));
+            }
+            File.WriteAllLines(path, lines);
+            _extraPaths.Add(path);
+        }
+
+        private List<string> BlockIds()
+        {
+            var ids = new List<string>();
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT BlockId FROM Blocks ORDER BY BlockId;";
+            using var r = cmd.ExecuteReader();
+            while (r.Read()) ids.Add(r.GetString(0));
+            return ids;
+        }
+
+        private double ScalarDouble(string sql)
+        {
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = sql;
+            return Convert.ToDouble(cmd.ExecuteScalar(), CultureInfo.InvariantCulture);
+        }
+
+        private int SampleCount(string blockId)
+        {
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $"SELECT COUNT(*) FROM SimSamples WHERE BlockId = '{blockId}';";
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        [Fact]
+        public void SiblingChannelFiles_AreLoadedAsAdditionalBlocks()
+        {
+            WriteFakeSimCsv();
+            foreach (var s in new[] { "pitch", "yaw", "tower", "power" }) WriteChannelCsv(s, 10, 0.1);
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            Assert.Equal(
+                new[] { "block_pitch", "block_power", "block_rotor", "block_tower", "block_yaw" },
+                BlockIds());
+            foreach (var b in new[] { "block_rotor", "block_pitch", "block_yaw", "block_tower", "block_power" })
+                Assert.Equal(10, SampleCount(b));
+        }
+
+        [Fact]
+        public void MissingSiblingChannels_AreSimplySkipped()
+        {
+            // Rotor-only is a legitimate export, and it is what every earlier test does.
+            WriteFakeSimCsv();
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            Assert.Equal(new[] { "block_rotor" }, BlockIds());
+        }
+
+        [Fact]
+        public void MeasuredTowerFrequency_TravelsWithThePackage_AndSoDoesTheModelsDisagreement()
+        {
+            // The only numbers in the package measured by a solver rather than copied from a
+            // model. BOTH are written deliberately: MYSTRAN says 0.2810991 Hz, the Simulink
+            // model assumes 0.320 Hz, and the 13.8% gap is the verification gate's finding.
+            // Publishing only the comfortable one would be the easier choice and the wrong one.
+            WriteFakeSimCsv();
+            foreach (var s in new[] { "pitch", "yaw", "tower", "power" }) WriteChannelCsv(s, 10, 0.1);
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            // Compared as numbers, not as strings. Value is REAL, and double.ToString() puts a
+            // comma in for the decimal separator under a good many cultures -- a test that
+            // passes in one locale and fails in another tells you about the agent, not the code.
+            Assert.Equal(0.2810991, ScalarDouble(
+                "SELECT Value FROM Parameters WHERE BlockId='block_tower' AND Name='f_tower_measured';"), 7);
+            Assert.Equal(0.320, ScalarDouble(
+                "SELECT Value FROM Parameters WHERE BlockId='block_tower' AND Name='f_tower_model';"), 7);
+
+            // Units are carried, which is the whole reason this belongs in Parameters rather
+            // than being smuggled into SimSamples -- that table has no Unit column and is keyed
+            // on Time, and a mode shape is not on a timeline.
+            Assert.Equal("Hz", ScalarString(
+                "SELECT Unit FROM Parameters WHERE BlockId='block_tower' AND Name='f_tower_measured';"));
+        }
+
+        [Fact]
+        public void NoTowerBlock_MeansNoTowerParameters_BecauseNothingWouldCatchAnOrphan()
+        {
+            // THE GUARD THIS TEST EXISTS FOR. A rotor-only export creates no block_tower --
+            // SeedTurbineChannel returns 0 without inserting when the sibling CSV is absent --
+            // and the mechanism schema has NO FOREIGN KEYS (fragility audit item 2). So an
+            // unguarded insert would not throw: it would write two parameter rows pointing at a
+            // block that does not exist, and `verify` would report green.
+            WriteFakeSimCsv();
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            Assert.Equal(new[] { "block_rotor" }, BlockIds());
+            Assert.Equal("0", ScalarString(
+                "SELECT COUNT(*) FROM Parameters WHERE BlockId='block_tower';"));
+
+            // Stated as the general property rather than the specific case, because the next
+            // orphan will be some other block: no Parameters row may name a missing block.
+            Assert.Equal("0", ScalarString(
+                "SELECT COUNT(*) FROM Parameters p WHERE NOT EXISTS " +
+                "(SELECT 1 FROM Blocks b WHERE b.BlockId = p.BlockId);"));
+        }
+
+        [Fact]
+        public void PowerBlock_IsTypedSignal_AndHasNoAssetBinding()
+        {
+            // The one non-kinematic block: Position/Velocity are plain channel slots
+            // (watts and m/s), which is why BlockType marks it and nothing binds a mesh.
+            WriteFakeSimCsv();
+            WriteChannelCsv("power", 5, 1000.0);
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
+
+            Assert.Equal("Signal", ScalarString("SELECT BlockType FROM Blocks WHERE BlockId = 'block_power';"));
+            Assert.Equal("0", ScalarString("SELECT COUNT(*) FROM AssetBindings WHERE BlockId = 'block_power';"));
+            // The kinematic blocks DO bind meshes.
+            Assert.Equal("RigidBody", ScalarString("SELECT BlockType FROM Blocks WHERE BlockId = 'block_rotor';"));
+        }
+
+        [Fact]
+        public void PathWithoutRotorSuffix_DoesNotTriggerChannelDiscovery()
+        {
+            // Substitution keys on the LAST "_rotor"; a path lacking it must stay
+            // rotor-only rather than probing for arbitrary sibling files.
+            var plain = Path.Combine(Path.GetTempPath(), $"dwm_plain_{Guid.NewGuid():N}.csv");
+            _extraPaths.Add(plain);
+            File.WriteAllLines(plain, new[] { "Time,Position,Velocity", "0,0,1", "0.1,0.1,1" });
+
+            new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", plain);
+
+            Assert.Equal(new[] { "block_rotor" }, BlockIds());
         }
 
         [Fact]

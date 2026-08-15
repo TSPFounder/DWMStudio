@@ -25,12 +25,26 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DWM.Shared\DWM.Shared.csproj" />
+
+    <!--
+      These two already arrive transitively through DWM.Shared, and FusionStageServiceTests
+      compiles against CAD.Scripting today without them. They are declared anyway, because
+      DWMStudio.WorldPackageCli did NOT get them the same way and failed with CS0246 on an
+      identical setup. A test project that implements ICADScriptRunner should not be relying
+      on inheritance that has already proved inconsistent once.
+    -->
+    <ProjectReference Include="..\..\CAD_Library\CAD_Library\CAD_Library.csproj" />
+    <ProjectReference Include="..\..\FusionLibrary\FusionLibrary\FusionLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Day 13 golden-scenario regression fixture, copied to the test output dir so
          GoldenWorldPackageTests.cs can open it by relative path. -->
     <None Include="Fixtures\golden_world_economy.db" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Real MYSTRAN 19.0.0 output from the 2026-08-03 tower run. NastranF06Parser was
+         written from the Nastran-standard layout before any output from this solver
+         existed; this fixture is what turns that from an assumption into a checked fact. -->
+    <None Include="Fixtures\wtTowerModal.f06" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
