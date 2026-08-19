@@ -372,23 +372,27 @@ namespace DWMStudio.Tests
         }
 
         [Fact]
-        public void AssetPath_IsStillThePlaceholder_SoThisFailsOnceItIsSetProperly()
+        public void AssetPath_IsTheMountainRotorMesh()
         {
-            // A DELIBERATE TRIPWIRE, not an assertion that the placeholder is correct.
+            // THE TRIPWIRE THIS REPLACES HAS FIRED AND DONE ITS JOB (2026-08-18).
             //
-            // The Mountain turbine mesh was placed on Day 21 and its real content path is not
-            // recorded anywhere this exporter can see, so WriteTurbine ships "REPLACE_ME/...".
-            // A wrong asset path binds nothing and the rotor simply does not appear, with no
-            // error anywhere -- the worst kind of failure to debug.
+            // It previously asserted the rotor binding was still "REPLACE_ME/WindTurbineRotor",
+            // deliberately written to FAIL the moment a real path was filled in, so the change
+            // could not happen by accident. It failed, on purpose, and this is the update it
+            // was asking for.
             //
-            // When the real path is filled in, THIS TEST WILL FAIL. That is the intended
-            // behaviour: update the expected value here at the same time, and the tripwire has
-            // done its job of making sure the change was deliberate rather than forgotten.
+            // The property being guarded has not changed and is still worth a test: a wrong
+            // asset path binds nothing and the rotor simply does not appear, with no error
+            // anywhere. This now pins the exact path instead of pinning its absence.
+            //
+            // NOT VERIFIED BY THIS TEST: that the path resolves to an actual mesh. It cannot
+            // be -- /Content/Wind_Turbine/ is a gitignored Marketplace pack that the C# test
+            // project has no view of. This asserts the string, and the editor asserts the rest.
             WriteFakeSimCsv();
             new WorldPackageExporter().WriteTurbine(_dbPath, "turbine", _csvPath);
 
             var assetPath = ScalarString("SELECT AssetPath FROM AssetBindings;");
-            Assert.Equal("REPLACE_ME/WindTurbineRotor", assetPath);
+            Assert.Equal("/Game/Wind_Turbine/Meshes/SM_Rotor.SM_Rotor", assetPath);
         }
     }
 }
