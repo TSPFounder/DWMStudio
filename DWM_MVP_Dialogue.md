@@ -1342,8 +1342,8 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 **[Navigation hand-off — added 2026-08-02. Two markers, one building, so
 this needs no map directions:]**
 
-> "You'll want Kai before you go anywhere. He's in the
-> back over. Metal's only half of what you're carrying home."
+> "You'll want Kai before you go anywhere. He's in the back, over there.
+> Metal's only half of what you're carrying home."
 
 **Ambient (optional — triggered on repeat visits):**
 
