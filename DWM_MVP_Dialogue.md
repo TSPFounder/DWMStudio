@@ -300,10 +300,10 @@ set up, and the payoff is available whenever it is wanted.
 storyline doc for his movement loop.)*
 
 **Approach:**
-> "That turbine came with the land when we settled here — nobody's turned
-> it in years, and nobody left so much as a drawing of how it goes back
-> together. We need real plans before anyone touches a wrench, and hands,
-> parts, and food for the crew once we do. Head down to the other
+> "That turbine came with the land when we settled here.  Nobody's turned 
+> it in years, and nobody left detailed drawings of how it goes back together. 
+> We need real plans before anyone touches a wrench to that thing. We need 
+> hands, parts, and food for the crew to fix it. Head down to the other
 > communities. Trade fair, come back with what we need, and let's get
 > this thing spinning again."
 
@@ -311,16 +311,16 @@ storyline doc for his movement loop.)*
 
 > "Start with Hillside — they've got engineers who can put together real
 > CAD drawings and a simulation model, so whoever fixes this thing isn't
-> guessing. After that: Grain, to feed the crew while they're working the
-> mount. Hands that know rigging, because none of us have hung something
-> this heavy before. And tools from the city — precision work no one up
-> here can forge."
+> guessing. After that go to the valley for grain, fruits, and vegetables 
+> to feed the crew while they're working the mount. Hands that know rigging, 
+> because none of us have hung something this heavy before. And tools from the 
+> city — precision work no one up here can forge."
 
 **[Directions — hand-off to Hillside. See the navigation note in the format
 section: these lines describe REAL level geometry and break if the level
 changes.]**
 
-> "Out through the gate and follow the track down to Hillside. Ask for
+> "Go out through the gate and follow the track down to Hillside. Ask for
 > Sophia Sandoval — she's got the room above the realty office. She'll be
 > expecting you."
 
@@ -331,7 +331,7 @@ returns to Mountain mid-quest:]**
 
 **[Return visit, after all four trades complete:]**
 
-> "Real plans for the mount, grain for the crew, hands to do the rigging,
+> "Real plans for the mount, meals for the crew, hands to do the rigging,
 > and tools to finish it right. That's everything. Let's bring this old
 > thing back to life."
 
@@ -969,7 +969,7 @@ resources, nothing to implement.
 
 **[Player prompt: "What exactly did you put together?"]**
 
-> "Full CAD drawings of the mount and rotor assembly, plus a Simulink
+> "Full CAD models and drawings of the mount and rotor assembly, plus a Simulink
 > model of how it should actually behave once it's running. Owen did the
 > drawings, Nathan built the model. Between the two, whoever's doing the
 > repair up there won't be guessing."
@@ -982,8 +982,8 @@ resources, nothing to implement.
 delivers HALF the answer and says so — City holds the other half. She must
 not be able to conclude alone.]**
 
-> "One more thing, and you won't like it. Doing this properly — not
-> patching it, properly — the design hours alone are steep. Whether that's
+> "One more thing, and you won't like it. Doing this properly, not
+> patching it, the design hours alone are steep. Whether that's
 > worth paying depends on what the parts cost, and that's not my number to
 > give you. Ask Mike in the City. Put his figure next to mine before you
 > decide anything."
@@ -994,7 +994,7 @@ not be able to conclude alone.]**
 
 > "Down the stairs, right as you come out of the office, then straight on
 > down the market street — don't turn off it. Road climbs out the far end
-> and drops you into the Valley. Maria Vega'll be on her porch. She
+> and drops you into the Valley. Maria Vega will be on her porch. She
 > generally is."
 
 **Sophia — Ambient (optional, triggered on repeat visits):**
@@ -1051,6 +1051,15 @@ without anybody explaining that that is what it does.]**
 > making, and there's no talking a beam into holding without it. But the
 > flat board for your molds is an easier ask than a beam — dry, indoors,
 > nothing hanging off it. That's the part we could stop buying first."
+
+> "Same flat board would do for your blade molds too, if that ever comes 
+> to anything. Gets bought in with dollars today. It doesn't have to." 
+
+> "And that's the part worth having, to my mind. Anybody can build one 
+> blade if they buy the board for the mold. It's making the mold again 
+> that matters — you never get the first one right, and if you can't 
+> afford to redo it you're stuck with whatever you managed first try. 
+> That's not designing anything. That's just guessing once." 
 
 > "Got solar on the roof now, battery bank right beside it. Doesn't run
 > much, but it keeps the lights on through a cloudy week while these two
@@ -1115,7 +1124,7 @@ will need a matching pass, same as Sophia's did for engineering_services.)*
 > else coming off this land too."
 
 **[Trade panel opens — Grain for Stone:]**
-> "Here — grain'll keep your crew fed a good while on its own. Ledger
+> "Here — grain and vegetables will keep your crew fed a good while. Ledger
 > says it's fair, and I trust the ledger."
 
 **Farewell — includes the hand-off out of Valley:**
@@ -1134,7 +1143,7 @@ backstory.)*
 **Ambient (optional — triggered on repeat visits; references the newly-
 added Valley assets):**
 
-> "Grain's what moves on the ledger, but it's not all we grow. Vegetables,
+> "Grain's what moves on the ledger mostly, but it's not all we grow. Vegetables,
 > some meat, honey from the hives out past the east field — none of it's
 > tracked the way the grain is, but nobody up here goes hungry either."
 
@@ -1174,7 +1183,7 @@ the thatch fire-protection note under Hillside.]**
 > for practice is a roof we're replacing early. So we keep it full,
 > keep it from freezing, and we don't truly know it works."
 
-> "Which is a thing I try not to dwell on of an evening."
+> "Which is a thing I try not to dwell on."
 
 > "Hillside's sheep come down to us after harvest. Eat the stubble off,
 > and we fold them on the fields at night — that's the whole point of it.
@@ -1188,7 +1197,7 @@ the thatch fire-protection note under Hillside.]**
 them the post-MVP conversion project is fully planted from both ends.
 Narrative only.]**
 
-> "DeShawn keeps asking what else that digester could do. Truth is, plenty
+> "DeShawn keeps asking what our digester could do. Truth is, plenty
 > — we could grow and press what those buses burn, if somebody sorted out
 > the engines. That's not our end of it. But it's the first thing anybody's
 > asked us for that we'd be growing instead of just handing over."
@@ -1242,9 +1251,9 @@ balance visibly drops on screen:]**
 **[Navigation hand-off — added 2026-08-02. Sends the player onto the bus
 loop to City, and names Mike so the arrival has a target:]**
 
-> "City's too far to walk and I'm not sending you. Stop's on the corner —
-> take the loop. Ask for Mike Dayton, he'll be on the shop floor, and he'll
-> be the loudest thing in the building."
+> "City's too far to walk and I'm not sending you on foot. Bus stop's on the corner —
+> take the loop. When you get to the city, ask for Mike Dayton, he'll be on the shop 
+> floor, and he'll be the loudest thing in the building."
 
 **Ambient (optional — triggered on repeat visits; references the newly-
 added Suburb assets):**
@@ -1257,8 +1266,8 @@ added Suburb assets):**
 > housing used to be something else entirely. We don't waste much out
 > here. Can't afford to."
 
-> "Anything we strip that's worth melting goes up to Mike in the City —
-> comes back as castings we couldn't make ourselves. Fair trade. Neither
+> "Anything we strip that's worth melting goes up to Mike in the City. 
+> It comes back as castings we couldn't make ourselves. Fair trade. Neither
 > of us has the whole shop, but between us it's most of one."
 
 **[Composite lumber feedstock — added 2026-08-02. The wood counterpart to
@@ -1333,9 +1342,8 @@ he also cannot conclude alone. The two halves meet at Hank.]**
 **[Navigation hand-off — added 2026-08-02. Two markers, one building, so
 this needs no map directions:]**
 
-> "You'll want Kai before you go anywhere. Straight up the stairs at the
-> back — office over the shop floor. Metal's only half of what you're
-> carrying home."
+> "You'll want Kai before you go anywhere. He's in the
+> back over. Metal's only half of what you're carrying home."
 
 **Ambient (optional — triggered on repeat visits):**
 
@@ -1369,8 +1377,8 @@ it must stay NON-JUDGMENTAL: see the paint note under Hillside.]**
 ### Kai Sutherland — Software Services
 
 **Approach:**
-> "Took Nathan's Simulink model and turned it into real controller code —
-> C, running on the hardware, not just a diagram anymore. And since it
+> "Took Nathan's Simulink model and turned it into real controller C code
+> running on the hardware, not just a diagram anymore. And since it
 > needed a home, I laid out the controller enclosure myself in Fusion.
 > Wind speed, load, the whole picture — that's on us. Software's not
 > free, but neither is guessing wrong on wind speed."
@@ -1390,7 +1398,7 @@ Mountain.]**
 
 > "Loop runs back round the way you came — stays on it all the way up to
 > Mountain. Get on, and the next thing you'll be looking at is that
-> turbine. Hank'll be waiting."
+> turbine. Hank will be waiting."
 
 **Ambient (optional — triggered on repeat visits):**
 
