@@ -66,15 +66,18 @@
                         <Button Content="Library"
                                 Command="{Binding NavigateLibraryCommand}"
                                 Style="{StaticResource NavItemStyle}" />
-                    </StackPanel>
 
-                    <!-- New World button at bottom -->
-                    <Border DockPanel.Dock="Bottom" Padding="12">
-                        <Button Content="+ New World"
-                                Command="{Binding Dashboard.OpenNewWorldWizardCommand}"
-                                Style="{StaticResource PrimaryButtonStyle}"
-                                HorizontalAlignment="Stretch" />
-                    </Border>
+                        <!-- Directly under Library, not docked to the bottom of the nav.
+                             Docked there it sat behind the status bar and was clipped to a
+                             sliver: the one control that creates anything was the one you
+                             could not see. -->
+                        <Border Padding="12 16 12 0">
+                            <Button Content="+ New World"
+                                    Command="{Binding Dashboard.OpenNewWorldWizardCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    HorizontalAlignment="Stretch" />
+                        </Border>
+                    </StackPanel>
 
                     <Grid />
                 </DockPanel>
