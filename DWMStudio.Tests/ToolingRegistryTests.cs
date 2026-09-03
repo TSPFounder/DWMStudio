@@ -201,7 +201,7 @@ namespace DWMStudio.Tests
             // be built on the test agent.
             var labels = ProjectPipeline.Default().Stages.Select(s => s.Label).ToArray();
 
-            Assert.Equal(new[] { "SysML", "CAD", "MATLAB", "Co-Sim", "Runtime" }, labels);
+            Assert.Equal(new[] { "SysML", "CAD", "MATLAB", "Co-Sim", "UE Simulation" }, labels);
         }
 
         [Fact]

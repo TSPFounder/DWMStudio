@@ -264,9 +264,14 @@ namespace DWMStudio.ViewModels
                         await OpenInFemapAsync();
                         break;
 
+                    case ToolRegistry.Unreal:
+                        await LaunchUnrealBuildAsync();
+                        break;
+
                     default:
                         // Say so plainly rather than showing a spinner over nothing. Only
-                        // MATLAB and MYSTRAN have runners; the rest are TOOLING.md steps 3-5.
+                        // MATLAB, MYSTRAN, FEMAP and Unreal have runners; the rest are
+                        // TOOLING.md steps 3-5.
                         StatusMessage =
                             $"No runner is wired for {Model.ToolId} yet. MYSTRAN runs from here; " +
                             "MATLAB runs through the WorldPackageCli 'turbine' command.";
@@ -507,6 +512,100 @@ namespace DWMStudio.ViewModels
         /// `reg query HKCR /f "matlab.application" /k`, alongside 25.2.
         /// </summary>
         private const string MatlabProgId = "Matlab.Application.7.12";
+
+        /// <summary>
+        /// Where the packaged game lands. This is the -archivedirectory the DWM_Dev
+        /// BuildCookRun writes to, so it is the build a player would actually run rather
+        /// than the editor's own output.
+        /// </summary>
+        private static readonly string[] PackagedBuildCandidates =
+        {
+            @"C:\DreamWorldMaker\Builds\Windows\DWM_Dev.exe"
+        };
+
+        /// <summary>
+        /// Start the packaged build.
+        ///
+        /// THE EXE, NOT THE EDITOR. The tool entry names UnrealEditor.exe because that is
+        /// what the availability check can find on disk, but launching the editor would open
+        /// a project for authoring -- a different thing from watching the simulation run.
+        /// The packaged build needs no editor, starts in seconds, and is what everyone else
+        /// will see.
+        ///
+        /// Fire and forget by design: this returns as soon as the process starts. The game
+        /// runs for as long as someone plays it, and a stage that sat busy until they quit
+        /// would lock the workspace for the whole session. The run is recorded as started,
+        /// which is the honest limit of what a launch can report -- the same ceiling the
+        /// tool's KnownLimitation describes.
+        /// </summary>
+        private async Task LaunchUnrealBuildAsync()
+        {
+            var exe = PackagedBuildCandidates.FirstOrDefault(File.Exists);
+            var startedUtc = DateTime.UtcNow;
+
+            if (exe is null)
+            {
+                StatusMessage =
+                    $"No packaged build found at {PackagedBuildCandidates[0]}. " +
+                    "Cook one first (RunUAT BuildCookRun -archivedirectory=...).";
+
+                Runs.Add(new ToolRun
+                {
+                    StageId = Model.StageId,
+                    ToolId = Model.ToolId,
+                    StartedUtc = startedUtc,
+                    Duration = DateTime.UtcNow - startedUtc,
+                    Status = ToolRunStatus.Failed,
+                    FailureMessage = StatusMessage
+                });
+                return;
+            }
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var info = new ProcessStartInfo
+                    {
+                        FileName = exe,
+                        // The build reads and writes beside itself -- Saved\Logs, and the
+                        // economy database it seeds on first run. Starting elsewhere leaves
+                        // those relative to whatever directory the Studio happened to be in.
+                        WorkingDirectory = Path.GetDirectoryName(exe)!,
+                        UseShellExecute = true
+                    };
+                    Process.Start(info);
+                });
+
+                StatusMessage = $"Launched {Path.GetFileName(exe)}. The Studio cannot see inside it from here.";
+
+                Runs.Add(new ToolRun
+                {
+                    StageId = Model.StageId,
+                    ToolId = Model.ToolId,
+                    ResolvedVia = exe,
+                    StartedUtc = startedUtc,
+                    Duration = DateTime.UtcNow - startedUtc,
+                    Status = ToolRunStatus.Succeeded,
+                    Outputs = new[] { Path.Combine(Path.GetDirectoryName(exe)!, @"DWM_Dev\Saved\Logs\DWM_Dev.log") }
+                });
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Could not start {exe}: {ex.Message}";
+
+                Runs.Add(new ToolRun
+                {
+                    StageId = Model.StageId,
+                    ToolId = Model.ToolId,
+                    ResolvedVia = exe,
+                    StartedUtc = startedUtc,
+                    Duration = DateTime.UtcNow - startedUtc,
+                    Status = ToolRunStatus.Failed,
+                    FailureMessage = ex.Message
+                });
+            }
+        }
 
         private async Task RunMystranAsync()
         {
