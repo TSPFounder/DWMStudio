@@ -1,7 +1,8 @@
-<Window x:Class="DWMStudio.Views.ToolWorkspaceWindow"
+﻿<Window x:Class="DWMStudio.Views.ToolWorkspaceWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Title}"
+        Icon="../Resources/DwmStudio.ico"
         Width="820" Height="640"
         WindowStartupLocation="CenterOwner"
         Background="{StaticResource DwmShellBrush}">

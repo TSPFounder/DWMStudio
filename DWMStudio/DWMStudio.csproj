@@ -6,7 +6,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+
+    <!-- The exe's icon in Explorer, the taskbar and Alt-Tab. -->
+    <ApplicationIcon>Resources\DwmStudio.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Also as a Resource, so windows can point their Icon at it. ApplicationIcon
+         alone only reaches the executable, not a Window's title bar. -->
+    <Resource Include="Resources\DwmStudio.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
