@@ -10,42 +10,10 @@ frequencies, and read the mode shapes back.
 
 ---
 
-## 1. The Library
+## 1. The project page
 
-DWM Studio opens on your **Library** — the worlds you have, and nothing else.
-
-![The DWM Studio Library, listing three worlds](docs/images/studio-home-library.png)
-
-A **world** is one thing being engineered, with its own set of stages. Three ship
-with the project:
-
-| World | What it is |
-|---|---|
-| **Tracer Pendulum** | Single rigid body — the Phase 3 tracer bullet world |
-| **Satellite Bus Demo** | Structural modes under launch loading |
-| **WindTurbine** | The Mountain's 3 MW turbine — the subject of this tutorial |
-
-Each card carries a completion counter, `0 / 5 stages`. Note that the project page
-in the next section enumerates *seven* stages for WindTurbine — two of them, the FEA
-Mesh and FEA Solve stages, are marked `(optional)`, which accounts for the
-difference. So the counter tracks the five required stages, and you can finish a
-world without ever touching FEA.
-
-The two buttons at the top — **Export Test Package** and **Export Economy
-Package** — write world packages for the runtime. They are the handoff to Unreal,
-not part of the engineering loop below.
-
-> **Close the Studio before Unreal opens a world package.** The exporter deletes and
-> recreates the `.db`; the handoff is sequential by design, not concurrent. See
-> `RUNBOOK.md` §4 and `ARCH.md`.
-
-`Open →` on **WindTurbine** to follow along.
-
----
-
-## 2. The project page
-
-Each project is a row of **stages**, and each stage is one tool with one job.
+The Studio opens on a Library of worlds; pick **WindTurbine** and `Open →` to get
+here. Each project is a row of **stages**, and each stage is one tool with one job.
 
 ![The DWM Studio project page, showing the six tool cards and the Contents tree](docs/images/studio-project-page.png)
 
@@ -71,7 +39,7 @@ live. A green dot means the Studio has a working connection to that application.
 
 ---
 
-## 3. MATLAB / Simulink — running the turbine
+## 2. MATLAB / Simulink — running the turbine
 
 `Open workspace` on the MATLAB card brings up Simulink over COM. The model is
 `wtTurbine3MW`.
@@ -139,7 +107,7 @@ moving to solver output rather than to a canned animation.
 
 ---
 
-## 4. FEA Mesh / FEMAP — building the deck
+## 3. FEA Mesh / FEMAP — building the deck
 
 The tower needs its own analysis. Open the FEMAP stage.
 
@@ -176,7 +144,7 @@ and will not.
 
 ---
 
-## 5. FEA Solve / MYSTRAN — solving it
+## 4. FEA Solve / MYSTRAN — solving it
 
 Back in the Studio, open the MYSTRAN stage and press **Solve deck**.
 
@@ -212,7 +180,7 @@ The footer gives the short version: **`Solved in 0.1 s. 6 modes, first at 0.2811
 
 ---
 
-## 6. Reading the results back
+## 5. Reading the results back
 
 Return to the FEMAP stage and press **Load results in FEMAP**.
 
@@ -246,12 +214,39 @@ That is the whole reason both stages exist in one project.
 
 ---
 
-## 7. What comes next
+## 6. Exporting to the runtime
 
-`Co-Sim` reads **"No tool for this stage"** and `Runtime / Unreal Engine 5.3` reads
-**"Nothing on disk yet"** until you export a world package to it. The channel CSVs
-from §3 are what the runtime consumes, and the export buttons on the Library screen
-are how the package gets written.
+Two stages are still empty, and they stay that way until you hand the work over.
+`Co-Sim` reads **"No tool for this stage"**; `Runtime / Unreal Engine 5.3` reads
+**"Nothing on disk yet"**. The channel CSVs from §2 are what the runtime plays
+back, but it cannot see them until they are packaged.
+
+That packaging happens on the Library, the screen you came in through:
+
+![The DWM Studio Library, listing three worlds](docs/images/studio-home-library.png)
+
+**Export Test Package** and **Export Economy Package** write the world packages
+Unreal reads. Once one exists, the Runtime stage stops reading "Nothing on disk yet"
+and the turbine in the game moves to your solver output.
+
+> **Close the Studio before Unreal opens the package.** The exporter deletes and
+> recreates the `.db` on every export, and the runtime opens it read-only afterwards.
+> The handoff is sequential by design, not concurrent — a file-handle rule learned
+> the hard way. See `RUNBOOK.md` §4 and `ARCH.md`.
+
+The Library is also how you switch between worlds. Three ship with the project, each
+with its own stages and its own package:
+
+| World | What it is |
+|---|---|
+| **Tracer Pendulum** | Single rigid body — the Phase 3 tracer bullet world |
+| **Satellite Bus Demo** | Structural modes under launch loading |
+| **WindTurbine** | The Mountain's 3 MW turbine — the one this tutorial follows |
+
+A small discrepancy worth knowing before it puzzles you: the cards count
+`0 / 5 stages` while the project page lists seven. The two FEA stages are marked
+`(optional)`, which accounts for the gap — a world can reach 5 / 5 without ever
+being meshed or solved.
 
 ---
 
