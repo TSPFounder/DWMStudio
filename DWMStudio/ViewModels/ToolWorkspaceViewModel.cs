@@ -1,4 +1,4 @@
-// ToolWorkspaceViewModel.cs
+﻿// ToolWorkspaceViewModel.cs
 // Backs the one workspace window, for whichever tool it was opened on.
 //
 // ONE WINDOW, NOT SIX. The verbs are the same everywhere -- Create, Edit, Run, plus the run
@@ -514,14 +514,33 @@ namespace DWMStudio.ViewModels
         private const string MatlabProgId = "Matlab.Application.7.12";
 
         /// <summary>
-        /// Where the packaged game lands. This is the -archivedirectory the DWM_Dev
-        /// BuildCookRun writes to, so it is the build a player would actually run rather
-        /// than the editor's own output.
+        /// Where the packaged game might be, nearest first.
+        ///
+        /// INSTALLED LAYOUT BEFORE THE DEVELOPER ONE. The combined installer puts the two
+        /// side by side -- Studio\ and Game\ under one install root -- so a path relative
+        /// to this executable is the only one that works on someone else's machine. The
+        /// absolute path is the developer fallback: it is the -archivedirectory DWM_Dev's
+        /// BuildCookRun writes to, and it is where this runs from in this repo.
         /// </summary>
-        private static readonly string[] PackagedBuildCandidates =
+        private static IEnumerable<string> PackagedBuildCandidates()
         {
-            @"C:\DreamWorldMaker\Builds\Windows\DWM_Dev.exe"
-        };
+            var here = Path.GetDirectoryName(Environment.ProcessPath ?? "") ?? "";
+
+            if (here.Length > 0)
+            {
+                // Installed: <root>\Studio\DWMStudio.exe -> <root>\Game\DWM_Dev.exe
+                var parent = Path.GetDirectoryName(here);
+                if (parent is not null)
+                {
+                    yield return Path.Combine(parent, "Game", "DWM_Dev.exe");
+                }
+
+                // Or simply beside the Studio, if someone flattens the layout.
+                yield return Path.Combine(here, "DWM_Dev.exe");
+            }
+
+            yield return @"C:\DreamWorldMaker\Builds\Windows\DWM_Dev.exe";
+        }
 
         /// <summary>
         /// Start the packaged build.
@@ -540,13 +559,13 @@ namespace DWMStudio.ViewModels
         /// </summary>
         private async Task LaunchUnrealBuildAsync()
         {
-            var exe = PackagedBuildCandidates.FirstOrDefault(File.Exists);
+            var exe = PackagedBuildCandidates().FirstOrDefault(File.Exists);
             var startedUtc = DateTime.UtcNow;
 
             if (exe is null)
             {
                 StatusMessage =
-                    $"No packaged build found at {PackagedBuildCandidates[0]}. " +
+                    $"No packaged build found. Looked in: {string.Join(", ", PackagedBuildCandidates())}. " +
                     "Cook one first (RunUAT BuildCookRun -archivedirectory=...).";
 
                 Runs.Add(new ToolRun
