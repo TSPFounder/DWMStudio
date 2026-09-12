@@ -341,6 +341,8 @@ A pooled purchase needs **no schema change**. It is *N* rows in `CommunityDollar
 
 ### 9.2 Worked make-or-buy: the crankshaft **[AIR]**
 
+> **This question is downstream of the propulsion choice — do not settle it first.** `SCOPE.md` (2026-09-12) records an all-electric alternative, which would delete the crankshaft, the forge and trip hammer as engine tooling, and FDY-2's crankcase driver outright. All-electric does not close at the stated mission — 1,140 kg of battery against 41 kg of avgas, on an aircraft whose whole MTOW is ~1,150 kg — but the **series hybrid** variant does, and it changes this section's answer rather than removing it: a genset running at one fixed speed has a gentler crankshaft duty than a variable-load aero engine, which moves the make-or-buy line. Everything below assumes the piston engine as specified. **OPEN-12.**
+
 `SCOPE.md` (2026-09-12) decides the crankshaft is **built-up, not one-piece drop-forged**, because drop forging needs $5,000–25,000 in dies and is economical only at 50–100+ units/year. That reasoning is sound and the conclusion stands. But it settles *how to make one*, not *whether to*. The communities still face a make-or-buy decision, and it deserves recording because it is the sharpest economic question the aircraft raises.
 
 **The decision is not really about forging.** A community forge and trip hammer can shape a crankshaft. What follows the shaping is the harder half, and it is where make-or-buy is actually decided:
@@ -454,6 +456,7 @@ Requirements here are verified by one of four methods, and each requirement abov
 | **OPEN-9** **[AIR]** | Does a pooled Dollar purchase need a correlation key? | It works today as *N* ledger rows sharing a free-text `Reason` — no schema change. But the contributions are then only recoverable by string-matching, which is fragile once there is more than one. | ECO-6 |
 | **OPEN-10** **[AIR]** | Coal/coke or charcoal for the forge? | Coal and coke are almost certainly a recurring Dollar import; charcoal is made locally from wood and is already the foundry's fuel. Charcoal forging is historically ordinary, so the substitution is real — but it changes achievable temperature and fuel handling, and the entry specifies coal/coke. | FRG-2, FRG-3, ECO-3 |
 | **OPEN-11** **[AIR]** | Does the turbine-driven trip hammer take priority over generation, and what drives it when the wind drops? | A tool only available in wind is a scheduling constraint that either gets modelled or gets designed out. | SR-11, SR-12, SR-13, HAM-2 |
+| **OPEN-12** **[AIR]** | **Piston, series hybrid, or all-electric?** This decides how much of §7.8 and §9.2 survives. | All-electric does not close at the stated mission (`SCOPE.md` 2026-09-12): ~1,140 kg of battery against 41 kg of avgas, on a ~1,150 kg aircraft, and still ~608 kg at optimistic future cells. It would also delete most of the manufacturing arc — which is the point of this document — since an electric aircraft is largely assembly around modules the communities cannot make at any scale. **Series hybrid is the middle path**: a constant-speed genset is easier to build than a variable-load aero engine and keeps the forge-and-foundry chain. **Settle this before OPEN-8.** | §7.8, §9.2, OPEN-8, FDY-2 |
 
 ---
 
@@ -466,6 +469,7 @@ Requirements here are verified by one of four methods, and each requirement abov
 | `DWMStudio/SCOPE.md` 2026-08-01 (laser capability) | Every figure in §7.2, and SAF-1 through SAF-5 |
 | `DWMStudio/SCOPE.md` 2026-08-02 (recycling, paint, wood) | Feedstock roles, the Dollar-cost precedent in ECO-2, Valley's partial role, the adhesive import |
 | `DWMStudio/SCOPE.md` 2026-09-12 (amphibious utility aircraft) | Everything marked **[AIR]**: the ~25 kg furnace closing FDY-2, the forge and trip hammer (§7.8), surface treatment (§7.9), mechanical drive (§6.4), the built-up crankshaft and its alignment trade-off, and the corrosion findings behind SUR-3 and SUR-4 |
+| `DWMStudio/SCOPE.md` 2026-09-12 (all-electric alternative) | OPEN-12 and the conditional note opening §9.2. The battery and fuel masses there are computed from the stated mission at the assumptions the entry lists — indicative sizing, not a design |
 | `DWMStudio/ECONOMY_SCHEMA_SPEC.md`; `SCOPE.md` 2026-08-02 | `CommunityDollarVaultLedger`'s shape (`CommunityId`, signed `DeltaAmount`, free-text `Reason`), which is what §9.1 checks the pooling requirement against |
 | `DWM_Dev/Models/Fusion/MVP_WindTurbine/README.md` | The 58.5 m blade and its planform — the basis of §3 |
 | `DWM_Dev/Wind_Turbine_BOM.xlsx` (referenced, not read) | Cited by `SCOPE.md` for the fatigue reasoning behind SHM-4 |
