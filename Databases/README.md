@@ -90,10 +90,52 @@ The dump temporarily disables foreign-key enforcement because SQLite dumps
 tables alphabetically; it restores enforcement after loading. Clients that edit
 the database must enable `PRAGMA foreign_keys=ON` on their own connections.
 
-The database uses DELETE journal mode and schema `user_version = 1`. It is closed
+The database uses DELETE journal mode and schema `user_version = 2`. It is closed
 before publication and needs no WAL/SHM companion files. Both the committed
 database and an SQL round-trip passed integrity and foreign-key checks; all 25
 subsystems have mappings and the recreated logical dump is identical.
 
 When editing the catalog, update the database and SQL export together and repeat
 those checks. MATLAB runtime validation is a separate future task.
+
+
+## Assembly / component classification (schema 2)
+
+Every `blocks` row now has `entry_type` (`assembly` or `component`),
+`classification_basis`, and `classification_rationale`. These fields are also
+available through `subsystem_catalog`.
+
+- **Assembly:** an interacting mechanism, circuit, combined controller, complete
+  system, or model-composition container. Examples: motors, pumps, gear sets,
+  H-Bridge, PID Controller, and the refrigeration cycle.
+- **Component:** an individual modeled element or atomic function at this catalog
+  boundary. Examples: resistors, springs, joints, ideal sensors, and logic blocks.
+  Solver/reference/configuration entries are infrastructure components, not
+  manufactured parts.
+
+This is a DWM functional classification, not an inspection of MathWorks block
+internals or a manufacturing bill of materials. A single Simscape block can
+represent an assembly. Conversely, a rigid-body or lumped-source abstraction
+is treated as one component even if the real device has multiple parts.
+
+Boundary-dependent cases have explicit rationales: Battery and Battery
+(Table-Based) are lumped source components; Battery Equivalent Circuit is a
+model assembly of circuit/thermal elements. Neither label implies a particular
+cell count. File Solid, MATLAB Function, Chart, and model containers should be
+reassessed when their concrete contents and intended boundary are known.
+Leadscrew is a screw/nut assembly; Lead Screw Joint is a kinematic component.
+
+All 137 entries are classified. Existing mappings, sources, release status and
+runtime-verification flags are preserved. This addition does not certify MATLAB
+compatibility or claim a supplier-defined classification.
+
+```sql
+SELECT entry_type, COUNT(*) FROM blocks GROUP BY entry_type;
+
+SELECT name, entry_type, classification_rationale
+FROM blocks ORDER BY entry_type, name;
+
+SELECT priority, subsystem, block, entry_type, classification_rationale
+FROM subsystem_catalog WHERE entry_type = 'assembly'
+ORDER BY priority, block;
+```
