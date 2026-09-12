@@ -2,8 +2,9 @@
 
 **Status:** FIRST TAKE. Draft for discussion; nothing here is baselined.
 **Date:** 2026-09-12
-**Scope:** The affordable, open-source manufacturing tooling of Project Goal 5 — CNC router, laser cutter/engraver, 3D printers, foundry, lathe, mill and drill press, sheet-metal and press tooling, CNC lathe.
-**Traces to:** `Dream_World_Maker_Project_Goals.md` §§2, 4, 5, 6; `SCOPE.md` decisions dated 2026-08-01 and 2026-08-02.
+**Scope:** The affordable, open-source manufacturing tooling of Project Goal 5 — CNC router, laser cutter/engraver, 3D printers, foundry, lathe, mill and drill press, sheet-metal and press tooling, CNC lathe — plus the forge, trip hammer and surface-treatment capabilities the amphibious aircraft adds.
+**Traces to:** `Dream_World_Maker_Project_Goals.md` §§2, 4, 5, 6; `SCOPE.md` decisions dated 2026-08-01, 2026-08-02 and 2026-09-12.
+**Marked [AIR]:** requirements that exist because of the amphibious utility aircraft rather than the wind turbine.
 
 ---
 
@@ -33,6 +34,8 @@ This document defines what that tooling must do. It covers both halves of the pr
 - **Simulated equipment** — the representation of those machines inside DWM, which must be truthful enough that a player who learns the tool in the game has learned something about the tool in the world.
 
 Where a requirement applies to only one, it says so.
+
+**Two demand drivers, not one.** This document was first written against the wind turbine. `SCOPE.md` (2026-09-12) added a second: the **amphibious utility aircraft**, whose 100–140 hp radial engine demands capabilities the turbine never did — a forge, a trip hammer, plating and anodising, and precision on a flight-critical fatigue part. Where the two drivers disagree about what a tool must do, the aircraft is the binding case, because an engine part that fails does so at altitude. Requirements added for it are marked **[AIR]**.
 
 ---
 
@@ -108,8 +111,15 @@ The production dependency that makes the chain a *structure* rather than a list:
         │                                  ▲                                            │
         │                                  │                                            ▼
    laser ──▶ pattern, core box,      salvaged metal                             parts for the NEXT machine
-             jig, template            (Suburb → City)
+             jig, template            (Suburb → City)                                   ▲
+                                                                                        │
+   forge + trip hammer ──▶ forged steel blank ─────────────────────────────────────────┘
+        ▲                          [AIR] fatigue-loaded parts only
+        │
+   turbine mechanical drive
 ```
+
+**The forge is a second branch, not a later stage.** `SCOPE.md` (2026-09-12) establishes that fatigue-loaded steel parts — crankshaft, connecting rods, valves — **cannot** be cast aluminium and must be forged and machined. That is a parallel route into the same finishing machines, not another link in the Gingery sequence, and it is the aircraft's requirement rather than the turbine's. It also confirms **FDY-4** from a second direction: steel parts leave the foundry's scope on fatigue grounds as well as on temperature grounds.
 
 **SR-BOOT-1** — The chain **shall** be traversable in dependency order with no step requiring a tool from a later step.
 *Verification:* topological sort of the tool-to-tool dependency graph; a cycle is a defect.
@@ -151,6 +161,18 @@ These apply to the kit as a whole. Machine-specific requirements are in §7.
 |---|---|---|
 | **SR-9** | The set **should** standardise on one fastener system, one stock-size family and a common workholding interface across machines. | Goal 5: *"a common set of designs and compatible parts that several communities can use."* Also halves the spares inventory. |
 | **SR-10** | Wear parts and consumables **should** be either locally producible or available from more than one outside supplier. | MR-9. A single-source consumable is a dependency wearing a different hat. |
+
+### 6.4 Motive power and mechanical drive **[AIR]**
+
+SR-5 and SR-6 assume electrical supply. The trip hammer breaks that assumption, and `SCOPE.md` (2026-09-12) makes it deliberate: *"the trip hammer can be driven by the wind turbine's mechanical power once it is running"* — a direct causal link between the two community projects rather than two isolated builds.
+
+| ID | Requirement | Rationale |
+|---|---|---|
+| **SR-11** | Tools that can be driven mechanically **should** publish a shaft-power requirement (kW, speed, torque characteristic, duty) alongside their electrical figure, so mechanical drive is a modelled option rather than a narrative flourish. | MR-8. A turbine-driven hammer only means something if the turbine's available shaft power and the hammer's demand are both numbers. |
+| **SR-12** | Any mechanical take-off from the turbine **shall** specify the coupling, the speed-matching arrangement, and what happens to the driven tool when wind drops or the turbine is shut down. | A hammer that stops mid-stroke on a falling gust is a safety and a quality problem. Intermittent prime movers are the reason line shafting historically ran off a governed source or a flywheel. |
+| **SR-13** | Mechanical drive **shall not** compromise the turbine's primary duty; priority between electrical generation and shaft take-off **shall** be stated. | The turbine is the community's energy asset first. An unprioritised take-off silently converts stored electrical capacity into forging.  |
+
+> **Why this is more than colour.** Belt-driven line shafting from a single prime mover is exactly how small shops worked before per-machine motors, so this is historically sound as well as narratively neat. It also does real work for the economy model: shaft power taken directly never becomes electricity, so the trip hammer's cost is legible in the same units as the turbine's output.
 
 ---
 
@@ -208,7 +230,7 @@ Primary role per `SCOPE.md`: jigs, fixtures, and **casting patterns** — the mo
 | ID | Requirement | Basis |
 |---|---|---|
 | **FDY-1** | The furnace **shall** melt and pour aluminium alloys — melt ~660 °C, pour ~700–760 °C. | **PROPOSED** figures, standard practice. |
-| **FDY-2** | Melt capacity **shall** be at least the largest single casting in the tooling BOM plus sprue and riser allowance, conventionally 1.5–2× part mass. | **PROPOSED.** Derived rather than guessed; needs the BOM to close. |
+| **FDY-2** | Melt capacity **shall** be at least **25 kg** of aluminium per heat. | **DECIDED** (`SCOPE.md` 2026-09-12), which fixes a ~25 kg furnace for the aircraft's crankcase sections and cylinder heads. That is the largest casting demand on record, so it governs. Note the sizing logic the entry supplies: this is **not** a constraint on total engine size, because real aircraft crankcases are already multiple smaller cast sections bolted together rather than one monolithic pour. The general rule still applies to anything larger — largest single casting plus sprue and riser allowance, conventionally 1.5–2× part mass. |
 | **FDY-3** | Copper-alloy capability (brass/bronze, pour ~950–1100 °C) **should** be available for bearings and fittings. | Bushings and fittings are named in Goal 5's lathe row and are classically bronze. |
 | **FDY-4** | Ferrous casting is **out of scope** for the charcoal foundry and **shall** be stated as such. Cast iron needs ~1200–1400 °C — cupola or induction territory. | MR-7. A capability limit that will otherwise get quietly assumed. |
 | **FDY-5** | Accepted salvage feedstock **shall** be specified by grade, with rejected contaminants named. | MR-6. |
@@ -246,6 +268,32 @@ The core Gingery chain. Cast from foundry output, finished by each other.
 | **CLA-2** | Control **shall** conform to SR-3's common stack. | Commonality of skills and spares. |
 | **CLA-3** | The conversion **shall** document the accuracy it adds *and the backlash it inherits* from the host machine. | MR-7. A stepper does not fix a worn leadscrew; it automates it. |
 
+### 7.8 Forge and trip hammer — `FRG`, `HAM` **[AIR]**
+
+**DECIDED** (`SCOPE.md` 2026-09-12): a coal/coke forge at ~1100–1300 °C, historically proven and buildable from local materials, plus a mechanical trip/power hammer for shaping. Required because fatigue-loaded steel parts cannot be cast aluminium.
+
+| ID | Requirement | Basis |
+|---|---|---|
+| **FRG-1** | The forge **shall** reach and hold 1100–1300 °C in a working volume sized to the largest forged part. | **DECIDED** temperature; volume **PROPOSED**, pending the engine design. |
+| **FRG-2** | The forge **shall** be operable on **charcoal** as well as coal or coke. | **PROPOSED, and it matters economically.** The foundry already runs on charcoal, which the communities make from wood — a Stone cost. Coal and coke are mined and processed: almost certainly a Dollar import, and a *recurring* one, which ECO-3 identifies as the worst kind. Charcoal forging is historically ordinary and predates coal, so this is a substitution the communities can actually make. See **OPEN-10**. |
+| **FRG-3** | Achievable temperature **shall** be stated per fuel, since fuel choice changes it. | MR-7. |
+| **FRG-4** | The forge **shall not** be relied on for steel *melting*. It is a heating and forging tool, not a ferrous foundry. | Reinforces **FDY-4**. Forging temperature is well below steel's melting point, and conflating the two would put cast-steel parts in scope on a false premise. |
+| **HAM-1** | The trip hammer **shall** publish blow energy, blow rate and the section size it can draw down. | MR-8; without these the forging step has no time model and cannot be priced under ECO-1. |
+| **HAM-2** | The hammer **shall** be drivable from the turbine's mechanical take-off per SR-11/SR-12/SR-13, with an electrical or manual alternative when wind is unavailable. | **DECIDED** link; the fallback is **PROPOSED**. A tool available only when it is windy is a scheduling constraint the economy model must either represent or design out. |
+| **HAM-3** | Guarding, foot-control behaviour on release, and a positive means of arresting the ram **shall** be specified as part of the tool definition. | §10. Trip hammers are among the most dangerous tools in the set. |
+
+### 7.9 Surface treatment and plating — `SUR` **[AIR]**
+
+**DECIDED** (`SCOPE.md` 2026-09-12) as the galvanic-corrosion control for an aluminium airframe carrying steel fasteners and a steel crankshaft: coatings (cadmium or zinc plating on steel, anodising on aluminium), sealants and paint at dissimilar-metal joints, and sacrificial zinc anodes on the floats.
+
+| ID | Requirement | Basis |
+|---|---|---|
+| **SUR-1** | The set **shall** include an anodising capability for aluminium. | **DECIDED** for corrosion control — and it already has a second customer: **LSR-8** laser-etches graduations on anodised aluminium for the dividing head, dials and nameplates. Two independent demands make this the easiest of these processes to justify. |
+| **SUR-2** | The set **shall** include a plating capability for steel parts. **Zinc or zinc-nickel should be preferred over cadmium.** | **DECIDED** requirement, **PROPOSED** substitution. Cadmium is the traditional aviation choice and it is also acutely and chronically toxic; cadmium plating baths are cyanide-based, cadmium fume is a serious inhalation hazard, and its use is restricted or banned in many jurisdictions. Zinc-nickel is the modern aerospace replacement precisely because of this. Choosing cadmium because that is what the FAA guidance historically describes would import a hazard the communities cannot handle safely. **SAF-12.** |
+| **SUR-3** | Float surfaces **shall** be painted or composite-covered as the **primary** corrosion defence, with sacrificial anodes as backup. | **DECIDED, and this is the entry's honest complication.** A documented Alaska floatplane case in fresh water showed anodes alone did **not** protect bare aluminium — the painted and composite-covered surfaces were the ones that stayed protected. Specifying anodes as the primary measure would be following the folk answer rather than the evidence. |
+| **SUR-4** | Corrosion control **shall** be specified as a recurring maintenance regime — anode replacement interval, hull inspection interval — not a one-time treatment. | **DECIDED.** Fits the established pattern: the turbine was not fix-and-forget either. The Suburb's existing "recycling/labour, keep things running" identity is the natural owner. |
+| **SUR-5** | Every dissimilar-metal joint in a library design **shall** name its isolation method. | Bearings (bronze/babbitt or roller) already isolate the steel crankshaft from the aluminium crankcase *inherently* — that is a design property, not an added cost, and it is the model for the rest. |
+
 ---
 
 ## 8. Community allocation
@@ -281,8 +329,47 @@ This is the group that distinguishes DWM's tooling requirements from any other m
 | **ECO-3** | Consumables **shall** be classified as locally producible (Stone) or imported (Dollar), with the import list maintained as a standing target for substitution. | Goal 2 (*"reduce recurring dependence on outside purchases"*). Consumables are the recurring drain — worse than capital cost, because they never stop. |
 | **ECO-4** | Where a tool displaces an outside purchase, the displaced Dollar cost **should** be recorded, so the tool's payback is expressible in the project's own terms. | Makes "affordable" measurable rather than rhetorical. |
 | **ECO-5** | Build effort **shall** be estimated in Stones, so that building a tool and buying one are comparable in the model. | MR-9. The whole argument for building rather than buying is that it spends the renewable money. That argument needs numbers. |
+| **ECO-6** | A purchase funded by more than one community — a **pooled** purchase — **shall** be representable, and the contributing communities and their shares **shall** be recoverable from the ledger afterwards. | **[AIR]** The aircraft is the first item plausibly beyond any single community's vault. Pooling is the obvious answer and the model should support it rather than forcing the fiction around it. |
 
 > **Precedent already set.** The 2026-08-02 paint decision worked exactly this way: the palette is what the communities can make; any other colour is available *"from outside vendors at a Dollar cost, not a Stone trade"* — and `CommunityDollarVaultLedger` already carries `CommunityId`, a signed `DeltaAmount` and a free-text `Reason`, so recording it needs no schema change. The tooling arc should reuse that mechanism rather than invent one. **This is a solved problem; don't re-solve it.**
+
+### 9.1 Pooled purchase — what the ledger already does, and the one thing it doesn't
+
+A pooled purchase needs **no schema change**. It is *N* rows in `CommunityDollarVaultLedger`, one per contributing community, each with its own `CommunityId` and signed `DeltaAmount`, sharing a `Reason`. The shares can differ. The paint precedent already established the shape.
+
+**What it does not give you is a join key.** Nothing ties those *N* rows together except matching free text, so "what did the aircraft cost, and who paid what share" is answered by string-matching a `Reason` field rather than by a query. That is fine for one pooled purchase and fragile for several — and a pooled purchase is exactly the kind of thing a community would want to audit years later. The minimal fix is a correlation identifier (a nullable `PurchaseId`, or a `JointPurchase` row the ledger rows reference). Worth deciding deliberately rather than discovering after the fiction depends on it. **OPEN-9.**
+
+### 9.2 Worked make-or-buy: the crankshaft **[AIR]**
+
+`SCOPE.md` (2026-09-12) decides the crankshaft is **built-up, not one-piece drop-forged**, because drop forging needs $5,000–25,000 in dies and is economical only at 50–100+ units/year. That reasoning is sound and the conclusion stands. But it settles *how to make one*, not *whether to*. The communities still face a make-or-buy decision, and it deserves recording because it is the sharpest economic question the aircraft raises.
+
+**The decision is not really about forging.** A community forge and trip hammer can shape a crankshaft. What follows the shaping is the harder half, and it is where make-or-buy is actually decided:
+
+| Step after forging | Why it is the real constraint |
+|---|---|
+| **Journal grinding** | Aero crank journals are held to tolerances in the low tens of microns, with surface finishes well below 1 µm Ra. That is a cylindrical grinder's work, not a lathe's, and it is finer than anything else in this document asks for. |
+| **Surface hardening (nitriding)** | A diffusion process needing a controlled furnace atmosphere and hours at temperature — a different capability from the forge, not an extension of it. |
+| **Dynamic balancing** | Requires a balancing machine. An out-of-balance crank in a radial is a vibration and fatigue problem, not a refinement. |
+| **Crack inspection (NDT)** | Magnetic particle inspection on a flight-critical fatigue part. Not optional, and not something you eyeball. |
+| **Built-up alignment** | The entry's own flagged trade-off: pressed-together cranks demand tight alignment between pieces, and misalignment means correction or scrapping. This is a *measurement* capability as much as an assembly one. |
+
+> **This is the observation worth carrying into the story.** The turbine's drama was distributed capability — no one community could do it, but the network together could. The crankshaft is the first case where the capability may not exist **anywhere in the network**. That is a different beat, and a more interesting one: it is where cooperation reaches its limit and the communities have to spend the finite money to reach outside. `MCH-2` requires accuracy to be published as-built rather than as-designed, and this is the part that will test it.
+
+**Outside sources that could actually make one.** The question is worth answering concretely, because "buy it" is only a real option if someone real would take the order:
+
+| Route | Viability | Note |
+|---|---|---|
+| **Billet crankshaft machinists** (motorsport/racing trade) | **The realistic buy route.** | Cut from solid 4340-class steel on CNC turn-mill and ground — **no dies at all**, which is precisely why one-offs are economic here and drop forging is not. The die-cost argument rules out forging, not one-piece cranks. |
+| **Automotive engine machine shops** | Viable for *steps*, not the whole part. | Grinding, balancing and sometimes nitriding are routinely subcontracted. A community could forge the blank and buy only the finishing — a **partial** buy, and probably the cheapest real option. |
+| **Adapting an automotive crankshaft** | Viable, and thematically apt. | This is the Pietenpol answer: he flew behind a repurposed Ford Model A engine. The lineage the entry already cites supplies the precedent for buying rather than making the hard part. |
+| **Small radial kit manufacturers** (Rotec-class) | Viable as a bought-in component. | The entry already cites this class as the engine reference. Buying their crank is buying the one part the class exists to have solved. |
+| **Certified aircraft overhaul shops** | Poor fit. | Geared to certified engines and type-certificated parts; an original design is non-certified work they may decline. |
+
+**ECO-7** — The crankshaft's make-or-buy **shall** be decided explicitly and recorded, with the buy route named and its Dollar cost estimated, rather than defaulting to "make" because the forge exists.
+*Rationale:* MR-4 requires outside purchases to be enumerated, and this is the one most likely to be assumed away — the forge makes "make" feel settled when the grinding, nitriding, balancing and inspection are the actual decision. **OPEN-8.**
+
+**ECO-8** — A **partial** buy — making the blank, buying specific finishing operations — **shall** be representable, so make-or-buy is not forced to be all-or-nothing.
+*Rationale:* it is very likely the correct answer, and a model offering only the two extremes would hide it.
 
 ---
 
@@ -301,6 +388,10 @@ Safety items belong in the tool definition, not in shop-fitting advice appended 
 | **SAF-7** | Foundry operation **shall** specify PPE, flue and extraction, a defined pour path, and a spill response. | Molten metal, CO from charcoal. |
 | **SAF-8** | Each tool's definition **shall** name its hazards, required PPE and required extraction as published fields. | SR-8. A hazard recorded only in prose is a hazard that gets skipped. |
 | **SAF-9** | Class D (metal) fire provision **shall** be specified for the foundry area; water **shall not** be used on a metal fire. | Distinct from the shop's general fire provision, and the wrong extinguisher makes it worse. |
+| **SAF-10** **[AIR]** | The forge **shall** specify flue, ventilation and CO monitoring. | Solid-fuel forges produce carbon monoxide continuously. Indoors, this is the hazard that kills without warning — and it is worse for coal and coke than for charcoal. |
+| **SAF-11** **[AIR]** | The trip hammer **shall** specify guarding, control behaviour on release, and a positive ram-arrest method; it **shall not** be operated by a lone worker. | HAM-3. A hammer that keeps cycling when the operator lets go, or drops when a belt breaks, is the classic mechanism. |
+| **SAF-12** **[AIR]** | **Cadmium plating should not be adopted.** Where it is, cyanide-bath handling, fume extraction and waste disposal **shall** be specified in full. | SUR-2. Cadmium is acutely and chronically toxic, its plating baths are cyanide-based, and its use is restricted or banned in many jurisdictions. Zinc-nickel is the modern aerospace substitute and exists for exactly this reason. **Historical aviation practice is not a safety justification.** |
+| **SAF-13** **[AIR]** | Anodising and plating **shall** specify acid and alkali handling, ventilation, PPE, and a spent-bath disposal route. | SUR-1, SUR-2. These are wet chemical processes; the waste stream is a real obligation and the communities' own water supply is downstream of it. |
 
 ---
 
@@ -356,9 +447,13 @@ Requirements here are verified by one of four methods, and each requirement abov
 | **OPEN-2** | What exactly is purchased to start the chain — furnace build, crucible, first stock, the shear? | MR-4 and the honesty of the bootstrap claim. | SR-BOOT-2 |
 | **OPEN-3** | Does the City have ferrous capability beyond the charcoal foundry, or is the pigment's mill scale salvage? | FDY-4 vs the 2026-08-02 pigment entry. | FDY-4 |
 | **OPEN-4** | Does Valley hold a tool, or only materials? | MR-3 and the 2026-08-01 entry's own open question. | §8 |
-| **OPEN-5** | Largest casting, turned part and sheet part in the library BOM. | Every derived-from-BOM requirement — FDY-2, MCH-1, SHM-1, PRN-2 — is parked until these are known. | FDY-2, MCH-1, SHM-1, PRN-2 |
+| **OPEN-5** | Largest turned part and sheet part in the library BOM. | The remaining derived-from-BOM requirements are parked until these are known. **Partly closed:** FDY-2 now has a figure — the aircraft's ~25 kg furnace (2026-09-12) — since that is the largest casting demand on record. | MCH-1, SHM-1, PRN-2 |
 | **OPEN-6** | Is the adhesive import substituted or accepted? | `SCOPE.md` 2026-08-02 plants soy/starch/lignin bio-adhesives off the Valley's biofuel fields but deliberately does **not** resolve it. Affects ECO-3. | ECO-3 |
 | **OPEN-7** | Are these requirements for real machines, simulated machines, or both — per tool? | This draft assumes both, with the laser real and the rest aspirational. Worth stating deliberately. | §1 |
+| **OPEN-8** **[AIR]** | **Make or buy the crankshaft — and if buy, from whom?** | The decision the communities have to make, per §9.2. The forge makes "make" feel settled, but grinding, nitriding, balancing and NDT are the real discriminators and may not exist anywhere in the network. Named candidate routes are in §9.2; a **partial** buy (forge the blank, buy the finishing) is probably the right answer and should be priced before it is ruled in or out. | ECO-7, ECO-8, MCH-2 |
+| **OPEN-9** **[AIR]** | Does a pooled Dollar purchase need a correlation key? | It works today as *N* ledger rows sharing a free-text `Reason` — no schema change. But the contributions are then only recoverable by string-matching, which is fragile once there is more than one. | ECO-6 |
+| **OPEN-10** **[AIR]** | Coal/coke or charcoal for the forge? | Coal and coke are almost certainly a recurring Dollar import; charcoal is made locally from wood and is already the foundry's fuel. Charcoal forging is historically ordinary, so the substitution is real — but it changes achievable temperature and fuel handling, and the entry specifies coal/coke. | FRG-2, FRG-3, ECO-3 |
+| **OPEN-11** **[AIR]** | Does the turbine-driven trip hammer take priority over generation, and what drives it when the wind drops? | A tool only available in wind is a scheduling constraint that either gets modelled or gets designed out. | SR-11, SR-12, SR-13, HAM-2 |
 
 ---
 
@@ -370,6 +465,8 @@ Requirements here are verified by one of four methods, and each requirement abov
 | `DWMStudio/SCOPE.md` 2026-08-01 (manufacturing arc) | Gingery chain, printer-as-patternmaker, CNC lathe as Gingery modification, community allocation, the dependency-chain-as-quest-structure |
 | `DWMStudio/SCOPE.md` 2026-08-01 (laser capability) | Every figure in §7.2, and SAF-1 through SAF-5 |
 | `DWMStudio/SCOPE.md` 2026-08-02 (recycling, paint, wood) | Feedstock roles, the Dollar-cost precedent in ECO-2, Valley's partial role, the adhesive import |
+| `DWMStudio/SCOPE.md` 2026-09-12 (amphibious utility aircraft) | Everything marked **[AIR]**: the ~25 kg furnace closing FDY-2, the forge and trip hammer (§7.8), surface treatment (§7.9), mechanical drive (§6.4), the built-up crankshaft and its alignment trade-off, and the corrosion findings behind SUR-3 and SUR-4 |
+| `DWMStudio/ECONOMY_SCHEMA_SPEC.md`; `SCOPE.md` 2026-08-02 | `CommunityDollarVaultLedger`'s shape (`CommunityId`, signed `DeltaAmount`, free-text `Reason`), which is what §9.1 checks the pooling requirement against |
 | `DWM_Dev/Models/Fusion/MVP_WindTurbine/README.md` | The 58.5 m blade and its planform — the basis of §3 |
 | `DWM_Dev/Wind_Turbine_BOM.xlsx` (referenced, not read) | Cited by `SCOPE.md` for the fatigue reasoning behind SHM-4 |
 
