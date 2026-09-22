@@ -356,6 +356,10 @@ A pooled purchase needs **no schema change**. It is *N* rows in `CommunityDollar
 | **Crack inspection (NDT)** | Magnetic particle inspection on a flight-critical fatigue part. Not optional, and not something you eyeball. |
 | **Built-up alignment** | The entry's own flagged trade-off: pressed-together cranks demand tight alignment between pieces, and misalignment means correction or scrapping. This is a *measurement* capability as much as an assembly one. |
 
+> **The radial makes this materially easier, and that is an argument for it.** `SCOPE.md` (2026-09-12) confirms a single-row radial, which has a **one-throw crankshaft** — not the four or six throws of an inline. Every alignment tolerance above applies once instead of repeatedly, and a single-throw built-up crank is a far smaller problem than a multi-throw one. The **master rod** inherits some of that difficulty back: one rod carries the crankpin with the others on knuckle pins, making its big end the most heavily loaded part in the engine. Net, this is still the right way round.
+>
+> It also depends on staying **spark-ignition**. A compression-ignition radial on the biodiesel the Valley already presses would raise peak cylinder pressure from ~60–70 bar to ~150–200 bar, straight onto this part — which is why that route was rejected in favour of ethanol.
+
 > **This is the observation worth carrying into the story.** The turbine's drama was distributed capability — no one community could do it, but the network together could. The crankshaft is the first case where the capability may not exist **anywhere in the network**. That is a different beat, and a more interesting one: it is where cooperation reaches its limit and the communities have to spend the finite money to reach outside. `MCH-2` requires accuracy to be published as-built rather than as-designed, and this is the part that will test it.
 
 **Outside sources that could actually make one.** The question is worth answering concretely, because "buy it" is only a real option if someone real would take the order:
