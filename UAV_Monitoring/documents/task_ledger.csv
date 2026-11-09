@@ -1,0 +1,14 @@
+Task,Role,Increment,Objective,InputBaseline,ExpectedOutputs,Reviewer,State
+TASK-A-001,Configuration and tool steward,A,"Inventory PD Quick, MATLAB R2011a and R2025b, UModel, Fusion and Unreal; record versions and licenses.",B01,Tool readiness record,Project engineer,Ready
+TASK-A-002,Configuration and tool steward,A,"Round trip: one PD Quick record, one native diagram and one deterministic analysis saved and read back.",B01,uav_t01_selftest result; seeded database readback,V&V,Ready
+TASK-B-001,Needs and operations analyst,B,"Seed the source register: 6 stakeholders, 16 needs, 5 excluded scenes, open questions.",B01,PD Quick Missions records,Human sponsor,Ready
+TASK-B-002,Needs and operations analyst,B,Review each need with its stakeholder; resolve the open questions; record G1 disposition.,TASK-B-001,G1 package,Human sponsor,Blocked: needs stakeholder review
+TASK-C-001,Requirements and model engineer,C,Derive mission and system requirements; allocate to systems and WBS; export catalogs.,TASK-B-001,PD Quick Requirements; .pdqreq and .xlsx,Chief systems engineer,Ready
+TASK-C-002,Requirements and model engineer,C,"Create UModel requirement, block definition and use case diagrams with deriveReqt, satisfy and verify.",TASK-C-001,SystemModel.ump diagrams,Chief systems engineer,Ready
+TASK-C-003,Requirements and model engineer,C,"Build the R2011a WBS model; link blocks to PD Quick, Excel and Word requirements with the V&V toolbox.",TASK-C-001,"uav_wbs_lib.mdl, uav_t01_mission.mdl, links report",V&V,Ready
+TASK-D-001,Analysis agent (aerodynamics),D,Run the DATCOM fixed-wing candidate; record applicability limits.,TASK-C-001,datcom output and coefficients table,Chief systems engineer,Ready
+TASK-D-002,Design engineer (airframe),D,"Create the multirotor candidate parts, assembly and drawing in Fusion; record mass properties.",TASK-C-001,Fusion documents; mass properties JSON,Chief systems engineer,Ready
+TASK-D-003,Analysis agent (power),D,Build and check the Simscape propulsion and power model in R2025b.,TASK-C-003,uav_power_simscape.slx; steady-state check,V&V,Ready
+TASK-E-001,Software and integration engineer,E,Pull the R2011a subsystems into an R2025b model; compare both releases back to back.,TASK-C-003,uav_t01_mission_r2025b.slx; comparison report,V&V,Ready
+TASK-E-002,Software and integration engineer,E,Run the T01 scenario with the Unreal scene in the loop.,TASK-E-001,uav_t01_ue.slx; run log,V&V,Ready
+TASK-F-001,Human technical authority,F,"Approve release to fabrication, powered tests and flight.","G4, G5 packages",Signed approval,Human test authority,Blocked: human decision

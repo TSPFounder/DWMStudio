@@ -1,0 +1,19 @@
+Code	Level	Name	BlockPath	Description
+1.1	2	Air Vehicle	WBS 1.1 Air Vehicle	Outdoor UAV air vehicle.
+1.1.1	3	Airframe	WBS 1.1 Air Vehicle/WBS 1.1.1 Airframe	Point-mass kinematics in the mission model.
+1.1.2	3	Propulsion	WBS 1.1 Air Vehicle/WBS 1.1.2 Propulsion	Electrical power drawn against airspeed.
+1.1.3	3	Electrical Power	WBS 1.1 Air Vehicle/WBS 1.1.3 Electrical Power	Usable energy, state of charge, reserve flag.
+1.1.4	3	Flight Control	WBS 1.1 Air Vehicle/WBS 1.1.4 Flight Control	Patrol guidance: speed and turn-rate commands.
+1.1.5	3	Communications	WBS 1.1 Air Vehicle/WBS 1.1.5 Communications	Link availability against range.
+1.1.6	3	Onboard Processing	WBS 1.1 Air Vehicle/WBS 1.1.6 Onboard Processing	Enclosure comparison and candidate detection.
+1.2	2	Payload	WBS 1.2 Payload	Mission payloads.
+1.2.1	3	EO Camera	WBS 1.2 Payload/WBS 1.2.1 EO Camera	Target inside the ground footprint.
+1.2.2	3	Audible Alarm	WBS 1.2 Payload/WBS 1.2.2 Audible Alarm	Alarm gated by authorization.
+1.3	2	Ground Segment	WBS 1.3 Ground Segment	Operator and notification service.
+1.3.1	3	Ground Control Station	WBS 1.3 Ground Segment/WBS 1.3.1 Ground Control Station	Alarm authorization pass-through.
+1.3.2	3	Event Manager	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Confirms a candidate when a link is available.
+1.3.3	3	Notification Gateway	WBS 1.3 Ground Segment/WBS 1.3.3 Notification Gateway	Delivery delay to the recipient.
+1.3.4	3	Evidence Store	WBS 1.3 Ground Segment/WBS 1.3.4 Evidence Store	Accumulated evidence time.
+1.4	2	Fixed and Wearable Sensing	WBS 1.4 Fixed and Wearable Sensing	Non-airborne members.
+1.4.1	3	Fixed Camera Node	WBS 1.4 Fixed and Wearable Sensing/WBS 1.4.1 Fixed Camera Node	Target inside a fixed node's radius.
+1.4.2	3	Wearable Assist Device	WBS 1.4 Fixed and Wearable Sensing/WBS 1.4.2 Wearable Assist Device	Assistance request pass-through.

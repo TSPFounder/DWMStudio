@@ -1,0 +1,33 @@
+RequirementNumber	WbsCode	BlockPath	Title
+SR-T01-01	1.1.6	WBS 1.1 Air Vehicle/WBS 1.1.6 Onboard Processing	Report confirmed boundary crossing
+SR-T01-01	1.3.2	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Report confirmed boundary crossing
+SR-T01-01	1.3.3	WBS 1.3 Ground Segment/WBS 1.3.3 Notification Gateway	Report confirmed boundary crossing
+SR-T01-02	1.2.1	WBS 1.2 Payload/WBS 1.2.1 EO Camera	Crossing report content
+SR-T01-02	1.3.2	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Crossing report content
+SR-T01-02	1.3.4	WBS 1.3 Ground Segment/WBS 1.3.4 Evidence Store	Crossing report content
+SR-T01-03	1.1.5	WBS 1.1 Air Vehicle/WBS 1.1.5 Communications	Indicate unavailable coverage
+SR-T01-03	1.3.2	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Indicate unavailable coverage
+SR-T01-03	1.3.3	WBS 1.3 Ground Segment/WBS 1.3.3 Notification Gateway	Indicate unavailable coverage
+SR-UAV-01	1.1.1	WBS 1.1 Air Vehicle/WBS 1.1.1 Airframe	Patrol coverage of the enclosure
+SR-UAV-01	1.1.4	WBS 1.1 Air Vehicle/WBS 1.1.4 Flight Control	Patrol coverage of the enclosure
+SR-UAV-01	1.2.1	WBS 1.2 Payload/WBS 1.2.1 EO Camera	Patrol coverage of the enclosure
+SR-UAV-02	1.1.2	WBS 1.1 Air Vehicle/WBS 1.1.2 Propulsion	Patrol energy with reserve
+SR-UAV-02	1.1.3	WBS 1.1 Air Vehicle/WBS 1.1.3 Electrical Power	Patrol energy with reserve
+SR-UAV-03	1.1.4	WBS 1.1 Air Vehicle/WBS 1.1.4 Flight Control	Geolocate an observation
+SR-UAV-03	1.1.6	WBS 1.1 Air Vehicle/WBS 1.1.6 Onboard Processing	Geolocate an observation
+SR-UAV-03	1.2.1	WBS 1.2 Payload/WBS 1.2.1 EO Camera	Geolocate an observation
+SR-UAV-04	1.1.4	WBS 1.1 Air Vehicle/WBS 1.1.4 Flight Control	Link status and loss-of-link behavior
+SR-UAV-04	1.1.5	WBS 1.1 Air Vehicle/WBS 1.1.5 Communications	Link status and loss-of-link behavior
+SR-UAV-05	1.2.1	WBS 1.2 Payload/WBS 1.2.1 EO Camera	Time-stamped image evidence
+SR-UAV-06	1.2.2	WBS 1.2 Payload/WBS 1.2.2 Audible Alarm	Authorized audible alarm only
+SR-UAV-06	1.3.1	WBS 1.3 Ground Segment/WBS 1.3.1 Ground Control Station	Authorized audible alarm only
+SR-NOT-01	1.3.3	WBS 1.3 Ground Segment/WBS 1.3.3 Notification Gateway	Delivery state, acknowledgment and escalation
+SR-NOT-02	1.3.4	WBS 1.3 Ground Segment/WBS 1.3.4 Evidence Store	Evidence retention and access control
+SR-FIX-01	1.4.1	WBS 1.4 Fixed and Wearable Sensing/WBS 1.4.1 Fixed Camera Node	Fixed and wearable events without an aircraft
+SR-FIX-01	1.4.2	WBS 1.4 Fixed and Wearable Sensing/WBS 1.4.2 Wearable Assist Device	Fixed and wearable events without an aircraft
+SR-FIX-01	1.3.2	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Fixed and wearable events without an aircraft
+SR-GEN-01	1.1.6	WBS 1.1 Air Vehicle/WBS 1.1.6 Onboard Processing	Report observations, not judgments
+SR-GEN-01	1.3.2	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Report observations, not judgments
+SR-GEN-02	1.1.6	WBS 1.1 Air Vehicle/WBS 1.1.6 Onboard Processing	Common time source
+SR-GEN-02	1.3.2	WBS 1.3 Ground Segment/WBS 1.3.2 Event Manager	Common time source
+SR-GEN-02	1.4.1	WBS 1.4 Fixed and Wearable Sensing/WBS 1.4.1 Fixed Camera Node	Common time source
