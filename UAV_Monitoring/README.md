@@ -4,6 +4,18 @@ This folder carries out [the agent coordination plan](UAV-Agent-OOSEM-Plan.md) a
 
 **Read this first.** The package was built in a Linux cloud session. That session had the PD Quick source (commit `32306b6`) and could build it and run its tests. It had no MATLAB, Simulink, UModel, Fusion, Unreal Engine, Word, Excel or DATCOM, and no access to `F:\PDQuick` or `%APPDATA%\PD Quick\PDQuick.db`. So nothing here has touched your project database or produced a native model yet. The table says exactly what was checked and how.
 
+## Results reported from the Windows machine (10 November 2026)
+
+The owner ran these in MATLAB and pasted the output. Two scripts needed fixes found on first contact, both now in this folder.
+
+| Step | Result |
+|---|---|
+| R2025b import of the R2011a subsystems | `UAV_T01_BACK_TO_BACK_PASS release=2025b worst_continuous_difference=0`. This needs the R2011a result file, so the R2011a build and self-test ran first. |
+| Simscape power and propulsion | `UAV_SIMSCAPE_PASS release=2025b`: 1195.960 rad/s and 2.9899 A, equal to the closed form. Fix: the converter's port domains are detected instead of assumed. |
+| Unreal co-simulation | `UAV_T01_UE_PASS release=2025b`, all eleven checks. Fix: the scene block's sample time (`Ts`) is set to the model's 0.05 s step. |
+
+Not yet reported back: seeding and export output, UModel diagrams, requirement links, Fusion, DATCOM. The table below describes the state at delivery and has not been edited.
+
 ## Status against the ten requested items
 
 | # | Item | State | Evidence |
