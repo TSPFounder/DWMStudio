@@ -13,8 +13,9 @@ The owner ran these in MATLAB and pasted the output. Two scripts needed fixes fo
 | R2025b import of the R2011a subsystems | `UAV_T01_BACK_TO_BACK_PASS release=2025b worst_continuous_difference=0`. This needs the R2011a result file, so the R2011a build and self-test ran first. |
 | Simscape power and propulsion | `UAV_SIMSCAPE_PASS release=2025b`: 1195.960 rad/s and 2.9899 A, equal to the closed form. Fix: the converter's port domains are detected instead of assumed. |
 | Unreal co-simulation | `UAV_T01_UE_PASS release=2025b`, all eleven checks. Fix: the scene block's sample time (`Ts`) is set to the model's 0.05 s step. |
+| Fusion multirotor candidate | Script ran to completion ("it worked"). Fix: the root component is no longer renamed. Mass figures and whether the drawing was saved were not reported. |
 
-Not yet reported back: seeding and export output, UModel diagrams, requirement links, Fusion, DATCOM. The table below describes the state at delivery and has not been edited.
+Not yet reported back: seeding and export output, UModel diagrams, requirement links, DATCOM. The table below describes the state at delivery and has not been edited.
 
 ## Status against the ten requested items
 
