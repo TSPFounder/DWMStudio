@@ -122,7 +122,7 @@ Expect `UAV_T01_BACK_TO_BACK_PASS`, `UAV_SIMSCAPE_PASS` and `UAV_T01_UE_PASS`.
 
 **Step 7. Fusion.** Sign in, select the hub and project, then Utilities, Scripts and Add-Ins, add `fusion\UavMultirotorCandidate`, Run. Finish the drawing dialog and save the drawing as *UAV Airframe Drawing*. Register the documents on the PD Quick Designs tab.
 
-**Step 8. DATCOM.** Copy `datcom\uav_vtol_fixed_wing.dcm` to `for005.dat` beside your Digital DATCOM executable and run it. Read the deck's header comments on applicability first.
+**Step 8. DATCOM.** Copy `datcom\uav_vtol_fixed_wing.dcm` to `for005.dat` beside your Digital DATCOM executable and run it. Read `datcom\uav_vtol_fixed_wing_NOTES.txt` on applicability first.
 
 **Step 9. Register the models in PD Quick.** Apps, MATLAB / Simulink, *Add to DB* for the `.mdl` and `.slx` files; set each Analysis record's model path; set the Unreal project on the Simulations record if you use one.
 
