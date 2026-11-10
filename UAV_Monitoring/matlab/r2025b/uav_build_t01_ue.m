@@ -44,8 +44,8 @@ add_block(vehicle, [model '/UAV in scene'], 'Position', [520 500 700 600]);
 % The 3D blocks default to 1/60 s, which a 0.05 s fixed-step model rejects.
 % They are set to the model's own step so the mission result is unchanged.
 p = uav_params();
-setSampleTime([model '/Scene'], p.fixed_step_s);
-setSampleTime([model '/UAV in scene'], p.fixed_step_s);
+setSampleTime([model '/Scene'], p.fixed_step_s, true);
+setSampleTime([model '/UAV in scene'], p.fixed_step_s, false);
 ports = get_param([model '/UAV in scene'], 'PortHandles');
 if numel(ports.Inport) ~= 2
     names = fieldnames(get_param([model '/UAV in scene'], 'DialogParameters'));
@@ -102,12 +102,18 @@ end
 error('uav:ue:block', 'Block "%s" was not found. Libraries that loaded:%s. Check that UAV Toolbox is installed.', name, tried);
 end
 
-function setSampleTime(block, step)
-try
-    set_param(block, 'SampleTime', uav_num(step));
-catch err
-    names = fieldnames(get_param(block, 'DialogParameters'));
-    error('uav:ue:sampletime', 'Could not set the sample time of %s (%s). Its parameters are: %s', ...
-        block, err.message, sprintf('%s ', names{:}));
+function setSampleTime(block, step, required)
+% The scene block calls its sample time Ts; other 3D blocks have used
+% SampleTime. A block with neither inherits the scene's.
+names = fieldnames(get_param(block, 'DialogParameters'));
+candidates = {'Ts', 'SampleTime'};
+for k = 1:numel(candidates)
+    if any(strcmp(names, candidates{k}))
+        set_param(block, candidates{k}, uav_num(step));
+        return;
+    end
+end
+if required
+    error('uav:ue:sampletime', 'No sample time parameter on %s. Its parameters are: %s', block, sprintf('%s ', names{:}));
 end
 end
