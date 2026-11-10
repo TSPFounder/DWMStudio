@@ -13,7 +13,8 @@ function result = uav_build_t01_ue(r2025bDir, outDir, runIt)
 %   If a block or a port is not as expected the function stops and prints
 %   what the installed release offers; it does not guess.
 %
-%   NOT RUN BEFORE DELIVERY. Written from the documented block interface:
+%   First run in R2025b found both blocks and the two-input vehicle block;
+%   the simulation itself is still unconfirmed. Written from the documented block interface:
 %   Simulation 3D Scene Configuration (no ports) and Simulation 3D UAV
 %   Vehicle with Translation and Rotation inputs sized by vehicle type.
 %   Expect to adjust the input sizes for the installed release.
@@ -40,6 +41,11 @@ scene = findBlock('Simulation 3D Scene Configuration');
 vehicle = findBlock('Simulation 3D UAV Vehicle');
 add_block(scene, [model '/Scene'], 'Position', [60 520 220 580]);
 add_block(vehicle, [model '/UAV in scene'], 'Position', [520 500 700 600]);
+% The 3D blocks default to 1/60 s, which a 0.05 s fixed-step model rejects.
+% They are set to the model's own step so the mission result is unchanged.
+p = uav_params();
+setSampleTime([model '/Scene'], p.fixed_step_s);
+setSampleTime([model '/UAV in scene'], p.fixed_step_s);
 ports = get_param([model '/UAV in scene'], 'PortHandles');
 if numel(ports.Inport) ~= 2
     names = fieldnames(get_param([model '/UAV in scene'], 'DialogParameters'));
@@ -86,11 +92,22 @@ for k = 1:numel(libraries)
         continue;
     end
     tried = [tried ' ' libraries{k}]; %#ok<AGROW>
-    found = find_system(libraries{k}, 'LookUnderMasks', 'all', 'FollowLinks', 'on', 'Name', name);
+    found = find_system(libraries{k}, 'MatchFilter', @Simulink.match.allVariants, ...
+        'LookUnderMasks', 'all', 'FollowLinks', 'on', 'Name', name);
     if ~isempty(found)
         path = found{1};
         return;
     end
 end
 error('uav:ue:block', 'Block "%s" was not found. Libraries that loaded:%s. Check that UAV Toolbox is installed.', name, tried);
+end
+
+function setSampleTime(block, step)
+try
+    set_param(block, 'SampleTime', uav_num(step));
+catch err
+    names = fieldnames(get_param(block, 'DialogParameters'));
+    error('uav:ue:sampletime', 'Could not set the sample time of %s (%s). Its parameters are: %s', ...
+        block, err.message, sprintf('%s ', names{:}));
+end
 end
