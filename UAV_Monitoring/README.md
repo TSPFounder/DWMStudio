@@ -14,8 +14,9 @@ The owner ran these in MATLAB and pasted the output. Two scripts needed fixes fo
 | Simscape power and propulsion | `UAV_SIMSCAPE_PASS release=2025b`: 1195.960 rad/s and 2.9899 A, equal to the closed form. Fix: the converter's port domains are detected instead of assumed. |
 | Unreal co-simulation | `UAV_T01_UE_PASS release=2025b`, all eleven checks. Fix: the scene block's sample time (`Ts`) is set to the model's 0.05 s step. |
 | Fusion multirotor candidate | Script ran to completion ("it worked"). Fix: the root component is no longer renamed. Mass figures and whether the drawing was saved were not reported. |
+| DATCOM fixed-wing candidate | Case ran after the comment cards were removed (the 2007 executable rejects them). At 0 deg: CL 0.294, CLa 5.59 /rad, CMa -1.11 /rad, so a static margin near 20 % of mean chord; CNB +0.030 /rad. See `datcom/uav_vtol_fixed_wing_NOTES.txt` for why drag and stall are not to be relied on. |
 
-Not yet reported back: seeding and export output, UModel diagrams, requirement links, DATCOM. The table below describes the state at delivery and has not been edited.
+Not yet reported back: seeding and export output, UModel diagrams, requirement links. The table below describes the state at delivery and has not been edited.
 
 ## Status against the ten requested items
 
