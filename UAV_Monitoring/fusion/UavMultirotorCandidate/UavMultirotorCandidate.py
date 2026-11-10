@@ -133,7 +133,8 @@ def run(context):
         design = adsk.fusion.Design.cast(app.activeProduct)
         design.designType = adsk.fusion.DesignTypes.ParametricDesignType
         root = design.rootComponent
-        root.name = "UAV - Assembly"
+        # The root component takes the document's name; Fusion refuses to rename it.
+        # It becomes "UAV - Assembly" when the document is saved under that name.
         for name, (value, comment) in PARAMETERS.items():
             design.userParameters.add(name, adsk.core.ValueInput.createByString("%g mm" % value), "mm", comment)
         v = {name: value for name, (value, _) in PARAMETERS.items()}
