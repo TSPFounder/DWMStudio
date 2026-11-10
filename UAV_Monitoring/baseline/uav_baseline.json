@@ -1,0 +1,1441 @@
+{
+  "meta": {
+    "baseline": "B01",
+    "project": "UAV Monitoring and Assistance",
+    "project_description": "UAV-enabled monitoring and assistance system developed with OOSEM. Farm demonstrator first.",
+    "method": "OOSEM",
+    "plan": "UAV-Agent-OOSEM-Plan.md, planning baseline 1, 8 November 2026",
+    "pd_quick_commit": "32306b655eba2cea6da5ff1f1b9cad215d5a40da",
+    "threshold_policy": "No numeric acceptance threshold is approved. Values marked TBD (G2) are set at gate G2."
+  },
+  "stakeholders": [
+    {
+      "id": "DAVE",
+      "name": "Dave",
+      "role": "Father and husband",
+      "banner": "My stories involve monitoring my family at home and while traveling and sending a response in an emergency.",
+      "source": "Storyboard image supplied in this session"
+    },
+    {
+      "id": "SALLY",
+      "name": "Sally",
+      "role": "Farmer, horse owner and farm owner",
+      "banner": "My stories involve monitoring my property for intrusion by poachers, predators, etc. and sending a response.",
+      "source": "Storyboard image supplied in this session"
+    },
+    {
+      "id": "KIM",
+      "name": "Kim",
+      "role": "Student",
+      "banner": "My stories involve monitoring me when walking around campus for protection and response to an assault.",
+      "source": "Storyboard image supplied in this session"
+    },
+    {
+      "id": "JEN",
+      "name": "Jen",
+      "role": "Homeowner",
+      "banner": "My stories involve monitoring my business when I'm away to notify emergency responders if there is a fire, break-in, or other emergency.",
+      "source": "Storyboard image supplied in this session"
+    },
+    {
+      "id": "BILL",
+      "name": "Bill",
+      "role": "Son and caregiver of an elderly mother",
+      "banner": "",
+      "source": "Plan section 2 summary only; storyboard image not supplied in this session"
+    },
+    {
+      "id": "TOM",
+      "name": "Tom",
+      "role": "Farmer",
+      "banner": "",
+      "source": "Plan section 2 summary only; storyboard image not supplied in this session"
+    }
+  ],
+  "excluded_scenes": [
+    {
+      "stakeholder": "DAVE",
+      "scene": "Scene 4",
+      "reason": "Placeholder title and empty description"
+    },
+    {
+      "stakeholder": "DAVE",
+      "scene": "Scene 5",
+      "reason": "Placeholder title and empty description"
+    },
+    {
+      "stakeholder": "DAVE",
+      "scene": "Scene 6",
+      "reason": "Placeholder title and empty description"
+    },
+    {
+      "stakeholder": "KIM",
+      "scene": "Scene 3",
+      "reason": "No narrative; need text is copied from Dave's storyboard"
+    },
+    {
+      "stakeholder": "JEN",
+      "scene": "Scene 3",
+      "reason": "Empty scene and empty need"
+    }
+  ],
+  "open_questions": [
+    "Jen's banner says business; her two completed scenes describe a home. Which is intended?",
+    "Dave scene 1 is titled Entering & Exiting My House but its need text refers to the car. Confirm the setting.",
+    "Sally scene 1 need reads 'to track any And: raise a loud alarm'. The tracked object is missing; 'predator' is assumed.",
+    "Kim scenes 1 and 2 keep the placeholder titles Scene 1 Title and Scene 2 Title.",
+    "Bill and Tom storyboard wording was not available here; their needs use the plan's summaries until the source is reviewed.",
+    "Pilot property, stakeholder representative, operating conditions, budget, staffing and response recipients (plan section 11).",
+    "Acceptable missed-event and nuisance-alert rates, and every threshold marked TBD (G2)."
+  ],
+  "missions": [
+    {
+      "key": "FARM",
+      "name": "Farm Monitoring Demonstrator",
+      "theme": "Outdoor property and livestock observation",
+      "description": "Priority mission. Observe a defined farm property, find cattle outside their enclosure and other events needing the owner's attention, and deliver an actionable notification.",
+      "narrative": "Start of the limited Family of Systems: an outdoor UAV, fixed sensing and a shared operator and notification service. Response decisions stay with people and external services.",
+      "stakeholders": [
+        "TOM",
+        "SALLY",
+        "JEN"
+      ]
+    },
+    {
+      "key": "HOME",
+      "name": "Home and Family Awareness",
+      "theme": "Fixed sensing first, optional exterior UAV observation",
+      "description": "Awareness and an evidence record around the home and car. Fixed and personal sensing first; a UAV only in an approved operating setting.",
+      "narrative": "Extension increment H. Reuses the notification service; no automatic inheritance of aircraft suitability.",
+      "stakeholders": [
+        "DAVE",
+        "JEN"
+      ]
+    },
+    {
+      "key": "PERSON",
+      "name": "Personal Safety and Assistance",
+      "theme": "Wearable and campus systems first",
+      "description": "User-initiated or confirmed assistance requests with location and context, without medical diagnosis.",
+      "narrative": "Extension increment H. Tested first with the non-airborne members of the Family of Systems.",
+      "stakeholders": [
+        "KIM",
+        "BILL"
+      ]
+    }
+  ],
+  "needs": [
+    {
+      "id": "D01",
+      "stakeholder": "DAVE",
+      "mission": "HOME",
+      "scene": "Entering & Exiting My House",
+      "as_a": "father & husband",
+      "i_need": "a mobile security system to monitor my family when entering and exiting my car And: to track anyone that approaches us And: record the area around my car with video and audio",
+      "so_that": "there is a visual and audible record of all interactions when entering and exiting my car.",
+      "normalized": "Family awareness and a record of encounters when arriving at or leaving the home or car.",
+      "allocation": "Fixed and mobile sensing, optional UAV coverage",
+      "source_wording": "verbatim from storyboard",
+      "owner": "DAVE",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "D02",
+      "stakeholder": "DAVE",
+      "mission": "HOME",
+      "scene": "Entering & Exiting My Car",
+      "as_a": "father & husband",
+      "i_need": "a mobile security system to monitor my family when traveling around town And: to track anyone that approaches them And: send an alert to emergency responders",
+      "so_that": "my children are protected And: there is a visual and audible record of all interactions when entering and exiting my car.",
+      "normalized": "Capture an incident near the car in town and request assistance.",
+      "allocation": "Personal device first; UAV only in an approved operating setting",
+      "source_wording": "verbatim from storyboard",
+      "owner": "DAVE",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "D03",
+      "stakeholder": "DAVE",
+      "mission": "HOME",
+      "scene": "Inside My Home",
+      "as_a": "father & husband",
+      "i_need": "a mobile security system to monitor my family inside our house",
+      "so_that": "an silent alarm is triggerd and there is a visual and audible record of all interactions when police apprehend an intruder.",
+      "normalized": "Silent notification and evidence when an intruder is inside the home.",
+      "allocation": "Fixed home sensing first",
+      "source_wording": "verbatim from storyboard",
+      "owner": "DAVE",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "S01",
+      "stakeholder": "SALLY",
+      "mission": "FARM",
+      "scene": "Predators",
+      "as_a": "farmer with livestock",
+      "i_need": "a mobile security system to monitor my livestock And: to track any And: raise a loud alarm",
+      "so_that": "the predator is scared away",
+      "normalized": "Detect a concerning animal encounter near livestock and alert the owner, with a controlled alarm option.",
+      "allocation": "UAV or fixed observation; alarm only when authorized",
+      "source_wording": "verbatim from storyboard",
+      "owner": "SALLY",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "S02",
+      "stakeholder": "SALLY",
+      "mission": "FARM",
+      "scene": "Horse Thieves",
+      "as_a": "horse owner",
+      "i_need": "a mobile security system to monitor my horses when they are turned out And: to track anyone that approaches them And: record the thief And: to notify the police",
+      "so_that": "the police can apprehend the thief",
+      "normalized": "Observe an incident near turned-out horses, preserve evidence and notify the owner or response service.",
+      "allocation": "UAV or fixed observation; notification service",
+      "source_wording": "verbatim from storyboard",
+      "owner": "SALLY",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "S03",
+      "stakeholder": "SALLY",
+      "mission": "FARM",
+      "scene": "Poachers",
+      "as_a": "farm owner",
+      "i_need": "a mobile security system to monitor my entire farm And: to track anyone that approaches And: record them And: to notify the police",
+      "so_that": "the police can apprehend the poacher",
+      "normalized": "Observe activity on the property and route evidence for human assessment.",
+      "allocation": "UAV observation; notification service",
+      "source_wording": "verbatim from storyboard",
+      "owner": "SALLY",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "K01",
+      "stakeholder": "KIM",
+      "mission": "PERSON",
+      "scene": "Scene 1 Title (walking home from a late test)",
+      "as_a": "student",
+      "i_need": "a mobile security system to monitor me when I walk across campus And: to track anyone that approaches me And: record the area around me And: raise an audible alarm",
+      "so_that": "the mugger is scared away",
+      "normalized": "User-initiated or confirmed assistance, evidence and an audible alarm at night on campus.",
+      "allocation": "Personal and campus systems first",
+      "source_wording": "verbatim from storyboard",
+      "owner": "KIM",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "K02",
+      "stakeholder": "KIM",
+      "mission": "PERSON",
+      "scene": "Scene 2 Title (walking home from a class)",
+      "as_a": "student",
+      "i_need": "a mobile security system to monitor me when entering I walk across campus And: to track anyone that verbally abuses me And: records the comments",
+      "so_that": "the university has evidence of the event",
+      "normalized": "Record and report an encounter with appropriate consent and access controls.",
+      "allocation": "Personal device; evidence store",
+      "source_wording": "verbatim from storyboard",
+      "owner": "KIM",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "J01",
+      "stakeholder": "JEN",
+      "mission": "HOME",
+      "scene": "House Fire",
+      "as_a": "a homeowner",
+      "i_need": "a mobile security system to monitor my home when I'm gone And: to notify the fire department if my house catches on fire",
+      "so_that": "the fire can be put out quickly",
+      "normalized": "Receive a fire alarm while away and share situational information.",
+      "allocation": "Existing fixed detection first; optional exterior UAV observation",
+      "source_wording": "verbatim from storyboard",
+      "owner": "JEN",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "J02",
+      "stakeholder": "JEN",
+      "mission": "FARM",
+      "scene": "Fires on Property",
+      "as_a": "a homeowner",
+      "i_need": "a mobile security system to monitor my property when I'm gone And: to notify the fire department if my property catches on fire",
+      "so_that": "the fire can be put out quickly",
+      "normalized": "Observe a fire on the property and notify; exterior information when operation is authorized.",
+      "allocation": "UAV exterior observation; notification service",
+      "source_wording": "verbatim from storyboard",
+      "owner": "JEN",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "B01",
+      "stakeholder": "BILL",
+      "mission": "PERSON",
+      "scene": "Mother unable to leave bed",
+      "as_a": "son and caregiver",
+      "i_need": "",
+      "so_that": "",
+      "normalized": "Obtain an assistance request and notify a caregiver, without medical diagnosis.",
+      "allocation": "Wearable or fixed device",
+      "source_wording": "plan section 2 summary; storyboard not reviewed here",
+      "owner": "BILL",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "B02",
+      "stakeholder": "BILL",
+      "mission": "PERSON",
+      "scene": "Mother locked out",
+      "as_a": "son and caregiver",
+      "i_need": "",
+      "so_that": "",
+      "normalized": "Request assistance and give a responder useful location and context.",
+      "allocation": "Wearable device; notification service",
+      "source_wording": "plan section 2 summary; storyboard not reviewed here",
+      "owner": "BILL",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "B03",
+      "stakeholder": "BILL",
+      "mission": "PERSON",
+      "scene": "Mother falls from ladder",
+      "as_a": "son and caregiver",
+      "i_need": "",
+      "so_that": "",
+      "normalized": "Detect or report a possible fall and request help; confirm with the person or caregiver when possible.",
+      "allocation": "Wearable or fixed device",
+      "source_wording": "plan section 2 summary; storyboard not reviewed here",
+      "owner": "BILL",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "T01",
+      "stakeholder": "TOM",
+      "mission": "FARM",
+      "scene": "Cattle Monitoring",
+      "as_a": "farmer",
+      "i_need": "",
+      "so_that": "",
+      "normalized": "Farmer needs actionable awareness of cattle outside the defined enclosure so recovery can begin.",
+      "allocation": "UAV or fixed sensor observation; shared notification service",
+      "source_wording": "plan section 2 summary; storyboard not reviewed here",
+      "owner": "TOM",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "T02",
+      "stakeholder": "TOM",
+      "mission": "FARM",
+      "scene": "Crop distress",
+      "as_a": "farmer",
+      "i_need": "",
+      "so_that": "",
+      "normalized": "Identify crop areas needing inspection; validate observations against agronomic ground truth.",
+      "allocation": "UAV observation",
+      "source_wording": "plan section 2 summary; storyboard not reviewed here",
+      "owner": "TOM",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    },
+    {
+      "id": "T03",
+      "stakeholder": "TOM",
+      "mission": "FARM",
+      "scene": "Orchard ripeness",
+      "as_a": "farmer",
+      "i_need": "",
+      "so_that": "",
+      "normalized": "Identify fruit ready for inspection or harvest; validate by crop and growing conditions.",
+      "allocation": "UAV observation",
+      "source_wording": "plan section 2 summary; storyboard not reviewed here",
+      "owner": "TOM",
+      "validation": "Stakeholder review at G1; outcome check at G7"
+    }
+  ],
+  "use_cases": [
+    {
+      "id": "UC-T01",
+      "mission": "FARM",
+      "need": "T01",
+      "actor": "TOM",
+      "name": "Monitor enclosure and report escaped cattle",
+      "description": "Monitor enclosure, detect candidate escape, confirm location, notify, obtain acknowledgment and close event.",
+      "steps": [
+        "Operator approves the patrol and the enclosure boundary for the operating envelope",
+        "UAV or fixed sensor observes the enclosure boundary",
+        "System detects a candidate boundary crossing and estimates its location",
+        "System compares the location with the enclosure and confirms or rejects the candidate",
+        "Notification service sends the event with time, location, uncertainty and image evidence",
+        "Farmer acknowledges; unacknowledged events escalate to the named alternate",
+        "On loss of observation or delivery, the system reports unavailable coverage",
+        "Farmer closes the event after recovery"
+      ]
+    },
+    {
+      "id": "UC-S01",
+      "mission": "FARM",
+      "need": "S01",
+      "actor": "SALLY",
+      "name": "Report animal encounter near livestock",
+      "description": "Observe livestock, report a concerning animal encounter and sound an alarm only when the owner authorizes it.",
+      "steps": [
+        "System observes the livestock area",
+        "System reports a candidate encounter with evidence and uncertainty",
+        "Owner reviews and may authorize the audible alarm",
+        "System records the outcome"
+      ]
+    },
+    {
+      "id": "UC-S02",
+      "mission": "FARM",
+      "need": "S02",
+      "actor": "SALLY",
+      "name": "Observe property incident and preserve evidence",
+      "description": "Covers S02, S03 and J02: observe a person, vehicle or fire on the property, preserve evidence and notify.",
+      "steps": [
+        "System observes the defined area",
+        "System reports the observation without classifying intent",
+        "Evidence is stored with access control",
+        "Owner decides whether to contact an external response service"
+      ]
+    },
+    {
+      "id": "UC-T02",
+      "mission": "FARM",
+      "need": "T02",
+      "actor": "TOM",
+      "name": "Survey crop and orchard condition",
+      "description": "Covers T02 and T03: collect imagery over fields or orchard blocks and flag areas for inspection.",
+      "steps": [
+        "Operator selects the survey area",
+        "UAV collects imagery",
+        "System flags candidate areas",
+        "Farmer inspects and records ground truth"
+      ]
+    },
+    {
+      "id": "UC-D01",
+      "mission": "HOME",
+      "need": "D01",
+      "actor": "DAVE",
+      "name": "Record arrivals, departures and intrusions",
+      "description": "Covers D01 to D03 and J01 with fixed and personal sensing; UAV coverage is optional.",
+      "steps": [
+        "Fixed or personal sensor detects an event",
+        "System records video and audio under the agreed consent rules",
+        "System notifies the family silently when configured",
+        "Family member decides on external response"
+      ]
+    },
+    {
+      "id": "UC-K01",
+      "mission": "PERSON",
+      "need": "K01",
+      "actor": "KIM",
+      "name": "Request assistance and record an encounter",
+      "description": "Covers K01, K02 and B01 to B03: a person requests or confirms help; the system shares location and context.",
+      "steps": [
+        "Person requests help or the device detects a possible fall",
+        "System asks the person to confirm when possible",
+        "System notifies the caregiver or campus service with location and context",
+        "Recipient acknowledges; unacknowledged requests escalate"
+      ]
+    }
+  ],
+  "mission_requirements": [
+    {
+      "number": "MR-T01",
+      "mission": "FARM",
+      "needs": [
+        "T01"
+      ],
+      "title": "Actionable awareness of escaped cattle",
+      "text": "The Family of Systems shall give the farmer timely, actionable awareness of cattle outside the defined enclosure within the approved operating envelope. Effectiveness measure MOE-T01; threshold TBD (G2)."
+    },
+    {
+      "number": "MR-S01",
+      "mission": "FARM",
+      "needs": [
+        "S01"
+      ],
+      "title": "Alert on animal encounter near livestock",
+      "text": "The Family of Systems shall alert the owner to a concerning animal encounter near livestock and shall sound an audible alarm only on the owner's authorization."
+    },
+    {
+      "number": "MR-S02",
+      "mission": "FARM",
+      "needs": [
+        "S02",
+        "S03",
+        "J02"
+      ],
+      "title": "Observe property incidents and preserve evidence",
+      "text": "The Family of Systems shall observe incidents on the defined property, preserve evidence and notify the owner, leaving assessment and external response to people."
+    },
+    {
+      "number": "MR-T02",
+      "mission": "FARM",
+      "needs": [
+        "T02",
+        "T03"
+      ],
+      "title": "Flag crop and orchard areas for inspection",
+      "text": "The Family of Systems shall identify crop and orchard areas for inspection, validated against ground truth by crop and season."
+    },
+    {
+      "number": "MR-D01",
+      "mission": "HOME",
+      "needs": [
+        "D01",
+        "D02",
+        "D03",
+        "J01"
+      ],
+      "title": "Home and family awareness with evidence",
+      "text": "The Family of Systems shall provide awareness and an access-controlled record of encounters and alarms at the home and car using fixed and personal sensing first."
+    },
+    {
+      "number": "MR-K01",
+      "mission": "PERSON",
+      "needs": [
+        "K01",
+        "K02",
+        "B01",
+        "B02",
+        "B03"
+      ],
+      "title": "Assistance request with location and context",
+      "text": "The Family of Systems shall deliver a user-initiated or confirmed assistance request with location and context to a named recipient, without medical diagnosis."
+    }
+  ],
+  "system_requirements": [
+    {
+      "number": "SR-T01-01",
+      "title": "Report confirmed boundary crossing",
+      "text": "Within the approved operating envelope, the system shall report a confirmed enclosure boundary crossing within latency L after the ground-truth crossing time. L is TBD (G2).",
+      "type": "Performance",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.1.6",
+        "1.3.2",
+        "1.3.3"
+      ],
+      "threshold_status": "TBD at G2"
+    },
+    {
+      "number": "SR-T01-02",
+      "title": "Crossing report content",
+      "text": "Each crossing report shall contain event time, location with uncertainty, image evidence and delivery state. Acceptance criteria are TBD (G2).",
+      "type": "Functional",
+      "verification": "Inspection",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.2.1",
+        "1.3.2",
+        "1.3.4"
+      ],
+      "threshold_status": "TBD at G2"
+    },
+    {
+      "number": "SR-T01-03",
+      "title": "Indicate unavailable coverage",
+      "text": "On loss of observation or delivery capability, the system shall indicate unavailable coverage and follow the approved degraded mode.",
+      "type": "Functional",
+      "verification": "Demonstration",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.1.5",
+        "1.3.2",
+        "1.3.3"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-UAV-01",
+      "title": "Patrol coverage of the enclosure",
+      "text": "The UAV shall observe the defined enclosure boundary with a revisit interval of R. R is TBD (G2).",
+      "type": "Performance",
+      "verification": "Analysis",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01",
+        "MR-S02"
+      ],
+      "allocated_to": [
+        "Outdoor UAV"
+      ],
+      "wbs": [
+        "1.1.1",
+        "1.1.4",
+        "1.2.1"
+      ],
+      "threshold_status": "TBD at G2"
+    },
+    {
+      "number": "SR-UAV-02",
+      "title": "Patrol energy with reserve",
+      "text": "The UAV shall complete the approved patrol and return with a usable-energy reserve of E_res. E_res is TBD (G2).",
+      "type": "Performance",
+      "verification": "Analysis",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV"
+      ],
+      "wbs": [
+        "1.1.2",
+        "1.1.3"
+      ],
+      "threshold_status": "TBD at G2"
+    },
+    {
+      "number": "SR-UAV-03",
+      "title": "Geolocate an observation",
+      "text": "The UAV shall estimate the ground location of an observation and report its uncertainty. The error limit is TBD (G2).",
+      "type": "Performance",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01",
+        "MR-S02"
+      ],
+      "allocated_to": [
+        "Outdoor UAV"
+      ],
+      "wbs": [
+        "1.1.4",
+        "1.1.6",
+        "1.2.1"
+      ],
+      "threshold_status": "TBD at G2"
+    },
+    {
+      "number": "SR-UAV-04",
+      "title": "Link status and loss-of-link behavior",
+      "text": "The UAV shall report command and telemetry link status and, on loss of link, shall follow the approved failsafe.",
+      "type": "Functional",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV"
+      ],
+      "wbs": [
+        "1.1.4",
+        "1.1.5"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-UAV-05",
+      "title": "Time-stamped image evidence",
+      "text": "The payload shall capture image evidence time-stamped against the common time source.",
+      "type": "Functional",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01",
+        "MR-S02",
+        "MR-T02"
+      ],
+      "allocated_to": [
+        "Outdoor UAV"
+      ],
+      "wbs": [
+        "1.2.1"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-UAV-06",
+      "title": "Authorized audible alarm only",
+      "text": "The UAV shall sound its audible alarm only while an operator authorization is active.",
+      "type": "Constraint",
+      "verification": "Demonstration",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-S01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.2.2",
+        "1.3.1"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-NOT-01",
+      "title": "Delivery state, acknowledgment and escalation",
+      "text": "The notification service shall record delivery state and recipient acknowledgment for each event and shall escalate an unacknowledged event to the named alternate after T_ack. T_ack is TBD (G2).",
+      "type": "Functional",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01",
+        "MR-S01",
+        "MR-S02",
+        "MR-D01",
+        "MR-K01"
+      ],
+      "allocated_to": [
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.3.3"
+      ],
+      "threshold_status": "TBD at G2"
+    },
+    {
+      "number": "SR-NOT-02",
+      "title": "Evidence retention and access control",
+      "text": "The evidence store shall keep recordings under the access and retention rules approved for the deployment.",
+      "type": "Constraint",
+      "verification": "Inspection",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-S02",
+        "MR-D01",
+        "MR-K01"
+      ],
+      "allocated_to": [
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.3.4"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-FIX-01",
+      "title": "Fixed and wearable events without an aircraft",
+      "text": "Fixed and wearable devices shall send their events to the notification service without an aircraft being airborne.",
+      "type": "Interface",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-D01",
+        "MR-K01",
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Fixed and Wearable Sensing",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.4.1",
+        "1.4.2",
+        "1.3.2"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-GEN-01",
+      "title": "Report observations, not judgments",
+      "text": "The system shall report observations with their uncertainty and shall not label a person as a criminal.",
+      "type": "Constraint",
+      "verification": "Inspection",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-S02",
+        "MR-D01",
+        "MR-K01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV",
+        "Fixed and Wearable Sensing",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.1.6",
+        "1.3.2"
+      ],
+      "threshold_status": "No numeric threshold"
+    },
+    {
+      "number": "SR-GEN-02",
+      "title": "Common time source",
+      "text": "All event, evidence and delivery timestamps shall be traceable to one common time source.",
+      "type": "Interface",
+      "verification": "Test",
+      "priority": "Shall",
+      "mission": "FARM",
+      "derived_from": [
+        "MR-T01"
+      ],
+      "allocated_to": [
+        "Outdoor UAV",
+        "Fixed and Wearable Sensing",
+        "Operator and Notification Service"
+      ],
+      "wbs": [
+        "1.1.6",
+        "1.3.2",
+        "1.4.1"
+      ],
+      "threshold_status": "No numeric threshold"
+    }
+  ],
+  "systems": {
+    "name": "Monitoring and Assistance Family of Systems",
+    "type": "FoS",
+    "description": "Outdoor UAV, fixed or wearable sensing, and a shared operator and notification service. Emergency responders are external actors.",
+    "children": [
+      {
+        "name": "Outdoor UAV",
+        "type": "SoI",
+        "wbs": "1.1",
+        "description": "Mobile outdoor observation. No LLM in the flight control loop.",
+        "children": [
+          {
+            "name": "Airframe",
+            "type": "Subsystem",
+            "wbs": "1.1.1",
+            "description": "Structure, lifting surfaces or arms, landing gear."
+          },
+          {
+            "name": "Propulsion",
+            "type": "Subsystem",
+            "wbs": "1.1.2",
+            "description": "Motors, speed controllers and propellers."
+          },
+          {
+            "name": "Electrical Power",
+            "type": "Subsystem",
+            "wbs": "1.1.3",
+            "description": "Battery, distribution and monitoring."
+          },
+          {
+            "name": "Flight Control",
+            "type": "Subsystem",
+            "wbs": "1.1.4",
+            "description": "Guidance, navigation and control; failsafe."
+          },
+          {
+            "name": "Communications",
+            "type": "Subsystem",
+            "wbs": "1.1.5",
+            "description": "Command, telemetry and payload links."
+          },
+          {
+            "name": "Onboard Processing",
+            "type": "Subsystem",
+            "wbs": "1.1.6",
+            "description": "Detection, geolocation and enclosure comparison."
+          },
+          {
+            "name": "EO Camera",
+            "type": "Subsystem",
+            "wbs": "1.2.1",
+            "description": "Visible-light camera payload."
+          },
+          {
+            "name": "Audible Alarm",
+            "type": "Subsystem",
+            "wbs": "1.2.2",
+            "description": "Alarm sounded only on authorization."
+          }
+        ]
+      },
+      {
+        "name": "Operator and Notification Service",
+        "type": "SoI",
+        "wbs": "1.3",
+        "description": "Shared ground service for operators and recipients.",
+        "children": [
+          {
+            "name": "Ground Control Station",
+            "type": "Subsystem",
+            "wbs": "1.3.1",
+            "description": "Mission approval, monitoring, alarm authorization."
+          },
+          {
+            "name": "Event Manager",
+            "type": "Subsystem",
+            "wbs": "1.3.2",
+            "description": "Confirms candidates, manages event state."
+          },
+          {
+            "name": "Notification Gateway",
+            "type": "Subsystem",
+            "wbs": "1.3.3",
+            "description": "Delivery, acknowledgment, escalation."
+          },
+          {
+            "name": "Evidence Store",
+            "type": "Subsystem",
+            "wbs": "1.3.4",
+            "description": "Access-controlled recordings and logs."
+          }
+        ]
+      },
+      {
+        "name": "Fixed and Wearable Sensing",
+        "type": "SoI",
+        "wbs": "1.4",
+        "description": "Indoor continuity and personal assistance without an aircraft.",
+        "children": [
+          {
+            "name": "Fixed Camera Node",
+            "type": "Subsystem",
+            "wbs": "1.4.1",
+            "description": "Fixed observation of a boundary or entrance."
+          },
+          {
+            "name": "Wearable Assist Device",
+            "type": "Subsystem",
+            "wbs": "1.4.2",
+            "description": "Assistance request and possible-fall report."
+          }
+        ]
+      }
+    ]
+  },
+  "wbs": {
+    "name": "UAV Monitoring System WBS",
+    "version": "1",
+    "control_account_level": 3,
+    "mapped_system": "Outdoor UAV",
+    "elements": [
+      {
+        "code": "1.0",
+        "name": "UAV Monitoring System",
+        "type": "SoS",
+        "simulink": false,
+        "description": "Limited Family of Systems, farm demonstrator first."
+      },
+      {
+        "code": "1.1",
+        "name": "Air Vehicle",
+        "type": "SoI",
+        "simulink": true,
+        "description": "Outdoor UAV air vehicle."
+      },
+      {
+        "code": "1.1.1",
+        "name": "Airframe",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Point-mass kinematics in the mission model."
+      },
+      {
+        "code": "1.1.2",
+        "name": "Propulsion",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Electrical power drawn against airspeed."
+      },
+      {
+        "code": "1.1.3",
+        "name": "Electrical Power",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Usable energy, state of charge, reserve flag."
+      },
+      {
+        "code": "1.1.4",
+        "name": "Flight Control",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Patrol guidance: speed and turn-rate commands."
+      },
+      {
+        "code": "1.1.5",
+        "name": "Communications",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Link availability against range."
+      },
+      {
+        "code": "1.1.6",
+        "name": "Onboard Processing",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Enclosure comparison and candidate detection."
+      },
+      {
+        "code": "1.2",
+        "name": "Payload",
+        "type": "SoI",
+        "simulink": true,
+        "description": "Mission payloads."
+      },
+      {
+        "code": "1.2.1",
+        "name": "EO Camera",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Target inside the ground footprint."
+      },
+      {
+        "code": "1.2.2",
+        "name": "Audible Alarm",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Alarm gated by authorization."
+      },
+      {
+        "code": "1.3",
+        "name": "Ground Segment",
+        "type": "SoI",
+        "simulink": true,
+        "description": "Operator and notification service."
+      },
+      {
+        "code": "1.3.1",
+        "name": "Ground Control Station",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Alarm authorization pass-through."
+      },
+      {
+        "code": "1.3.2",
+        "name": "Event Manager",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Confirms a candidate when a link is available."
+      },
+      {
+        "code": "1.3.3",
+        "name": "Notification Gateway",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Delivery delay to the recipient."
+      },
+      {
+        "code": "1.3.4",
+        "name": "Evidence Store",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Accumulated evidence time."
+      },
+      {
+        "code": "1.4",
+        "name": "Fixed and Wearable Sensing",
+        "type": "SoI",
+        "simulink": true,
+        "description": "Non-airborne members."
+      },
+      {
+        "code": "1.4.1",
+        "name": "Fixed Camera Node",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Target inside a fixed node's radius."
+      },
+      {
+        "code": "1.4.2",
+        "name": "Wearable Assist Device",
+        "type": "Subsystem",
+        "simulink": true,
+        "description": "Assistance request pass-through."
+      },
+      {
+        "code": "1.5",
+        "name": "Systems Engineering and Program Management",
+        "type": "Other",
+        "simulink": false,
+        "description": "Baselines, reviews, ledger."
+      },
+      {
+        "code": "1.6",
+        "name": "System Test and Evaluation",
+        "type": "Other",
+        "simulink": false,
+        "description": "Simulation and field test."
+      },
+      {
+        "code": "1.6.1",
+        "name": "Simulation Environment",
+        "type": "Other",
+        "simulink": false,
+        "description": "Simulink, Simscape and Unreal scenarios."
+      },
+      {
+        "code": "1.6.2",
+        "name": "Field Test",
+        "type": "Other",
+        "simulink": false,
+        "description": "Staged crossings with independent ground truth."
+      }
+    ]
+  },
+  "measures": [
+    {
+      "id": "MOE-T01",
+      "kind": "MoE",
+      "need": "T01",
+      "name": "Actionable escape awareness",
+      "definition": "Fraction of staged escapes that lead to a timely, actionable farmer acknowledgment.",
+      "denominator": "Staged escapes inside the approved operating envelope",
+      "threshold": "TBD (G2)"
+    },
+    {
+      "id": "MOP-T01-PD",
+      "kind": "MoP",
+      "need": "T01",
+      "name": "Detection probability",
+      "definition": "Staged crossings detected / staged crossings observed under stated conditions.",
+      "threshold": "TBD (G2)"
+    },
+    {
+      "id": "MOP-T01-FA",
+      "kind": "MoP",
+      "need": "T01",
+      "name": "False alerts per monitored hour",
+      "definition": "Alerts with no ground-truth crossing / monitored hours.",
+      "threshold": "TBD (G2)"
+    },
+    {
+      "id": "MOP-T01-LOC",
+      "kind": "MoP",
+      "need": "T01",
+      "name": "Localization error",
+      "definition": "Horizontal distance between reported and surveyed crossing location.",
+      "threshold": "TBD (G2)"
+    },
+    {
+      "id": "MOP-T01-LAT",
+      "kind": "MoP",
+      "need": "T01",
+      "name": "Notification latency",
+      "definition": "Recipient delivery time minus ground-truth crossing time.",
+      "threshold": "TBD (G2)"
+    },
+    {
+      "id": "MOP-T01-AV",
+      "kind": "MoP",
+      "need": "T01",
+      "name": "Mission availability",
+      "definition": "Time with coverage available / scheduled monitoring time.",
+      "threshold": "TBD (G2)"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "ANA-T01-MISSION",
+      "type": "Simulink",
+      "name": "T01 mission behavior (R2011a WBS model)",
+      "description": "Patrol, detection, link and notification timing in uav_t01_mission.mdl. Simulation evidence only.",
+      "requirements": [
+        "SR-T01-01",
+        "SR-T01-03",
+        "SR-UAV-01",
+        "SR-UAV-04"
+      ]
+    },
+    {
+      "id": "ANA-T01-ENERGY",
+      "type": "Simulink",
+      "name": "T01 patrol energy",
+      "description": "Energy drawn over the patrol against usable energy and reserve. Parameters are provisional.",
+      "requirements": [
+        "SR-UAV-02"
+      ]
+    },
+    {
+      "id": "ANA-PWR-SIMSCAPE",
+      "type": "Simulink",
+      "name": "Propulsion and power physical model (Simscape, R2025b)",
+      "description": "Battery, motor and propeller load network in uav_power_simscape.slx.",
+      "requirements": [
+        "SR-UAV-02"
+      ]
+    },
+    {
+      "id": "ANA-AERO-DATCOM",
+      "type": "Datcom",
+      "name": "VTOL fixed-wing candidate aerodynamics",
+      "description": "Digital DATCOM run of the fixed-wing candidate for the airframe trade. Applicability limits recorded.",
+      "requirements": [
+        "SR-UAV-01",
+        "SR-UAV-02"
+      ]
+    }
+  ],
+  "simulation": {
+    "name": "T01 escaped cattle scenario (Unreal)",
+    "description": "Simulink co-simulation scene for the T01 scenario. Synthetic scene; not detection evidence."
+  },
+  "designs": [
+    {
+      "name": "UAV - Assembly",
+      "type": "CAD_Assembly",
+      "system": "Outdoor UAV",
+      "wbs": "1.1"
+    },
+    {
+      "name": "UAV Airframe",
+      "type": "CAD_Part",
+      "system": "Airframe",
+      "wbs": "1.1.1"
+    },
+    {
+      "name": "UAV Motor Arm",
+      "type": "CAD_Part",
+      "system": "Airframe",
+      "wbs": "1.1.1"
+    },
+    {
+      "name": "UAV Motor Mount",
+      "type": "CAD_Part",
+      "system": "Propulsion",
+      "wbs": "1.1.2"
+    },
+    {
+      "name": "UAV Payload Tray",
+      "type": "CAD_Part",
+      "system": "EO Camera",
+      "wbs": "1.2.1"
+    },
+    {
+      "name": "UAV Airframe Drawing",
+      "type": "CAD_Drawing",
+      "system": "Airframe",
+      "wbs": "1.1.1"
+    }
+  ],
+  "verification": [
+    {
+      "id": "TEST-T01-01",
+      "requirement": "SR-T01-01",
+      "method": "Test",
+      "level": "System",
+      "procedure": "Staged crossings and non-crossing controls with independent, time-stamped ground truth; compare event and delivery logs.",
+      "measured": "Notification latency",
+      "threshold": "TBD (G2)",
+      "result": "Not run"
+    },
+    {
+      "id": "TEST-T01-02",
+      "requirement": "SR-T01-02",
+      "method": "Inspection",
+      "level": "System",
+      "procedure": "Inspect each delivered report for the required fields.",
+      "measured": "Field presence",
+      "threshold": "TBD (G2)",
+      "result": "Not run"
+    },
+    {
+      "id": "TEST-T01-03",
+      "requirement": "SR-T01-03",
+      "method": "Demonstration",
+      "level": "System",
+      "procedure": "Remove observation, then delivery; confirm the unavailable-coverage indication and degraded mode.",
+      "measured": "Indication shown",
+      "threshold": "Indicated",
+      "result": "Not run"
+    },
+    {
+      "id": "ANA-T01-MISSION",
+      "requirement": "SR-UAV-01",
+      "method": "Analysis",
+      "level": "System",
+      "procedure": "Run uav_t01_mission; compute the revisit interval from the patrol.",
+      "measured": "Revisit interval",
+      "threshold": "TBD (G2)",
+      "result": "Not run"
+    },
+    {
+      "id": "ANA-T01-ENERGY",
+      "requirement": "SR-UAV-02",
+      "method": "Analysis",
+      "level": "Subsystem",
+      "procedure": "Run the energy analysis with the reviewed mission segments; independent check of units and reserve.",
+      "measured": "Energy remaining at landing",
+      "threshold": "TBD (G2)",
+      "result": "Not run"
+    }
+  ],
+  "ledger": [
+    {
+      "task": "TASK-A-001",
+      "role": "Configuration and tool steward",
+      "increment": "A",
+      "objective": "Inventory PD Quick, MATLAB R2011a and R2025b, UModel, Fusion and Unreal; record versions and licenses.",
+      "inputs": "B01",
+      "outputs": "Tool readiness record",
+      "reviewer": "Project engineer",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-A-002",
+      "role": "Configuration and tool steward",
+      "increment": "A",
+      "objective": "Round trip: one PD Quick record, one native diagram and one deterministic analysis saved and read back.",
+      "inputs": "B01",
+      "outputs": "uav_t01_selftest result; seeded database readback",
+      "reviewer": "V&V",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-B-001",
+      "role": "Needs and operations analyst",
+      "increment": "B",
+      "objective": "Seed the source register: 6 stakeholders, 16 needs, 5 excluded scenes, open questions.",
+      "inputs": "B01",
+      "outputs": "PD Quick Missions records",
+      "reviewer": "Human sponsor",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-B-002",
+      "role": "Needs and operations analyst",
+      "increment": "B",
+      "objective": "Review each need with its stakeholder; resolve the open questions; record G1 disposition.",
+      "inputs": "TASK-B-001",
+      "outputs": "G1 package",
+      "reviewer": "Human sponsor",
+      "state": "Blocked: needs stakeholder review"
+    },
+    {
+      "task": "TASK-C-001",
+      "role": "Requirements and model engineer",
+      "increment": "C",
+      "objective": "Derive mission and system requirements; allocate to systems and WBS; export catalogs.",
+      "inputs": "TASK-B-001",
+      "outputs": "PD Quick Requirements; .pdqreq and .xlsx",
+      "reviewer": "Chief systems engineer",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-C-002",
+      "role": "Requirements and model engineer",
+      "increment": "C",
+      "objective": "Create UModel requirement, block definition and use case diagrams with deriveReqt, satisfy and verify.",
+      "inputs": "TASK-C-001",
+      "outputs": "SystemModel.ump diagrams",
+      "reviewer": "Chief systems engineer",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-C-003",
+      "role": "Requirements and model engineer",
+      "increment": "C",
+      "objective": "Build the R2011a WBS model; link blocks to PD Quick, Excel and Word requirements with the V&V toolbox.",
+      "inputs": "TASK-C-001",
+      "outputs": "uav_wbs_lib.mdl, uav_t01_mission.mdl, links report",
+      "reviewer": "V&V",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-D-001",
+      "role": "Analysis agent (aerodynamics)",
+      "increment": "D",
+      "objective": "Run the DATCOM fixed-wing candidate; record applicability limits.",
+      "inputs": "TASK-C-001",
+      "outputs": "datcom output and coefficients table",
+      "reviewer": "Chief systems engineer",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-D-002",
+      "role": "Design engineer (airframe)",
+      "increment": "D",
+      "objective": "Create the multirotor candidate parts, assembly and drawing in Fusion; record mass properties.",
+      "inputs": "TASK-C-001",
+      "outputs": "Fusion documents; mass properties JSON",
+      "reviewer": "Chief systems engineer",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-D-003",
+      "role": "Analysis agent (power)",
+      "increment": "D",
+      "objective": "Build and check the Simscape propulsion and power model in R2025b.",
+      "inputs": "TASK-C-003",
+      "outputs": "uav_power_simscape.slx; steady-state check",
+      "reviewer": "V&V",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-E-001",
+      "role": "Software and integration engineer",
+      "increment": "E",
+      "objective": "Pull the R2011a subsystems into an R2025b model; compare both releases back to back.",
+      "inputs": "TASK-C-003",
+      "outputs": "uav_t01_mission_r2025b.slx; comparison report",
+      "reviewer": "V&V",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-E-002",
+      "role": "Software and integration engineer",
+      "increment": "E",
+      "objective": "Run the T01 scenario with the Unreal scene in the loop.",
+      "inputs": "TASK-E-001",
+      "outputs": "uav_t01_ue.slx; run log",
+      "reviewer": "V&V",
+      "state": "Ready"
+    },
+    {
+      "task": "TASK-F-001",
+      "role": "Human technical authority",
+      "increment": "F",
+      "objective": "Approve release to fabrication, powered tests and flight.",
+      "inputs": "G4, G5 packages",
+      "outputs": "Signed approval",
+      "reviewer": "Human test authority",
+      "state": "Blocked: human decision"
+    }
+  ],
+  "model_parameters": {
+    "status": "Provisional values for a deterministic self-test; not approved thresholds or a design",
+    "patrol_radius_m": 150.0,
+    "patrol_speed_mps": 12.0,
+    "enclosure_half_width_m": 100.0,
+    "camera_footprint_radius_m": 60.0,
+    "link_range_m": 1000.0,
+    "notify_delay_s": 5.0,
+    "cattle_start_east_m": 80.0,
+    "cattle_speed_mps": 1.0,
+    "cattle_depart_time_s": 20.0,
+    "hover_power_w": 180.0,
+    "drag_power_coeff_w_per_mps3": 0.05,
+    "usable_energy_wh": 90.0,
+    "reserve_fraction": 0.2,
+    "fixed_node_east_m": 130.0,
+    "fixed_node_radius_m": 25.0,
+    "stop_time_s": 300.0,
+    "fixed_step_s": 0.05
+  }
+}

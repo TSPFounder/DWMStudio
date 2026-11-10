@@ -1,0 +1,8 @@
+{
+  "autodeskProduct": "Fusion",
+  "type": "script",
+  "author": "",
+  "description": {"": "Multirotor candidate for the UAV airframe trade: parts, assembly, mass properties, STEP/STL and the drawing workflow."},
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}

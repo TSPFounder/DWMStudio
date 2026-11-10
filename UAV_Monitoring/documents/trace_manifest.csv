@@ -1,0 +1,105 @@
+Baseline,From,Relation,To,ToKind
+B01,MR-T01,deriveReqt,NEED T01,Need
+B01,MR-S01,deriveReqt,NEED S01,Need
+B01,MR-S02,deriveReqt,NEED S02,Need
+B01,MR-S02,deriveReqt,NEED S03,Need
+B01,MR-S02,deriveReqt,NEED J02,Need
+B01,MR-T02,deriveReqt,NEED T02,Need
+B01,MR-T02,deriveReqt,NEED T03,Need
+B01,MR-D01,deriveReqt,NEED D01,Need
+B01,MR-D01,deriveReqt,NEED D02,Need
+B01,MR-D01,deriveReqt,NEED D03,Need
+B01,MR-D01,deriveReqt,NEED J01,Need
+B01,MR-K01,deriveReqt,NEED K01,Need
+B01,MR-K01,deriveReqt,NEED K02,Need
+B01,MR-K01,deriveReqt,NEED B01,Need
+B01,MR-K01,deriveReqt,NEED B02,Need
+B01,MR-K01,deriveReqt,NEED B03,Need
+B01,SR-T01-01,deriveReqt,MR-T01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-T01-01,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-T01-01,SystemRequirement
+B01,WBS 1.1.6,satisfy,SR-T01-01,SystemRequirement
+B01,WBS 1.3.2,satisfy,SR-T01-01,SystemRequirement
+B01,WBS 1.3.3,satisfy,SR-T01-01,SystemRequirement
+B01,SR-T01-02,deriveReqt,MR-T01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-T01-02,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-T01-02,SystemRequirement
+B01,WBS 1.2.1,satisfy,SR-T01-02,SystemRequirement
+B01,WBS 1.3.2,satisfy,SR-T01-02,SystemRequirement
+B01,WBS 1.3.4,satisfy,SR-T01-02,SystemRequirement
+B01,SR-T01-03,deriveReqt,MR-T01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-T01-03,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-T01-03,SystemRequirement
+B01,WBS 1.1.5,satisfy,SR-T01-03,SystemRequirement
+B01,WBS 1.3.2,satisfy,SR-T01-03,SystemRequirement
+B01,WBS 1.3.3,satisfy,SR-T01-03,SystemRequirement
+B01,SR-UAV-01,deriveReqt,MR-T01,MissionRequirement
+B01,SR-UAV-01,deriveReqt,MR-S02,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-UAV-01,SystemRequirement
+B01,WBS 1.1.1,satisfy,SR-UAV-01,SystemRequirement
+B01,WBS 1.1.4,satisfy,SR-UAV-01,SystemRequirement
+B01,WBS 1.2.1,satisfy,SR-UAV-01,SystemRequirement
+B01,SR-UAV-02,deriveReqt,MR-T01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-UAV-02,SystemRequirement
+B01,WBS 1.1.2,satisfy,SR-UAV-02,SystemRequirement
+B01,WBS 1.1.3,satisfy,SR-UAV-02,SystemRequirement
+B01,SR-UAV-03,deriveReqt,MR-T01,MissionRequirement
+B01,SR-UAV-03,deriveReqt,MR-S02,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-UAV-03,SystemRequirement
+B01,WBS 1.1.4,satisfy,SR-UAV-03,SystemRequirement
+B01,WBS 1.1.6,satisfy,SR-UAV-03,SystemRequirement
+B01,WBS 1.2.1,satisfy,SR-UAV-03,SystemRequirement
+B01,SR-UAV-04,deriveReqt,MR-T01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-UAV-04,SystemRequirement
+B01,WBS 1.1.4,satisfy,SR-UAV-04,SystemRequirement
+B01,WBS 1.1.5,satisfy,SR-UAV-04,SystemRequirement
+B01,SR-UAV-05,deriveReqt,MR-T01,MissionRequirement
+B01,SR-UAV-05,deriveReqt,MR-S02,MissionRequirement
+B01,SR-UAV-05,deriveReqt,MR-T02,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-UAV-05,SystemRequirement
+B01,WBS 1.2.1,satisfy,SR-UAV-05,SystemRequirement
+B01,SR-UAV-06,deriveReqt,MR-S01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-UAV-06,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-UAV-06,SystemRequirement
+B01,WBS 1.2.2,satisfy,SR-UAV-06,SystemRequirement
+B01,WBS 1.3.1,satisfy,SR-UAV-06,SystemRequirement
+B01,SR-NOT-01,deriveReqt,MR-T01,MissionRequirement
+B01,SR-NOT-01,deriveReqt,MR-S01,MissionRequirement
+B01,SR-NOT-01,deriveReqt,MR-S02,MissionRequirement
+B01,SR-NOT-01,deriveReqt,MR-D01,MissionRequirement
+B01,SR-NOT-01,deriveReqt,MR-K01,MissionRequirement
+B01,Operator and Notification Service,satisfy,SR-NOT-01,SystemRequirement
+B01,WBS 1.3.3,satisfy,SR-NOT-01,SystemRequirement
+B01,SR-NOT-02,deriveReqt,MR-S02,MissionRequirement
+B01,SR-NOT-02,deriveReqt,MR-D01,MissionRequirement
+B01,SR-NOT-02,deriveReqt,MR-K01,MissionRequirement
+B01,Operator and Notification Service,satisfy,SR-NOT-02,SystemRequirement
+B01,WBS 1.3.4,satisfy,SR-NOT-02,SystemRequirement
+B01,SR-FIX-01,deriveReqt,MR-D01,MissionRequirement
+B01,SR-FIX-01,deriveReqt,MR-K01,MissionRequirement
+B01,SR-FIX-01,deriveReqt,MR-T01,MissionRequirement
+B01,Fixed and Wearable Sensing,satisfy,SR-FIX-01,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-FIX-01,SystemRequirement
+B01,WBS 1.4.1,satisfy,SR-FIX-01,SystemRequirement
+B01,WBS 1.4.2,satisfy,SR-FIX-01,SystemRequirement
+B01,WBS 1.3.2,satisfy,SR-FIX-01,SystemRequirement
+B01,SR-GEN-01,deriveReqt,MR-S02,MissionRequirement
+B01,SR-GEN-01,deriveReqt,MR-D01,MissionRequirement
+B01,SR-GEN-01,deriveReqt,MR-K01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-GEN-01,SystemRequirement
+B01,Fixed and Wearable Sensing,satisfy,SR-GEN-01,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-GEN-01,SystemRequirement
+B01,WBS 1.1.6,satisfy,SR-GEN-01,SystemRequirement
+B01,WBS 1.3.2,satisfy,SR-GEN-01,SystemRequirement
+B01,SR-GEN-02,deriveReqt,MR-T01,MissionRequirement
+B01,Outdoor UAV,satisfy,SR-GEN-02,SystemRequirement
+B01,Fixed and Wearable Sensing,satisfy,SR-GEN-02,SystemRequirement
+B01,Operator and Notification Service,satisfy,SR-GEN-02,SystemRequirement
+B01,WBS 1.1.6,satisfy,SR-GEN-02,SystemRequirement
+B01,WBS 1.3.2,satisfy,SR-GEN-02,SystemRequirement
+B01,WBS 1.4.1,satisfy,SR-GEN-02,SystemRequirement
+B01,TEST-T01-01,verify,SR-T01-01,SystemRequirement
+B01,TEST-T01-02,verify,SR-T01-02,SystemRequirement
+B01,TEST-T01-03,verify,SR-T01-03,SystemRequirement
+B01,ANA-T01-MISSION,verify,SR-UAV-01,SystemRequirement
+B01,ANA-T01-ENERGY,verify,SR-UAV-02,SystemRequirement
