@@ -13,9 +13,9 @@ function result = uav_build_power_simscape(outDir)
 %
 %   Check: the steady state of this network has a closed form,
 %       w = K*V / (K^2 + (Rb + Rw)*D)      i = D*w / K
-%   and the run must match both within 1 %. A sign difference in w means the
-%   converter's mechanical ports are the other way round, which is reported
-%   and does not affect the magnitudes.
+%   and the run must match both within 1 %. The converter's port order is
+%   detected, not assumed, so w may come out negative; the check uses
+%   magnitudes and reports the sign.
 %
 %   R2011a has no Simscape on the licence recorded in PD Quick's TOOLING.md,
 %   so this model starts in R2025b. NOT a propeller or battery model: the
@@ -59,13 +59,17 @@ foundation(pr, 'Rotational Damper', 'PropellerLoad', {'D', num2str(q.D)});
 foundation(pr, 'Mechanical Rotational Reference', 'Case', {});
 connectionPort(pr, 'pos', 'left');
 connectionPort(pr, 'neg', 'left');
+% The converter has two electrical and two mechanical ports, and which is
+% which differs from what its icon suggests between releases. Each port is
+% tested against a known electrical port, so nothing is assumed.
+[electrical, mechanical] = classifyPorts(pr, 'Motor', 'Winding', 'RConn1');
 physical(pr, 'pos', 'Conn1', 'Winding', 'LConn1');
-physical(pr, 'Winding', 'RConn1', 'Motor', 'LConn1');
-physical(pr, 'Motor', 'LConn2', 'neg', 'Conn1');
-physical(pr, 'Motor', 'RConn1', 'Rotor', 'Conn1');
-physical(pr, 'Motor', 'RConn1', 'PropellerLoad', 'LConn1');
+physical(pr, 'Winding', 'RConn1', 'Motor', electrical(1));
+physical(pr, 'Motor', electrical(2), 'neg', 'Conn1');
+physical(pr, 'Motor', mechanical(1), 'Rotor', 'Conn1');
+physical(pr, 'Motor', mechanical(1), 'PropellerLoad', 'LConn1');
 physical(pr, 'PropellerLoad', 'RConn1', 'Case', 'Conn1');
-physical(pr, 'Motor', 'RConn2', 'Case', 'Conn1');
+physical(pr, 'Motor', mechanical(2), 'Case', 'Conn1');
 
 add_block('nesl_utility/Solver Configuration', [model '/Solver'], 'Position', [80 240 140 280]);
 physical(model, 'ElectricalPower', 'RConn1', 'Propulsion', 'LConn1');
@@ -94,7 +98,7 @@ okI = abs(abs(result.i) - result.i_expected) <= 0.01 * result.i_expected;
 fprintf('rotor speed     measured %.3f rad/s   expected %.3f rad/s\n', result.w, result.w_expected);
 fprintf('motor current   measured %.4f A       expected %.4f A\n', result.i, result.i_expected);
 if result.w < 0
-    fprintf('Note: speed is negative; the converter mechanical ports are reversed relative to the comments.\n');
+    fprintf('Note: speed is negative. That is the port order the converter was connected in; magnitudes are unaffected.\n');
 end
 if ~(okW && okI)
     error('uav:simscape:check', 'The Simscape model does not match the closed-form steady state within 1 %%.');
@@ -136,7 +140,34 @@ function physical(sys, a, portA, b, portB)
 add_line(sys, portHandle([sys '/' a], portA), portHandle([sys '/' b], portB), 'autorouting', 'on');
 end
 
+function [electrical, mechanical] = classifyPorts(sys, block, electricalBlock, electricalPort)
+% Split BLOCK's conserving ports by whether Simulink allows a connection to a
+% known electrical port. The trial lines are removed again.
+handles = get_param([sys '/' block], 'PortHandles');
+all = [handles.LConn, handles.RConn];
+probe = portHandle([sys '/' electricalBlock], electricalPort);
+electrical = [];
+mechanical = [];
+for k = 1:numel(all)
+    try
+        line = add_line(sys, all(k), probe);
+        delete_line(line);
+        electrical(end + 1) = all(k); %#ok<AGROW>
+    catch %#ok<CTCH>
+        mechanical(end + 1) = all(k); %#ok<AGROW>
+    end
+end
+if numel(electrical) ~= 2 || numel(mechanical) ~= 2
+    error('uav:simscape:ports', '%s has %d electrical and %d other conserving ports; two of each were expected.', ...
+        block, numel(electrical), numel(mechanical));
+end
+end
+
 function h = portHandle(block, port)
+if isnumeric(port)
+    h = port;
+    return;
+end
 handles = get_param(block, 'PortHandles');
 if strncmp(port, 'Conn', 4)
     side = 'conserving';
